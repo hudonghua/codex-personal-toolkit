@@ -1,0 +1,12 @@
+{
+  "workspace": "C:\\Users\\t250c\\Documents\\Codex\\2026-05-22\\new-chat",
+  "session_file": "C:\\Users\\t250c\\.codex\\sessions\\2026\\05\\22\\rollout-2026-05-22T01-23-38-019e4b90-74db-7e31-9c40-b40d5bcc9397.jsonl",
+  "exported_at": "2026-05-23T22:49:44",
+  "topic": "codex-skills-mcp-github-sync",
+  "workspace_zip_files": 1,
+  "workspace_zip_source_bytes": 10209,
+  "mcp_data_files": [
+    "C:\\Users\\t250c\\Documents\\Codex\\codex-personal-toolkit\\work-states\\2026\\codex-skills-mcp-github-sync_20260523-224944\\mcp-data\\memory.sqlite",
+    "C:\\Users\\t250c\\Documents\\Codex\\codex-personal-toolkit\\work-states\\2026\\codex-skills-mcp-github-sync_20260523-224944\\mcp-data\\records.sqlite"
+  ]
+}

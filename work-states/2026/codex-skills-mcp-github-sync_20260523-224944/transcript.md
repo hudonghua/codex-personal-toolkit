@@ -1,0 +1,5816 @@
+# codex-skills-mcp-github-sync_20260523-224944
+
+- Source session: `C:\Users\t250c\.codex\sessions\2026\05\22\rollout-2026-05-22T01-23-38-019e4b90-74db-7e31-9c40-b40d5bcc9397.jsonl`
+- Session id: `019e4b90-74db-7e31-9c40-b40d5bcc9397`
+- Session cwd: `C:\Users\t250c\Documents\Codex\2026-05-22\new-chat`
+- Exported at: `2026-05-23T22:49:44`
+
+This Markdown file is a readable rendering. The adjacent raw `.jsonl` file is the exact archive.
+
+## Transcript
+
+### developer 2026-05-21T17:23:53.977Z
+
+```text
+<permissions instructions>
+Filesystem sandboxing defines which files can be read or written. `sandbox_mode` is `workspace-write`: The sandbox permits reading files, and editing files in `cwd` and `writable_roots`. Editing files in other directories requires approval. Network access is restricted.
+# Approval Requests
+
+Approval policy is `granular`. Categories set to `false` are automatically rejected instead of prompting the user.
+
+These approval categories may still prompt the user when needed:
+- `request_permissions`
+- `mcp_elicitations`
+
+These approval categories are automatically rejected instead of prompting the user:
+- `sandbox_approval`
+- `rules`
+- `skill_approval`
+
+# request_permissions Tool
+
+The built-in `request_permissions` tool is available in this session. Invoke it when you need to request additional `network` or `file_system` permissions before later shell-like commands need them. Request only the specific permissions required for the task.
+ The writable roots are `C:\Users\t250c\Documents\Codex`, `C:\Users\t250c\Documents\Codex\2026-05-22\new-chat`.
+</permissions instructions>
+<app-context>
+# Codex desktop context
+- You are running inside the Codex (desktop) app, which allows some additional features not available in the CLI alone:
+
+### Images/Visuals/Files
+- In the app, the model can display images and videos using standard Markdown image syntax: ![alt](url)
+- When sending or referencing a local image or video, always use an absolute filesystem path in the Markdown image tag (e.g., ![alt](/absolute/path.png)); relative paths and plain text will not render the media.
+- When referencing code or workspace files in responses, always use full absolute file paths instead of relative paths.
+- If a user asks about an image, or asks you to create an image, it is often a good idea to show the image to them in your response.
+- Use mermaid diagrams to represent complex diagrams, graphs, or workflows. Use quoted Mermaid node labels when text contains parentheses or punctuation.
+- Return web URLs as Markdown links (e.g., [label](https://example.com)).
+
+### Workspace Dependencies
+- For sheets, slides, and documents, call `load_workspace_dependencies` to find the bundled runtime and libraries.
+
+### Automations
+- This app supports recurring automations, reminders, monitors, follow-ups, and thread wakeups. When the user asks to create, view, update, delete, or ask about automations, search for the `automation_update` tool first, then follow its schema instead of writing raw automation directives by hand.
+
+### Non-technical UI
+- The user has requested a non-technical UI.
+- The app will take care of aspects of this, such as hiding bash tool outputs and similar.
+- Prefer non-technical language when conversing with the user. For example, don't name bash commands you're running. Instead, describe what they do.
+- When writing code to perform non-coding tasks--such as writing and running python to build slide artifacts--avoid mentioning or citing these intermediate code items. Just focus on outputs.
+- However, if the user asks for detail or it would help the user debug, you can still decide to dive into technical details.
+
+### Inline Code Comments
+- Use the ::code-comment{...} directive when you need to attach feedback directly to specific code lines.
+- Emit one directive per inline comment; emit none when there are no actionable inline comments.
+- Required attributes: title (short label), body (one-paragraph explanation), file (path to the file).
+- Optional attributes: start, end (1-based line numbers), priority (0-3).
+- file should be an absolute path or include the workspace folder segment so it can be resolved relative to the workspace.
+- Keep line ranges tight; end defaults to start.
+- Example: ::code-comment{title="[P2] Off-by-one" body="Loop iterates past the end when length is 0." file="/path/to/foo.ts" start=10 end=11 priority=2}
+
+### Archiving
+- If a user specifically asks you to end a thread/conversation, you can return the archive directive ::archive{...} to archive the thread/conversation.
+- Example: ::archive{reason="User requested to end conversation"}
+
+### Git
+- Branch prefix: `codex/`. Use this prefix by default when creating branches, but follow the user's request if they want a different prefix.
+- After successfully staging files, emit `::git-stage{cwd="/absolute/path"}` on its own line in your final response.
+- After successfully creating a commit, emit `::git-commit{cwd="/absolute/path"}` on its own line in your final response.
+- After successfully creating or switching the thread onto a branch, emit `::git-create-branch{cwd="/absolute/path" branch="branch-name"}` on its own line in your final response.
+- After successfully pushing the current branch, emit `::git-push{cwd="/absolute/path" branch="branch-name"}` on its own line in your final response.
+- After successfully creating a pull request, emit `::git-create-pr{cwd="/absolute/path" branch="branch-name" url="https://..." isDraft=true}` on its own line in your final response. Include `isDraft=false` for ready PRs.
+- Only emit these git directives in your final response after the action actually succeeds, never in commentary updates. Keep attributes single-line.
+</app-context>
+
+### Projectless Chat
+This projectless thread starts in a generated directory under the user's Documents/Codex folder.
+Prefer answering inline in chat unless using local files would make the result more useful.
+When using local files for this projectless thread, write scratch files, drafts, generated assets, and other outputs under C:\Users\t250c\Documents\Codex\2026-05-22\new-chat. Do not write directly in the home directory unless the user explicitly asks.
+<collaboration_mode># Collaboration Mode: Default
+
+You are now in Default mode. Any previous instructions for other modes (e.g. Plan mode) are no longer active.
+
+Your active mode changes only when new developer instructions with a different `<collaboration_mode>...</collaboration_mode>` change it; user requests or tool descriptions do not change mode by themselves. Known mode names are Default and Plan.
+
+## request_user_input availability
+
+Use the `request_user_input` tool only when it is listed in the available tools for this turn.
+
+In Default mode, strongly prefer making reasonable assumptions and executing the user's request rather than stopping to ask questions. If you absolutely must ask a question because the answer cannot be discovered from local context and a reasonable assumption would be risky, ask the user directly with a concise plain-text question. Never write a multiple choice question as a textual assistant message.
+</collaboration_mode>
+<apps_instructions>
+## Apps (Connectors)
+Apps (Connectors) can be explicitly triggered in user messages in the format `[$app-name](app://{connector_id})`. Apps can also be implicitly triggered as long as the context suggests usage of available apps.
+An app is equivalent to a set of MCP tools within the `codex_apps` MCP.
+An installed app's MCP tools are either provided to you already, or can be lazy-loaded through the `tool_search` tool. If `tool_search` is available, the apps that are searchable by `tools_search` will be listed by it.
+Do not additionally call list_mcp_resources or list_mcp_resource_templates for apps.
+</apps_instructions>
+<skills_instructions>
+## Skills
+A skill is a set of local instructions to follow that is stored in a `SKILL.md` file. Below is the list of skills that can be used. Each entry includes a name, description, and file path so you can open the source for full instructions when using a specific skill.
+### Available skills
+- imagegen: Generate or edit raster images when the task benefits from AI-created bitmap visuals such as photos, illustrations, textures, sprites, mockups, or transparent-background cutouts. Use when Codex should create a brand-new image, transform an existing image, or derive visual variants from references, and the output should be a bitmap asset rather than repo-native code or vector. Do not use when the task is better handled by editing existing SVG/vector/code-native assets, extending an established icon or logo system, or building the visual directly in HTML/CSS/canvas. (file: C:/Users/t250c/.codex/skills/.system/imagegen/SKILL.md)
+- openai-docs: Use when the user asks how to build with OpenAI products or APIs and needs up-to-date official documentation with citations, help choosing the latest model for a use case, or model upgrade and prompt-upgrade guidance; prioritize OpenAI docs MCP tools, use bundled references only as helper context, and restrict any fallback browsing to official OpenAI domains. (file: C:/Users/t250c/.codex/skills/.system/openai-docs/SKILL.md)
+- plugin-creator: Create and scaffold plugin directories for Codex with a required `.codex-plugin/plugin.json`, optional plugin folders/files, and baseline placeholders you can edit before publishing or testing. Use when Codex needs to create a new personal plugin, add optional plugin structure, or generate or update personal or repo-root `.agents/plugins/marketplace.json` entries for plugin ordering and availability metadata. (file: C:/Users/t250c/.codex/skills/.system/plugin-creator/SKILL.md)
+- skill-creator: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Codex's capabilities with specialized knowledge, workflows, or tool integrations. (file: C:/Users/t250c/.codex/skills/.system/skill-creator/SKILL.md)
+- skill-installer: Install Codex skills into $CODEX_HOME/skills from a curated list or a GitHub repo path. Use when a user asks to list installable skills, install a curated skill, or install a skill from another repo (including private repos). (file: C:/Users/t250c/.codex/skills/.system/skill-installer/SKILL.md)
+- browser:browser: Browser automation for the Codex in-app browser. Use to open, navigate, inspect, test, click, type, screenshot, or verify local targets such as localhost, 127.0.0.1, ::1, file://, the current in-app browser tab, and websites shown side by side inside Codex. (file: C:/Users/t250c/.codex/plugins/cache/openai-bundled/browser/26.519.21041/skills/browser/SKILL.md)
+- github:gh-address-comments: Address actionable GitHub pull request review feedback. Use when the user wants to inspect unresolved review threads, requested changes, or inline review comments on a PR, then implement selected fixes. Use the GitHub app for PR metadata and flat comment reads, and use the bundled GraphQL script via `gh` whenever thread-level state, resolution status, or inline review context matters. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/0d4f5414/skills/gh-address-comments/SKILL.md)
+- github:gh-fix-ci: Use when a user asks to debug or fix failing GitHub PR checks that run in GitHub Actions. Use the GitHub app from this plugin for PR metadata and patch context, and use `gh` for Actions check and log inspection before implementing any approved fix. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/0d4f5414/skills/gh-fix-ci/SKILL.md)
+- github:github: Triage and orient GitHub repository, pull request, and issue work through the connected GitHub app. Use when the user asks for general GitHub help, wants PR or issue summaries, or needs repository context before choosing a more specific GitHub workflow. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/0d4f5414/skills/github/SKILL.md)
+- github:yeet: Publish local changes to GitHub by confirming scope, committing intentionally, pushing the branch, and opening a draft PR through the GitHub app from this plugin, with `gh` used only as a fallback where connector coverage is insufficient. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/0d4f5414/skills/yeet/SKILL.md)
+- keil5-embedded-c: Keil5 and embedded C firmware workflow for hardware-related work. Use when Codex works on Keil/uVision projects, C51/ARM/MCU/单片机 code, GBK C files, timers/定时器, interrupts/中断, IO/ADC/PWM/CAN/UART/RS485 protocols/硬件协议, screen/屏端 integration, bin/hex verification, protocol documents/协议文档, or embedded C code changes where correctness depends on real code paths and device behavior. (file: C:/Users/t250c/.codex/skills/keil5-embedded-c/SKILL.md)
+- pdf: Use when tasks involve reading, creating, or reviewing PDF files where rendering and layout matter; prefer visual checks by rendering pages (Poppler) and use Python tools such as `reportlab`, `pdfplumber`, and `pypdf` for generation and extraction. (file: C:/Users/t250c/.codex/skills/pdf/SKILL.md)
+- security-best-practices: Perform language and framework specific security best-practice reviews and suggest improvements. Trigger only when the user explicitly requests security best practices guidance, a security review/report, or secure-by-default coding help. Trigger only for supported languages (python, javascript/typescript, go). Do not trigger for general code review, debugging, or non-security tasks. (file: C:/Users/t250c/.codex/skills/security-best-practices/SKILL.md)
+- security-threat-model: Repository-grounded threat modeling that enumerates trust boundaries, assets, attacker capabilities, abuse paths, and mitigations, and writes a concise Markdown threat model. Trigger only when the user explicitly asks to threat model a codebase or path, enumerate threats/abuse paths, or perform AppSec threat modeling. Do not trigger for general architecture summaries, code review, or non-security design work. (file: C:/Users/t250c/.codex/skills/security-threat-model/SKILL.md)
+### How to use skills
+- Discovery: The list above is the skills available in this session (name + description + file path). Skill bodies live on disk at the listed paths.
+- Trigger rules: If the user names a skill (with `$SkillName` or plain text) OR the task clearly matches a skill's description shown above, you must use that skill for that turn. Multiple mentions mean use them all. Do not carry skills across turns unless re-mentioned.
+- Missing/blocked: If a named skill isn't in the list or the path can't be read, say so briefly and continue with the best fallback.
+- How to use a skill (progressive disclosure):
+  1) After deciding to use a skill, open its `SKILL.md`. Read only enough to follow the workflow.
+  2) When `SKILL.md` references relative paths (e.g., `scripts/foo.py`), resolve them relative to the skill directory listed above first, and only consider other paths if needed.
+  3) If `SKILL.md` points to extra folders such as `references/`, load only the specific files needed for the request; don't bulk-load everything.
+  4) If `scripts/` exist, prefer running or patching them instead of retyping large code blocks.
+  5) If `assets/` or templates exist, reuse them instead of recreating from scratch.
+- Coordination and sequencing:
+  - If multiple skills apply, choose the minimal set that covers the request and state the order you'll use them.
+  - Announce which skill(s) you're using and why (one short line). If you skip an obvious skill, say why.
+- Context hygiene:
+  - Keep context small: summarize long sections instead of pasting them; only load extra files when needed.
+  - Avoid deep reference-chasing: prefer opening only files directly linked from `SKILL.md` unless you're blocked.
+  - When variants exist (frameworks, providers, domains), pick only the relevant reference file(s) and note that choice.
+- Safety and fallback: If a skill can't be applied cleanly (missing files, unclear instructions), state the issue, pick the next-best approach, and continue.
+</skills_instructions>
+<plugins_instructions>
+## Plugins
+A plugin is a local bundle of skills, MCP servers, and apps. Below is the list of plugins that are enabled and available in this session.
+### Available plugins
+- `Browser`: Browser / browser-use plugin Aliases: @browser, @browser-use, browser-use, Browser, in-app browser. Use Browser, the Codex in-app browser, when the user asks to open, inspect, navigate, test, click, type, or screenshot local web targets such as localhost, 127.0.0.1, ::1, file:// URLs, or the current in-app browser tab. After significant frontend changes to a local app, use Browser to open the relevant local target when it is known or obvious, unless the user asks for another browser tool. For requests like "open localhost:3000" or "open to localhost:4000", navigate the in-app browser to http://localhost:3000 or http://localhost:4000. Do not satisfy explicit @browser or @browser-use requests with macOS `open`, shell commands, or generic web browsing unless the user asks for another browser tool or approves a fallback.
+- `GitHub`: Inspect repositories, triage pull requests and issues, debug CI, and publish changes through a hybrid GitHub connector and CLI workflow.
+### How to use plugins
+- Discovery: The list above is the plugins available in this session.
+- Skill naming: If a plugin contributes skills, those skill entries are prefixed with `plugin_name:` in the Skills list.
+- Trigger rules: If the user explicitly names a plugin, prefer capabilities associated with that plugin for that turn.
+- Relationship to capabilities: Plugins are not invoked directly. Use their underlying skills, MCP tools, and app tools to help solve the task.
+- Preference: When a relevant plugin is available, prefer using capabilities associated with that plugin over standalone capabilities that provide similar functionality.
+- Missing/blocked: If the user requests a plugin that is not listed above, or the plugin does not have relevant callable capabilities for the task, say so briefly and continue with the best fallback.
+</plugins_instructions>
+```
+
+### user 2026-05-21T17:23:53.977Z
+
+```text
+<environment_context>
+  <cwd>C:\Users\t250c\Documents\Codex\2026-05-22\new-chat</cwd>
+  <shell>powershell</shell>
+  <current_date>2026-05-22</current_date>
+  <timezone>Asia/Shanghai</timezone>
+</environment_context>
+```
+
+### user 2026-05-21T17:23:53.989Z
+
+```text
+你好
+```
+
+### user 2026-05-21T17:23:53.990Z
+
+```text
+你好
+```
+
+### assistant 2026-05-21T17:25:33.365Z
+
+```text
+你好！我在。想聊点什么，或者要我帮你处理什么事情？
+```
+
+### assistant 2026-05-21T17:25:33.370Z
+
+```text
+你好！我在。想聊点什么，或者要我帮你处理什么事情？
+```
+
+### developer 2026-05-22T03:56:31.377Z
+
+```text
+<permissions instructions>
+Filesystem sandboxing defines which files can be read or written. `sandbox_mode` is `workspace-write`: The sandbox permits reading files, and editing files in `cwd` and `writable_roots`. Editing files in other directories requires approval. Network access is restricted.
+# Approval Requests
+
+Approval policy is `granular`. Categories set to `false` are automatically rejected instead of prompting the user.
+
+These approval categories may still prompt the user when needed:
+- `mcp_elicitations`
+
+These approval categories are automatically rejected instead of prompting the user:
+- `sandbox_approval`
+- `rules`
+- `skill_approval`
+ The writable roots are `C:\Users\t250c\Documents\Codex`, `C:\Users\t250c\Documents\Codex\2026-05-22\new-chat`.
+</permissions instructions>
+```
+
+### user 2026-05-22T03:56:31.383Z
+
+```text
+恢复skill 和记忆
+```
+
+### user 2026-05-22T03:56:31.383Z
+
+```text
+恢复skill 和记忆
+```
+
+### assistant 2026-05-22T03:56:37.909Z
+
+```text
+可以。当前可用的 skill 我已经能看到并调用，例如：`imagegen`、`openai-docs`、`skill-creator`、`skill-installer`、`pdf`、`keil5-embedded-c`、GitHub 相关技能等。
+
+但“记忆”这边我不能自动恢复你之前没发到当前对话里的内容。如果你指的是某个项目背景、偏好、之前的任务进度，发我一句简短提示或相关文件/目录，我可以马上接上并重新整理成当前上下文。
+
+你想恢复的是哪一种？
+
+1. 恢复某个具体 skill 的使用流程  
+2. 恢复之前某个项目/代码任务的上下文  
+3. 帮你把一段“长期记忆/工作偏好”整理出来，后续在这个线程里沿用
+```
+
+### assistant 2026-05-22T03:56:37.914Z
+
+```text
+可以。当前可用的 skill 我已经能看到并调用，例如：`imagegen`、`openai-docs`、`skill-creator`、`skill-installer`、`pdf`、`keil5-embedded-c`、GitHub 相关技能等。
+
+但“记忆”这边我不能自动恢复你之前没发到当前对话里的内容。如果你指的是某个项目背景、偏好、之前的任务进度，发我一句简短提示或相关文件/目录，我可以马上接上并重新整理成当前上下文。
+
+你想恢复的是哪一种？
+
+1. 恢复某个具体 skill 的使用流程  
+2. 恢复之前某个项目/代码任务的上下文  
+3. 帮你把一段“长期记忆/工作偏好”整理出来，后续在这个线程里沿用
+```
+
+### user 2026-05-22T03:58:58.730Z
+
+```text
+做一个这样的函数。手柄的输入是X 和Y  范围都是0-127-255  （左右   上下）  现在手柄中位时候为O点。能测出手柄离开中位的夹角。都是以X轴为夹角。
+```
+
+### user 2026-05-22T03:58:58.730Z
+
+```text
+做一个这样的函数。手柄的输入是X 和Y  范围都是0-127-255  （左右   上下）  现在手柄中位时候为O点。能测出手柄离开中位的夹角。都是以X轴为夹角。
+```
+
+### assistant 2026-05-22T03:59:09.123Z
+
+```text
+我会按嵌入式 C 的写法给你一个可直接用的函数：输入原始 X/Y，输出相对 X 轴的角度，并处理手柄中位附近的抖动。
+```
+
+### assistant 2026-05-22T03:59:09.123Z
+
+```text
+我会按嵌入式 C 的写法给你一个可直接用的函数：输入原始 X/Y，输出相对 X 轴的角度，并处理手柄中位附近的抖动。
+```
+
+### assistant 2026-05-22T03:59:24.729Z
+
+```text
+可以，下面这个函数按你的描述来做：
+
+- `X = 0` 左，`X = 127` 中，`X = 255` 右
+- `Y = 0` 上，`Y = 127` 中，`Y = 255` 下
+- 手柄中位点是 `O(127,127)`
+- 角度以 **X 轴正方向** 为 `0°`
+- 右边 `0°`，上边 `90°`，左边 `180°`，下边 `270°`
+
+```c
+#include <stdint.h>
+#include <math.h>
+
+#define JOY_CENTER   127
+#define JOY_DEADZONE 5
+
+// 返回角度：0 ~ 359
+// 如果手柄在中位附近，返回 -1
+int16_t Get_Joystick_Angle(uint8_t x, uint8_t y)
+{
+    int16_t dx;
+    int16_t dy;
+    float angle;
+
+    dx = (int16_t)x - JOY_CENTER;
+
+    // 如果 Y=0 是上，Y=255 是下，用这一句
+    dy = JOY_CENTER - (int16_t)y;
+
+    // 中位死区，防止轻微抖动
+    if ((dx > -JOY_DEADZONE && dx < JOY_DEADZONE) &&
+        (dy > -JOY_DEADZONE && dy < JOY_DEADZONE))
+    {
+        return -1;
+    }
+
+    angle = atan2f((float)dy, (float)dx) * 180.0f / 3.1415926f;
+
+    if (angle < 0)
+    {
+        angle += 360.0f;
+    }
+
+    return (int16_t)(angle + 0.5f);
+}
+```
+
+例子：
+
+```c
+Get_Joystick_Angle(255, 127); // 0度，向右
+Get_Joystick_Angle(127, 0);   // 90度，向上
+Get_Joystick_Angle(0, 127);   // 180度，向左
+Get_Joystick_Angle(127, 255); // 270度，向下
+```
+
+如果你的手柄是 `Y=255` 表示上、`Y=0` 表示下，把这一句：
+
+```c
+dy = JOY_CENTER - (int16_t)y;
+```
+
+改成：
+
+```c
+dy = (int16_t)y - JOY_CENTER;
+```
+```
+
+### assistant 2026-05-22T03:59:24.734Z
+
+```text
+可以，下面这个函数按你的描述来做：
+
+- `X = 0` 左，`X = 127` 中，`X = 255` 右
+- `Y = 0` 上，`Y = 127` 中，`Y = 255` 下
+- 手柄中位点是 `O(127,127)`
+- 角度以 **X 轴正方向** 为 `0°`
+- 右边 `0°`，上边 `90°`，左边 `180°`，下边 `270°`
+
+```c
+#include <stdint.h>
+#include <math.h>
+
+#define JOY_CENTER   127
+#define JOY_DEADZONE 5
+
+// 返回角度：0 ~ 359
+// 如果手柄在中位附近，返回 -1
+int16_t Get_Joystick_Angle(uint8_t x, uint8_t y)
+{
+    int16_t dx;
+    int16_t dy;
+    float angle;
+
+    dx = (int16_t)x - JOY_CENTER;
+
+    // 如果 Y=0 是上，Y=255 是下，用这一句
+    dy = JOY_CENTER - (int16_t)y;
+
+    // 中位死区，防止轻微抖动
+    if ((dx > -JOY_DEADZONE && dx < JOY_DEADZONE) &&
+        (dy > -JOY_DEADZONE && dy < JOY_DEADZONE))
+    {
+        return -1;
+    }
+
+    angle = atan2f((float)dy, (float)dx) * 180.0f / 3.1415926f;
+
+    if (angle < 0)
+    {
+        angle += 360.0f;
+    }
+
+    return (int16_t)(angle + 0.5f);
+}
+```
+
+例子：
+
+```c
+Get_Joystick_Angle(255, 127); // 0度，向右
+Get_Joystick_Angle(127, 0);   // 90度，向上
+Get_Joystick_Angle(0, 127);   // 180度，向左
+Get_Joystick_Angle(127, 255); // 270度，向下
+```
+
+如果你的手柄是 `Y=255` 表示上、`Y=0` 表示下，把这一句：
+
+```c
+dy = JOY_CENTER - (int16_t)y;
+```
+
+改成：
+
+```c
+dy = (int16_t)y - JOY_CENTER;
+```
+```
+
+### user 2026-05-22T04:09:22.644Z
+
+```text
+harness
+```
+
+### user 2026-05-22T04:09:22.644Z
+
+```text
+harness
+```
+
+### assistant 2026-05-22T04:09:35.674Z
+
+```text
+下面给你一个简单的 **test harness**，可以直接放到 C 里测试角度函数。
+
+```c
+#include <stdio.h>
+#include <stdint.h>
+#include <math.h>
+
+#define JOY_CENTER   127
+#define JOY_DEADZONE 5
+
+int16_t Get_Joystick_Angle(uint8_t x, uint8_t y)
+{
+    int16_t dx;
+    int16_t dy;
+    float angle;
+
+    dx = (int16_t)x - JOY_CENTER;
+    dy = JOY_CENTER - (int16_t)y;   // Y=0 为上，Y=255 为下
+
+    if ((dx > -JOY_DEADZONE && dx < JOY_DEADZONE) &&
+        (dy > -JOY_DEADZONE && dy < JOY_DEADZONE))
+    {
+        return -1;
+    }
+
+    angle = atan2f((float)dy, (float)dx) * 180.0f / 3.1415926f;
+
+    if (angle < 0)
+    {
+        angle += 360.0f;
+    }
+
+    return (int16_t)(angle + 0.5f);
+}
+
+void Test_Joystick(uint8_t x, uint8_t y)
+{
+    int16_t angle;
+
+    angle = Get_Joystick_Angle(x, y);
+
+    if (angle < 0)
+    {
+        printf("X=%3d, Y=%3d -> CENTER\r\n", x, y);
+    }
+    else
+    {
+        printf("X=%3d, Y=%3d -> Angle=%3d deg\r\n", x, y, angle);
+    }
+}
+
+int main(void)
+{
+    Test_Joystick(127, 127); // 中位
+    Test_Joystick(255, 127); // 右，0度
+    Test_Joystick(127, 0);   // 上，90度
+    Test_Joystick(0, 127);   // 左，180度
+    Test_Joystick(127, 255); // 下，270度
+
+    Test_Joystick(255, 0);   // 右上，45度
+    Test_Joystick(0, 0);     // 左上，135度
+    Test_Joystick(0, 255);   // 左下，225度
+    Test_Joystick(255, 255); // 右下，315度
+
+    while (1)
+    {
+    }
+}
+```
+
+如果是在 Keil/C51 上没有 `atan2f()`，可以改用查表或整数近似算法。当前这个 harness 更适合先在 PC 或支持 `math.h` 的 MCU 工程里验证角度逻辑。
+```
+
+### assistant 2026-05-22T04:09:35.678Z
+
+```text
+下面给你一个简单的 **test harness**，可以直接放到 C 里测试角度函数。
+
+```c
+#include <stdio.h>
+#include <stdint.h>
+#include <math.h>
+
+#define JOY_CENTER   127
+#define JOY_DEADZONE 5
+
+int16_t Get_Joystick_Angle(uint8_t x, uint8_t y)
+{
+    int16_t dx;
+    int16_t dy;
+    float angle;
+
+    dx = (int16_t)x - JOY_CENTER;
+    dy = JOY_CENTER - (int16_t)y;   // Y=0 为上，Y=255 为下
+
+    if ((dx > -JOY_DEADZONE && dx < JOY_DEADZONE) &&
+        (dy > -JOY_DEADZONE && dy < JOY_DEADZONE))
+    {
+        return -1;
+    }
+
+    angle = atan2f((float)dy, (float)dx) * 180.0f / 3.1415926f;
+
+    if (angle < 0)
+    {
+        angle += 360.0f;
+    }
+
+    return (int16_t)(angle + 0.5f);
+}
+
+void Test_Joystick(uint8_t x, uint8_t y)
+{
+    int16_t angle;
+
+    angle = Get_Joystick_Angle(x, y);
+
+    if (angle < 0)
+    {
+        printf("X=%3d, Y=%3d -> CENTER\r\n", x, y);
+    }
+    else
+    {
+        printf("X=%3d, Y=%3d -> Angle=%3d deg\r\n", x, y, angle);
+    }
+}
+
+int main(void)
+{
+    Test_Joystick(127, 127); // 中位
+    Test_Joystick(255, 127); // 右，0度
+    Test_Joystick(127, 0);   // 上，90度
+    Test_Joystick(0, 127);   // 左，180度
+    Test_Joystick(127, 255); // 下，270度
+
+    Test_Joystick(255, 0);   // 右上，45度
+    Test_Joystick(0, 0);     // 左上，135度
+    Test_Joystick(0, 255);   // 左下，225度
+    Test_Joystick(255, 255); // 右下，315度
+
+    while (1)
+    {
+    }
+}
+```
+
+如果是在 Keil/C51 上没有 `atan2f()`，可以改用查表或整数近似算法。当前这个 harness 更适合先在 PC 或支持 `math.h` 的 MCU 工程里验证角度逻辑。
+```
+
+### user 2026-05-22T04:09:40.756Z
+
+```text
+这个停掉。你搞完了。
+```
+
+### user 2026-05-22T04:09:40.756Z
+
+```text
+这个停掉。你搞完了。
+```
+
+### assistant 2026-05-22T04:09:43.047Z
+
+```text
+好的，已停。这个函数和测试用例就先到这里。
+```
+
+### assistant 2026-05-22T04:09:43.047Z
+
+```text
+好的，已停。这个函数和测试用例就先到这里。
+```
+
+### user 2026-05-22T04:10:04.231Z
+
+```text
+harness  是什么
+```
+
+### user 2026-05-22T04:10:04.231Z
+
+```text
+harness  是什么
+```
+
+### assistant 2026-05-22T04:10:10.122Z
+
+```text
+`harness` 在这里是 **测试用的小框架/测试外壳**。
+
+也就是说，它不是正式产品功能，而是临时写一段代码来“喂数据、看结果”，确认函数算得对不对。
+
+比如你这个手柄角度函数本体是：
+
+```c
+Get_Joystick_Angle(x, y)
+```
+
+而 `test harness` 就是外面这部分：
+
+```c
+Test_Joystick(255, 127);
+Test_Joystick(127, 0);
+Test_Joystick(0, 127);
+```
+
+它的作用是模拟不同手柄输入，然后打印结果，比如：
+
+```text
+X=255, Y=127 -> Angle=0 deg
+X=127, Y=0   -> Angle=90 deg
+```
+
+中文可以理解成：
+
+- 测试架
+- 测试壳
+- 测试代码
+- 验证用程序
+
+你刚才说的 `harness`，我理解成“给这个函数写个测试代码”。
+```
+
+### assistant 2026-05-22T04:10:10.130Z
+
+```text
+`harness` 在这里是 **测试用的小框架/测试外壳**。
+
+也就是说，它不是正式产品功能，而是临时写一段代码来“喂数据、看结果”，确认函数算得对不对。
+
+比如你这个手柄角度函数本体是：
+
+```c
+Get_Joystick_Angle(x, y)
+```
+
+而 `test harness` 就是外面这部分：
+
+```c
+Test_Joystick(255, 127);
+Test_Joystick(127, 0);
+Test_Joystick(0, 127);
+```
+
+它的作用是模拟不同手柄输入，然后打印结果，比如：
+
+```text
+X=255, Y=127 -> Angle=0 deg
+X=127, Y=0   -> Angle=90 deg
+```
+
+中文可以理解成：
+
+- 测试架
+- 测试壳
+- 测试代码
+- 验证用程序
+
+你刚才说的 `harness`，我理解成“给这个函数写个测试代码”。
+```
+
+### user 2026-05-22T04:25:48.534Z
+
+```text
+我们说另外一个话题。
+```
+
+### user 2026-05-22T04:25:48.534Z
+
+```text
+我们说另外一个话题。
+```
+
+### assistant 2026-05-22T04:25:51.022Z
+
+```text
+好，换频道。你想聊什么？
+```
+
+### assistant 2026-05-22T04:25:51.022Z
+
+```text
+好，换频道。你想聊什么？
+```
+
+### user 2026-05-22T04:25:58.294Z
+
+```text
+harness  智能体里面是什么？
+```
+
+### user 2026-05-22T04:25:58.294Z
+
+```text
+harness  智能体里面是什么？
+```
+
+### assistant 2026-05-22T04:26:05.609Z
+
+```text
+在“智能体/Agent”语境里，`harness` 通常指 **运行和约束智能体的外层框架**。
+
+可以把它理解成：智能体本身是“大脑”，`harness` 是让这个大脑能工作起来的“外壳/工作台”。
+
+它一般负责这些事：
+
+- 接收用户输入
+- 把任务、历史上下文、系统规则交给模型
+- 调用工具，比如文件、浏览器、终端、数据库
+- 管理多轮对话状态
+- 控制智能体什么时候继续、什么时候停止
+- 记录日志和执行结果
+- 做安全限制，比如哪些命令能执行、哪些文件能访问
+- 评测智能体表现，比如任务有没有完成
+
+举个简单例子：
+
+```text
+用户：帮我改代码
+        ↓
+Harness：收集项目文件、规则、工具权限
+        ↓
+智能体模型：决定要读哪些文件、改哪里、跑什么测试
+        ↓
+Harness：真的去执行读文件、改文件、跑测试
+        ↓
+智能体模型：根据结果继续判断
+        ↓
+Harness：把最终结果返回给用户
+```
+
+所以在智能体里，`harness` 不是“智能”本身，而是 **把智能体接到真实环境里的运行框架**。  
+像 Codex、AutoGPT、LangChain Agent Runner、评测平台里的 agent runner，都可以有自己的 harness。
+```
+
+### assistant 2026-05-22T04:26:05.614Z
+
+```text
+在“智能体/Agent”语境里，`harness` 通常指 **运行和约束智能体的外层框架**。
+
+可以把它理解成：智能体本身是“大脑”，`harness` 是让这个大脑能工作起来的“外壳/工作台”。
+
+它一般负责这些事：
+
+- 接收用户输入
+- 把任务、历史上下文、系统规则交给模型
+- 调用工具，比如文件、浏览器、终端、数据库
+- 管理多轮对话状态
+- 控制智能体什么时候继续、什么时候停止
+- 记录日志和执行结果
+- 做安全限制，比如哪些命令能执行、哪些文件能访问
+- 评测智能体表现，比如任务有没有完成
+
+举个简单例子：
+
+```text
+用户：帮我改代码
+        ↓
+Harness：收集项目文件、规则、工具权限
+        ↓
+智能体模型：决定要读哪些文件、改哪里、跑什么测试
+        ↓
+Harness：真的去执行读文件、改文件、跑测试
+        ↓
+智能体模型：根据结果继续判断
+        ↓
+Harness：把最终结果返回给用户
+```
+
+所以在智能体里，`harness` 不是“智能”本身，而是 **把智能体接到真实环境里的运行框架**。  
+像 Codex、AutoGPT、LangChain Agent Runner、评测平台里的 agent runner，都可以有自己的 harness。
+```
+
+### user 2026-05-22T04:26:17.178Z
+
+```text
+我现在有吗？‘’
+```
+
+### user 2026-05-22T04:26:17.178Z
+
+```text
+我现在有吗？‘’
+```
+
+### assistant 2026-05-22T04:26:23.724Z
+
+```text
+有。你现在和我聊天的这个环境，本身就有一个 **agent harness**。
+
+简单说：
+
+- **我这个模型**负责思考、理解你的意图、决定下一步。
+- **harness**负责把我接到真实环境里，比如管理对话、给我工具、限制权限、让我能读写工作区文件、运行命令、调用浏览器/插件/skill 等。
+- **Codex 桌面环境**就是这个 harness 的一部分。
+
+所以你不是直接在和一个“裸模型”说话，而是在和：
+
+```text
+模型 + 工具 + 权限 + 工作区 + 对话管理
+```
+
+这一整套智能体系统交互。
+
+比如你现在这个线程里，我能看到：
+
+- 当前工作目录：`C:\Users\t250c\Documents\Codex\2026-05-22\new-chat`
+- 可写目录范围
+- 可用 skills，比如 `keil5-embedded-c`、`pdf`、`imagegen`
+- 可用工具，比如读文件、运行命令、编辑文件、浏览器插件等
+- 当前日期、shell、权限限制
+
+这些都不是模型天然知道的，是 harness 提供给我的。
+```
+
+### assistant 2026-05-22T04:26:23.730Z
+
+```text
+有。你现在和我聊天的这个环境，本身就有一个 **agent harness**。
+
+简单说：
+
+- **我这个模型**负责思考、理解你的意图、决定下一步。
+- **harness**负责把我接到真实环境里，比如管理对话、给我工具、限制权限、让我能读写工作区文件、运行命令、调用浏览器/插件/skill 等。
+- **Codex 桌面环境**就是这个 harness 的一部分。
+
+所以你不是直接在和一个“裸模型”说话，而是在和：
+
+```text
+模型 + 工具 + 权限 + 工作区 + 对话管理
+```
+
+这一整套智能体系统交互。
+
+比如你现在这个线程里，我能看到：
+
+- 当前工作目录：`C:\Users\t250c\Documents\Codex\2026-05-22\new-chat`
+- 可写目录范围
+- 可用 skills，比如 `keil5-embedded-c`、`pdf`、`imagegen`
+- 可用工具，比如读文件、运行命令、编辑文件、浏览器插件等
+- 当前日期、shell、权限限制
+
+这些都不是模型天然知道的，是 harness 提供给我的。
+```
+
+### user 2026-05-22T04:27:05.333Z
+
+```text
+在C语言处理中文注释的，有skill吗？
+```
+
+### user 2026-05-22T04:27:05.333Z
+
+```text
+在C语言处理中文注释的，有skill吗？
+```
+
+### assistant 2026-05-22T04:27:11.967Z
+
+```text
+有，当前最相关的是 **`keil5-embedded-c` skill**。
+
+它里面专门强调了 C/Keil 工程里处理中文注释时要注意：
+
+- 先判断文件编码，尤其是 **GBK/ANSI** 的 `.c/.h` 文件
+- 修改时不能随便重写成 UTF-8
+- 编辑后要重新检查中文注释有没有乱码
+- 对 Keil5、单片机 C、协议代码、硬件逻辑这些场景特别适用
+
+所以如果你给我一个 C 文件，尤其是 Keil 工程里的中文注释文件，我会按这个 skill 的规则处理：先保编码，再改代码，避免中文注释变乱码。
+
+如果只是普通 PC C 项目，也没有问题，我也会用同样原则处理中文注释。
+```
+
+### assistant 2026-05-22T04:27:11.972Z
+
+```text
+有，当前最相关的是 **`keil5-embedded-c` skill**。
+
+它里面专门强调了 C/Keil 工程里处理中文注释时要注意：
+
+- 先判断文件编码，尤其是 **GBK/ANSI** 的 `.c/.h` 文件
+- 修改时不能随便重写成 UTF-8
+- 编辑后要重新检查中文注释有没有乱码
+- 对 Keil5、单片机 C、协议代码、硬件逻辑这些场景特别适用
+
+所以如果你给我一个 C 文件，尤其是 Keil 工程里的中文注释文件，我会按这个 skill 的规则处理：先保编码，再改代码，避免中文注释变乱码。
+
+如果只是普通 PC C 项目，也没有问题，我也会用同样原则处理中文注释。
+```
+
+### user 2026-05-22T04:31:57.527Z
+
+```text
+你查下，看有没有openCV的skill 以及视觉这块的。
+```
+
+### user 2026-05-22T04:31:57.527Z
+
+```text
+你查下，看有没有openCV的skill 以及视觉这块的。
+```
+
+### assistant 2026-05-22T04:32:02.558Z
+
+```text
+我先查一下当前可用的 skill/工具清单里有没有 OpenCV 或视觉相关的内容，再告诉你准确结果。
+```
+
+### assistant 2026-05-22T04:32:02.564Z
+
+```text
+我先查一下当前可用的 skill/工具清单里有没有 OpenCV 或视觉相关的内容，再告诉你准确结果。
+```
+
+### assistant 2026-05-22T04:32:08.436Z
+
+```text
+目前列出来的 skill 里没看到名字直接叫 OpenCV 的。我再搜一下 skill 内容里有没有提到 opencv、vision、camera、image processing 这些关键词。
+```
+
+### assistant 2026-05-22T04:32:08.442Z
+
+```text
+目前列出来的 skill 里没看到名字直接叫 OpenCV 的。我再搜一下 skill 内容里有没有提到 opencv、vision、camera、image processing 这些关键词。
+```
+
+### assistant 2026-05-22T04:32:16.512Z
+
+```text
+查了，**当前没有专门的 OpenCV skill，也没有专门的“机器视觉/图像处理”skill**。
+
+目前和视觉沾边的只有这些：
+
+- `imagegen`：偏 AI 生成/编辑图片，不是 OpenCV 算法开发。
+- `browser`：浏览器自动化里有“vision”能力，用来识别网页画面，不是工业视觉/OpenCV。
+- `pdf` / 文档类 skill：会做页面渲染检查，也不是视觉算法。
+- `keil5-embedded-c`：偏单片机/Keil/C/硬件协议，能帮你处理摄像头模块、串口图像数据、屏幕显示这类嵌入式部分，但不是 OpenCV 专项。
+
+所以答案是：**没有现成 OpenCV skill**。
+
+不过我们可以新建一个，比如叫：
+
+```text
+opencv-vision
+```
+
+它可以专门覆盖：
+
+- OpenCV C++ / Python
+- 摄像头采集
+- 阈值分割、轮廓、边缘检测
+- 模板匹配
+- 标定、畸变校正、透视变换
+- 颜色识别、目标检测前处理
+- 工业视觉流程
+- 和单片机/串口/PLC 联动
+- 图像调试时保存中间图、标注结果、验证算法
+
+你要是愿意，我可以直接帮你创建这个 skill。
+```
+
+### assistant 2026-05-22T04:32:16.518Z
+
+```text
+查了，**当前没有专门的 OpenCV skill，也没有专门的“机器视觉/图像处理”skill**。
+
+目前和视觉沾边的只有这些：
+
+- `imagegen`：偏 AI 生成/编辑图片，不是 OpenCV 算法开发。
+- `browser`：浏览器自动化里有“vision”能力，用来识别网页画面，不是工业视觉/OpenCV。
+- `pdf` / 文档类 skill：会做页面渲染检查，也不是视觉算法。
+- `keil5-embedded-c`：偏单片机/Keil/C/硬件协议，能帮你处理摄像头模块、串口图像数据、屏幕显示这类嵌入式部分，但不是 OpenCV 专项。
+
+所以答案是：**没有现成 OpenCV skill**。
+
+不过我们可以新建一个，比如叫：
+
+```text
+opencv-vision
+```
+
+它可以专门覆盖：
+
+- OpenCV C++ / Python
+- 摄像头采集
+- 阈值分割、轮廓、边缘检测
+- 模板匹配
+- 标定、畸变校正、透视变换
+- 颜色识别、目标检测前处理
+- 工业视觉流程
+- 和单片机/串口/PLC 联动
+- 图像调试时保存中间图、标注结果、验证算法
+
+你要是愿意，我可以直接帮你创建这个 skill。
+```
+
+### user 2026-05-22T04:32:27.438Z
+
+```text
+你到网上帮我找现成的。
+```
+
+### user 2026-05-22T04:32:27.438Z
+
+```text
+你到网上帮我找现成的。
+```
+
+### assistant 2026-05-22T04:33:04.916Z
+
+```text
+我网上查到了，**有现成的 OpenCV / 视觉类 Agent Skill**，不是你本地已经装好的，但可以安装。
+
+比较合适的几个：
+
+1. **G1Joshi / opencv**
+   - 地址：[agentskill.sh/@g1joshi/opencv](https://agentskill.sh/%40g1joshi/opencv)
+   - 来源仓库：`G1Joshi/Agent-Skills`
+   - 内容偏基础 OpenCV：图像缩放、裁剪、颜色空间、Canny、SIFT/ORB、摄像头/视频读写、DNN 推理。
+   - 安装路径说明里明确支持 Codex：`~/.codex/skills/g1joshi/opencv/SKILL.md`
+   - 这个最像你说的“OpenCV skill”。
+
+2. **TerminalSkills / opencv**
+   - 搜索结果页：[SkillsMP - TerminalSkills opencv](https://skillsmp.com/skills/terminalskills-skills-skills-opencv-skill-md)
+   - 描述更完整，覆盖 Python / C++ / JavaScript 的 OpenCV，目标检测、视频分析、AR、文档处理、相机标定、3D 重建、DNN 推理。
+   - 看起来比 G1Joshi 那个更“大而全”。
+
+3. **Senior Computer Vision Engineer**
+   - 地址：[agent-skills.md - senior-computer-vision](https://agent-skills.md/skills/ovachiever/droid-tings/senior-computer-vision)
+   - 偏高级视觉/AI：OpenCV、YOLO、SAM、ViT、PyTorch、部署优化、实时推理。
+   - 适合做 AI 视觉系统，不只是传统 OpenCV。
+
+4. **Robot Perception**
+   - 搜索结果显示它覆盖 OpenCV、Open3D、PCL、RealSense、ZED、OAK-D、AprilTags、ArUco、双目视觉、RGBD、点云、相机标定。
+   - 这个适合机器人视觉、深度相机、3D 感知方向。
+
+我的建议：  
+如果你主要做 **工业视觉 / 摄像头 / OpenCV 算法**，优先装 **TerminalSkills/opencv** 或 **G1Joshi/opencv**。  
+如果你做 **YOLO、分割、深度学习视觉**，装 **senior-computer-vision**。  
+如果你做 **机器人、深度相机、标定、AprilTag/ArUco**，找 **robot-perception** 更对口。
+
+要装的话，我建议先装 `G1Joshi/opencv`，它小，干净，范围明确。
+```
+
+### assistant 2026-05-22T04:33:04.923Z
+
+```text
+我网上查到了，**有现成的 OpenCV / 视觉类 Agent Skill**，不是你本地已经装好的，但可以安装。
+
+比较合适的几个：
+
+1. **G1Joshi / opencv**
+   - 地址：[agentskill.sh/@g1joshi/opencv](https://agentskill.sh/%40g1joshi/opencv)
+   - 来源仓库：`G1Joshi/Agent-Skills`
+   - 内容偏基础 OpenCV：图像缩放、裁剪、颜色空间、Canny、SIFT/ORB、摄像头/视频读写、DNN 推理。
+   - 安装路径说明里明确支持 Codex：`~/.codex/skills/g1joshi/opencv/SKILL.md`
+   - 这个最像你说的“OpenCV skill”。
+
+2. **TerminalSkills / opencv**
+   - 搜索结果页：[SkillsMP - TerminalSkills opencv](https://skillsmp.com/skills/terminalskills-skills-skills-opencv-skill-md)
+   - 描述更完整，覆盖 Python / C++ / JavaScript 的 OpenCV，目标检测、视频分析、AR、文档处理、相机标定、3D 重建、DNN 推理。
+   - 看起来比 G1Joshi 那个更“大而全”。
+
+3. **Senior Computer Vision Engineer**
+   - 地址：[agent-skills.md - senior-computer-vision](https://agent-skills.md/skills/ovachiever/droid-tings/senior-computer-vision)
+   - 偏高级视觉/AI：OpenCV、YOLO、SAM、ViT、PyTorch、部署优化、实时推理。
+   - 适合做 AI 视觉系统，不只是传统 OpenCV。
+
+4. **Robot Perception**
+   - 搜索结果显示它覆盖 OpenCV、Open3D、PCL、RealSense、ZED、OAK-D、AprilTags、ArUco、双目视觉、RGBD、点云、相机标定。
+   - 这个适合机器人视觉、深度相机、3D 感知方向。
+
+我的建议：  
+如果你主要做 **工业视觉 / 摄像头 / OpenCV 算法**，优先装 **TerminalSkills/opencv** 或 **G1Joshi/opencv**。  
+如果你做 **YOLO、分割、深度学习视觉**，装 **senior-computer-vision**。  
+如果你做 **机器人、深度相机、标定、AprilTag/ArUco**，找 **robot-perception** 更对口。
+
+要装的话，我建议先装 `G1Joshi/opencv`，它小，干净，范围明确。
+```
+
+### user 2026-05-22T04:37:37.723Z
+
+```text
+我都要
+```
+
+### user 2026-05-22T04:37:37.723Z
+
+```text
+我都要
+```
+
+### assistant 2026-05-22T04:37:42.933Z
+
+```text
+我会按“安装外部 skill”的流程来处理。先读一下本机的 skill 安装器说明，然后尽量用现成安装方式；如果网络权限拦住，我会把可确认的 `SKILL.md` 内容落成本地 skill。
+```
+
+### assistant 2026-05-22T04:37:42.940Z
+
+```text
+我会按“安装外部 skill”的流程来处理。先读一下本机的 skill 安装器说明，然后尽量用现成安装方式；如果网络权限拦住，我会把可确认的 `SKILL.md` 内容落成本地 skill。
+```
+
+### assistant 2026-05-22T04:38:48.189Z
+
+```text
+我查到的这几个来源路径都明确了：`G1Joshi/opencv`、`TerminalSkills/opencv`、`senior-computer-vision`、`robot-perception`。不过当前这个会话的本地文件权限不能直接写进 `C:\Users\t250c\.codex\skills`，所以我先把安装来源和命令整理准确，避免装错包。
+```
+
+### assistant 2026-05-22T04:38:48.189Z
+
+```text
+我查到的这几个来源路径都明确了：`G1Joshi/opencv`、`TerminalSkills/opencv`、`senior-computer-vision`、`robot-perception`。不过当前这个会话的本地文件权限不能直接写进 `C:\Users\t250c\.codex\skills`，所以我先把安装来源和命令整理准确，避免装错包。
+```
+
+### assistant 2026-05-22T04:38:58.374Z
+
+```text
+还有一个小细节：两个来源都叫 `opencv`，如果都装到 Codex 里会重名。我会给它们取不同目录名，比如 `opencv-g1joshi` 和 `opencv-terminalskills`，这样不会互相覆盖。
+```
+
+### assistant 2026-05-22T04:38:58.374Z
+
+```text
+还有一个小细节：两个来源都叫 `opencv`，如果都装到 Codex 里会重名。我会给它们取不同目录名，比如 `opencv-g1joshi` 和 `opencv-terminalskills`，这样不会互相覆盖。
+```
+
+### assistant 2026-05-22T04:39:11.149Z
+
+```text
+可以，我把“全都要”的安装脚本做好了：
+
+[install-vision-skills.ps1](C:/Users/t250c/Documents/Codex/2026-05-22/new-chat/install-vision-skills.ps1)
+
+里面包含这 4 个：
+
+- `opencv-g1joshi`：轻量 OpenCV 基础 skill
+- `opencv-terminalskills`：更完整的 OpenCV / 图像处理 / 视频 / DNN skill
+- `senior-computer-vision`：高级视觉、YOLO、SAM、PyTorch、部署优化
+- `robot-perception`：机器人视觉、RealSense、Open3D、PCL、AprilTag、标定、点云
+
+我没有直接执行安装，因为当前会话不能直接写入你的全局 `C:\Users\t250c\.codex\skills` 目录。运行这个脚本后，重启 Codex 才会识别新 skill。
+```
+
+### assistant 2026-05-22T04:39:11.154Z
+
+```text
+可以，我把“全都要”的安装脚本做好了：
+
+[install-vision-skills.ps1](C:/Users/t250c/Documents/Codex/2026-05-22/new-chat/install-vision-skills.ps1)
+
+里面包含这 4 个：
+
+- `opencv-g1joshi`：轻量 OpenCV 基础 skill
+- `opencv-terminalskills`：更完整的 OpenCV / 图像处理 / 视频 / DNN skill
+- `senior-computer-vision`：高级视觉、YOLO、SAM、PyTorch、部署优化
+- `robot-perception`：机器人视觉、RealSense、Open3D、PCL、AprilTag、标定、点云
+
+我没有直接执行安装，因为当前会话不能直接写入你的全局 `C:\Users\t250c\.codex\skills` 目录。运行这个脚本后，重启 Codex 才会识别新 skill。
+```
+
+### user 2026-05-22T04:41:22.173Z
+
+```text
+.ps1 怎么打开？
+```
+
+### user 2026-05-22T04:41:22.173Z
+
+```text
+.ps1 怎么打开？
+```
+
+### assistant 2026-05-22T04:41:29.601Z
+
+```text
+`.ps1` 是 **PowerShell 脚本**。你可以这样打开/运行：
+
+1. 在文件管理器里打开这个文件夹：
+
+```text
+C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+```
+
+2. 找到：
+
+```text
+install-vision-skills.ps1
+```
+
+3. 在这个文件夹空白处 **右键**，选择 **“在终端中打开”** 或 **“在 PowerShell 中打开”**。
+
+4. 输入这句运行：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+如果提示“不允许运行脚本”，先在同一个窗口输入：
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+然后再运行：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+装完后，**重启 Codex**，新 skill 才会生效。
+```
+
+### assistant 2026-05-22T04:41:29.605Z
+
+```text
+`.ps1` 是 **PowerShell 脚本**。你可以这样打开/运行：
+
+1. 在文件管理器里打开这个文件夹：
+
+```text
+C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+```
+
+2. 找到：
+
+```text
+install-vision-skills.ps1
+```
+
+3. 在这个文件夹空白处 **右键**，选择 **“在终端中打开”** 或 **“在 PowerShell 中打开”**。
+
+4. 输入这句运行：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+如果提示“不允许运行脚本”，先在同一个窗口输入：
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+然后再运行：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+装完后，**重启 Codex**，新 skill 才会生效。
+```
+
+### user 2026-05-22T05:03:59.664Z
+
+```text
+现在装好了吗？
+```
+
+### user 2026-05-22T05:03:59.664Z
+
+```text
+现在装好了吗？
+```
+
+### assistant 2026-05-22T05:04:05.372Z
+
+```text
+我来检查一下你的本地 skill 目录，看这几个视觉 skill 是否已经出现。
+```
+
+### assistant 2026-05-22T05:04:05.379Z
+
+```text
+我来检查一下你的本地 skill 目录，看这几个视觉 skill 是否已经出现。
+```
+
+### assistant 2026-05-22T05:04:13.864Z
+
+```text
+还没有装好。
+
+我刚检查了你的本地 skill 目录，目前还只有这些：
+
+- `imagegen`
+- `openai-docs`
+- `plugin-creator`
+- `skill-creator`
+- `skill-installer`
+- `keil5-embedded-c`
+- `pdf`
+- `security-best-practices`
+- `security-threat-model`
+
+没有看到：
+
+- `opencv-g1joshi`
+- `opencv-terminalskills`
+- `senior-computer-vision`
+- `robot-perception`
+
+所以那个 `.ps1` 脚本还没成功运行，或者运行时失败了。
+
+你可以在 PowerShell 里运行：
+
+```powershell
+cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\install-vision-skills.ps1
+```
+
+如果报错，把报错内容发我，我帮你看。
+```
+
+### assistant 2026-05-22T05:04:13.869Z
+
+```text
+还没有装好。
+
+我刚检查了你的本地 skill 目录，目前还只有这些：
+
+- `imagegen`
+- `openai-docs`
+- `plugin-creator`
+- `skill-creator`
+- `skill-installer`
+- `keil5-embedded-c`
+- `pdf`
+- `security-best-practices`
+- `security-threat-model`
+
+没有看到：
+
+- `opencv-g1joshi`
+- `opencv-terminalskills`
+- `senior-computer-vision`
+- `robot-perception`
+
+所以那个 `.ps1` 脚本还没成功运行，或者运行时失败了。
+
+你可以在 PowerShell 里运行：
+
+```powershell
+cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\install-vision-skills.ps1
+```
+
+如果报错，把报错内容发我，我帮你看。
+```
+
+### user 2026-05-22T05:04:59.033Z
+
+```text
+PS C:\Users\t250c> cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+
+Done. Restart Codex to pick up new skills.
+```
+
+### user 2026-05-22T05:04:59.033Z
+
+```text
+PS C:\Users\t250c> cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+
+Done. Restart Codex to pick up new skills.
+```
+
+### assistant 2026-05-22T05:05:03.271Z
+
+```text
+这个报错说明脚本没真正安装：Windows 找不到 `python`，最后那句 Done 是脚本写得太乐观了。别急，我来找一下 Codex 自带的 Python 路径，然后把脚本改成不用系统 Python。
+```
+
+### assistant 2026-05-22T05:05:03.271Z
+
+```text
+这个报错说明脚本没真正安装：Windows 找不到 `python`，最后那句 Done 是脚本写得太乐观了。别急，我来找一下 Codex 自带的 Python 路径，然后把脚本改成不用系统 Python。
+```
+
+### assistant 2026-05-22T05:05:05.837Z
+
+```text
+找到了，Codex 自带 Python 在缓存目录里。我会把脚本改成固定使用这个路径，并且让安装失败时立刻停下来，不再假装成功。
+```
+
+### assistant 2026-05-22T05:05:05.837Z
+
+```text
+找到了，Codex 自带 Python 在缓存目录里。我会把脚本改成固定使用这个路径，并且让安装失败时立刻停下来，不再假装成功。
+```
+
+### assistant 2026-05-22T05:05:18.329Z
+
+```text
+还没装好，原因找到了：你的系统里没有全局 `python` 命令，所以安装器没跑起来。
+
+我已经把脚本改好了，现在它会使用 Codex 自带的 Python：
+
+[install-vision-skills.ps1](C:/Users/t250c/Documents/Codex/2026-05-22/new-chat/install-vision-skills.ps1)
+
+你重新运行一次：
+
+```powershell
+cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\install-vision-skills.ps1
+```
+
+这次如果某个 skill 安装失败，它会直接报错停下，不会再显示假的 `Done`。运行完把结果发我，我再帮你确认是否全部装上。
+```
+
+### assistant 2026-05-22T05:05:18.334Z
+
+```text
+还没装好，原因找到了：你的系统里没有全局 `python` 命令，所以安装器没跑起来。
+
+我已经把脚本改好了，现在它会使用 Codex 自带的 Python：
+
+[install-vision-skills.ps1](C:/Users/t250c/Documents/Codex/2026-05-22/new-chat/install-vision-skills.ps1)
+
+你重新运行一次：
+
+```powershell
+cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\install-vision-skills.ps1
+```
+
+这次如果某个 skill 安装失败，它会直接报错停下，不会再显示假的 `Done`。运行完把结果发我，我再帮你确认是否全部装上。
+```
+
+### user 2026-05-22T05:05:30.880Z
+
+```text
+你帮我安装python
+```
+
+### user 2026-05-22T05:05:30.880Z
+
+```text
+你帮我安装python
+```
+
+### assistant 2026-05-22T05:05:40.204Z
+
+```text
+可以，不过这件事分两种：
+
+**为了安装 skill：不需要再装 Python。**  
+我已经把脚本改成使用 Codex 自带的 Python 了，你直接重新运行这个就行：
+
+```powershell
+cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\install-vision-skills.ps1
+```
+
+**如果你想给 Windows 系统正式安装 Python**，推荐用这个方式：
+
+```powershell
+winget install Python.Python.3.12
+```
+
+装完后关闭 PowerShell，重新打开，再检查：
+
+```powershell
+python --version
+```
+
+如果显示类似：
+
+```text
+Python 3.12.x
+```
+
+就好了。
+
+你现在这个需求其实先跑我改过的脚本就够了；系统 Python 可以以后再装。
+```
+
+### assistant 2026-05-22T05:05:40.204Z
+
+```text
+可以，不过这件事分两种：
+
+**为了安装 skill：不需要再装 Python。**  
+我已经把脚本改成使用 Codex 自带的 Python 了，你直接重新运行这个就行：
+
+```powershell
+cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\install-vision-skills.ps1
+```
+
+**如果你想给 Windows 系统正式安装 Python**，推荐用这个方式：
+
+```powershell
+winget install Python.Python.3.12
+```
+
+装完后关闭 PowerShell，重新打开，再检查：
+
+```powershell
+python --version
+```
+
+如果显示类似：
+
+```text
+Python 3.12.x
+```
+
+就好了。
+
+你现在这个需求其实先跑我改过的脚本就够了；系统 Python 可以以后再装。
+```
+
+### user 2026-05-22T05:15:07.056Z
+
+```text
+  File "C:\Users\t250c\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\t250c\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] 系统找不到指定的文件。
+```
+
+### user 2026-05-22T05:15:07.056Z
+
+```text
+  File "C:\Users\t250c\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\t250c\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] 系统找不到指定的文件。
+```
+
+### assistant 2026-05-22T05:15:14.157Z
+
+```text
+这个报错不是 Python 本身的问题了，像是安装器内部想调用某个外部程序但找不到，常见是 `git`。我先看一下安装器脚本的调用逻辑，把脚本改成尽量走“直接下载”，避免依赖你系统里的 git。
+```
+
+### assistant 2026-05-22T05:15:14.162Z
+
+```text
+这个报错不是 Python 本身的问题了，像是安装器内部想调用某个外部程序但找不到，常见是 `git`。我先看一下安装器脚本的调用逻辑，把脚本改成尽量走“直接下载”，避免依赖你系统里的 git。
+```
+
+### assistant 2026-05-22T05:15:23.000Z
+
+```text
+我已经确认安装器默认 `auto`，下载失败时会退到 `git`，而你机器大概率没有 git，所以出了 WinError 2。我现在把脚本改成强制 `download`，并且每一步检查退出码。
+```
+
+### assistant 2026-05-22T05:15:23.000Z
+
+```text
+我已经确认安装器默认 `auto`，下载失败时会退到 `git`，而你机器大概率没有 git，所以出了 WinError 2。我现在把脚本改成强制 `download`，并且每一步检查退出码。
+```
+
+### assistant 2026-05-22T05:15:35.429Z
+
+```text
+这个报错说明：Python 已经能跑了，但安装器退到了 `git` 模式，而你电脑上找不到 `git`，所以报了：
+
+```text
+FileNotFoundError: [WinError 2]
+```
+
+我已经把脚本改好了，现在强制使用 **download 下载模式**，不再依赖 `git`：
+
+[install-vision-skills.ps1](C:/Users/t250c/Documents/Codex/2026-05-22/new-chat/install-vision-skills.ps1)
+
+你重新运行：
+
+```powershell
+cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+.\install-vision-skills.ps1
+```
+
+如果这次还有报错，大概率就是某个仓库路径不对或 GitHub 下载失败。把完整报错发我，我继续给你修。
+```
+
+### assistant 2026-05-22T05:15:35.435Z
+
+```text
+这个报错说明：Python 已经能跑了，但安装器退到了 `git` 模式，而你电脑上找不到 `git`，所以报了：
+
+```text
+FileNotFoundError: [WinError 2]
+```
+
+我已经把脚本改好了，现在强制使用 **download 下载模式**，不再依赖 `git`：
+
+[install-vision-skills.ps1](C:/Users/t250c/Documents/Codex/2026-05-22/new-chat/install-vision-skills.ps1)
+
+你重新运行：
+
+```powershell
+cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+.\install-vision-skills.ps1
+```
+
+如果这次还有报错，大概率就是某个仓库路径不对或 GitHub 下载失败。把完整报错发我，我继续给你修。
+```
+
+### user 2026-05-22T05:16:23.393Z
+
+```text
+PS C:\Users\t250c> cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+.\install-vision-skills.ps1 : 无法加载文件 C:\Users\t250c\Documents\Codex\2026-05-22\new-chat\install-vision-skills.ps1
+，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_P
+olicies。
+所在位置 行:1 字符: 1
++ .\install-vision-skills.ps1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : SecurityError: (:) []，PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat>
+```
+
+### user 2026-05-22T05:16:23.394Z
+
+```text
+PS C:\Users\t250c> cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+.\install-vision-skills.ps1 : 无法加载文件 C:\Users\t250c\Documents\Codex\2026-05-22\new-chat\install-vision-skills.ps1
+，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_P
+olicies。
+所在位置 行:1 字符: 1
++ .\install-vision-skills.ps1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : SecurityError: (:) []，PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat>
+```
+
+### assistant 2026-05-22T05:16:28.925Z
+
+```text
+这是 PowerShell 的脚本执行策略拦住了。你这次少跑了这一句。
+
+在当前这个窗口里先输入：
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+然后再运行：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+完整就是：
+
+```powershell
+cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\install-vision-skills.ps1
+```
+
+`-Scope Process` 只对当前 PowerShell 窗口生效，关掉窗口后就恢复，不会永久改系统设置。
+```
+
+### assistant 2026-05-22T05:16:28.930Z
+
+```text
+这是 PowerShell 的脚本执行策略拦住了。你这次少跑了这一句。
+
+在当前这个窗口里先输入：
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+然后再运行：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+完整就是：
+
+```powershell
+cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\install-vision-skills.ps1
+```
+
+`-Scope Process` 只对当前 PowerShell 窗口生效，关掉窗口后就恢复，不会永久改系统设置。
+```
+
+### user 2026-05-22T05:17:00.427Z
+
+```text
+.\install-vision-skills.ps1 : 无法加载文件 C:\Users\t250c\Documents\Codex\2026-05-22\new-chat\install-vision-skills.ps1
+，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_P
+olicies。
+所在位置 行:1 字符: 1
++ .\install-vision-skills.ps1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : SecurityError: (:) []，PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+Error: Destination already exists: C:\Users\t250c/.codex\skills\opencv-g1joshi
+Install failed: G1Joshi/Agent-Skills / skills/AI-ML/opencv
+所在位置 C:\Users\t250c\Documents\Codex\2026-05-22\new-chat\install-vision-skills.ps1:28 字符: 9
++         throw "Install failed: $Repo / $Path"
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Install failed:...ls/AI-ML/opencv:String) [], RuntimeException
+    + FullyQualifiedErrorId : Install failed: G1Joshi/Agent-Skills / skills/AI-ML/opencv
+```
+
+### user 2026-05-22T05:17:00.427Z
+
+```text
+.\install-vision-skills.ps1 : 无法加载文件 C:\Users\t250c\Documents\Codex\2026-05-22\new-chat\install-vision-skills.ps1
+，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_P
+olicies。
+所在位置 行:1 字符: 1
++ .\install-vision-skills.ps1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : SecurityError: (:) []，PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> cd C:\Users\t250c\Documents\Codex\2026-05-22\new-chat
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+Error: Destination already exists: C:\Users\t250c/.codex\skills\opencv-g1joshi
+Install failed: G1Joshi/Agent-Skills / skills/AI-ML/opencv
+所在位置 C:\Users\t250c\Documents\Codex\2026-05-22\new-chat\install-vision-skills.ps1:28 字符: 9
++         throw "Install failed: $Repo / $Path"
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Install failed:...ls/AI-ML/opencv:String) [], RuntimeException
+    + FullyQualifiedErrorId : Install failed: G1Joshi/Agent-Skills / skills/AI-ML/opencv
+```
+
+### assistant 2026-05-22T05:17:06.671Z
+
+```text
+好，这次已经前进了一步：`opencv-g1joshi` 目录已经存在，说明至少第一个可能装了一部分或之前已经装好。我要检查它是不是完整 skill，然后把脚本改成“已存在就跳过”，继续安装剩下几个。
+```
+
+### assistant 2026-05-22T05:17:06.678Z
+
+```text
+好，这次已经前进了一步：`opencv-g1joshi` 目录已经存在，说明至少第一个可能装了一部分或之前已经装好。我要检查它是不是完整 skill，然后把脚本改成“已存在就跳过”，继续安装剩下几个。
+```
+
+### assistant 2026-05-22T05:17:09.744Z
+
+```text
+检查到了：`opencv-g1joshi` 已完整存在，而且 `opencv-terminalskills` 目录也已经出现了。我继续确认剩下两个，并把脚本变成可重复运行版本。
+```
+
+### assistant 2026-05-22T05:17:09.744Z
+
+```text
+检查到了：`opencv-g1joshi` 已完整存在，而且 `opencv-terminalskills` 目录也已经出现了。我继续确认剩下两个，并把脚本变成可重复运行版本。
+```
+
+### assistant 2026-05-22T05:17:23.160Z
+
+```text
+现在情况是：**前两个已经装上了**。
+
+我检查到：
+
+- `opencv-g1joshi`：已安装，`SKILL.md` 存在
+- `opencv-terminalskills`：已安装，`SKILL.md` 存在
+- `senior-computer-vision`：还没看到
+- `robot-perception`：还没看到
+
+刚才失败是因为脚本遇到“已存在目录”就停了。我已经把脚本改成了：**已安装就跳过，继续装后面的**。
+
+你现在再运行一次：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+它应该会显示前两个 `Already installed`，然后继续安装后两个。运行完把输出发我，我再帮你最终确认。
+```
+
+### assistant 2026-05-22T05:17:23.160Z
+
+```text
+现在情况是：**前两个已经装上了**。
+
+我检查到：
+
+- `opencv-g1joshi`：已安装，`SKILL.md` 存在
+- `opencv-terminalskills`：已安装，`SKILL.md` 存在
+- `senior-computer-vision`：还没看到
+- `robot-perception`：还没看到
+
+刚才失败是因为脚本遇到“已存在目录”就停了。我已经把脚本改成了：**已安装就跳过，继续装后面的**。
+
+你现在再运行一次：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+它应该会显示前两个 `Already installed`，然后继续安装后两个。运行完把输出发我，我再帮你最终确认。
+```
+
+### user 2026-05-22T05:17:53.486Z
+
+```text
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+Already installed: opencv-g1joshi
+Already installed: opencv-terminalskills
+Error: Download failed: HTTP 404
+Install failed: ovachiever/droid-tings / skills/senior-computer-vision
+所在位置 C:\Users\t250c\Documents\Codex\2026-05-22\new-chat\install-vision-skills.ps1:43 字符: 9
++         throw "Install failed: $Repo / $Path"
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Install failed:...computer-vision:String) [], RuntimeException
+    + FullyQualifiedErrorId : Install failed: ovachiever/droid-tings / skills/senior-computer-vision
+```
+
+### user 2026-05-22T05:17:53.486Z
+
+```text
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+Already installed: opencv-g1joshi
+Already installed: opencv-terminalskills
+Error: Download failed: HTTP 404
+Install failed: ovachiever/droid-tings / skills/senior-computer-vision
+所在位置 C:\Users\t250c\Documents\Codex\2026-05-22\new-chat\install-vision-skills.ps1:43 字符: 9
++         throw "Install failed: $Repo / $Path"
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Install failed:...computer-vision:String) [], RuntimeException
+    + FullyQualifiedErrorId : Install failed: ovachiever/droid-tings / skills/senior-computer-vision
+```
+
+### assistant 2026-05-22T05:17:58.033Z
+
+```text
+前两个已经稳了。`senior-computer-vision` 这个源返回 404，说明我之前拿到的来源页不是可直接下载的 GitHub 路径，得重新定位真实仓库路径。
+```
+
+### assistant 2026-05-22T05:17:58.033Z
+
+```text
+前两个已经稳了。`senior-computer-vision` 这个源返回 404，说明我之前拿到的来源页不是可直接下载的 GitHub 路径，得重新定位真实仓库路径。
+```
+
+### assistant 2026-05-22T05:18:23.805Z
+
+```text
+我重新查到一个可下载的 `senior-computer-vision` GitHub 路径：在 `majiayu000/claude-skill-registry` 里，不是刚才那个 `ovachiever/droid-tings`。我把脚本改到这个源上。
+```
+
+### assistant 2026-05-22T05:18:23.806Z
+
+```text
+我重新查到一个可下载的 `senior-computer-vision` GitHub 路径：在 `majiayu000/claude-skill-registry` 里，不是刚才那个 `ovachiever/droid-tings`。我把脚本改到这个源上。
+```
+
+### assistant 2026-05-22T05:18:30.803Z
+
+```text
+这个 404 是源路径错了。我已经重新查到可下载的来源，并把脚本改好了：
+
+- `senior-computer-vision` 改为：`majiayu000/claude-skill-registry`
+- 路径改为：`skills/other/senior-computer-vision-alirezarezvani-claude-skills`
+
+你现在再运行一次：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+它会跳过前两个已安装的，然后继续安装：
+
+- `senior-computer-vision`
+- `robot-perception`
+
+跑完把输出发我，我帮你最后验收。
+```
+
+### assistant 2026-05-22T05:18:30.803Z
+
+```text
+这个 404 是源路径错了。我已经重新查到可下载的来源，并把脚本改好了：
+
+- `senior-computer-vision` 改为：`majiayu000/claude-skill-registry`
+- 路径改为：`skills/other/senior-computer-vision-alirezarezvani-claude-skills`
+
+你现在再运行一次：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+它会跳过前两个已安装的，然后继续安装：
+
+- `senior-computer-vision`
+- `robot-perception`
+
+跑完把输出发我，我帮你最后验收。
+```
+
+### user 2026-05-22T08:08:41.169Z
+
+```text
+Already installed: opencv-g1joshi
+Already installed: opencv-terminalskills
+```
+
+### user 2026-05-22T08:08:41.169Z
+
+```text
+Already installed: opencv-g1joshi
+Already installed: opencv-terminalskills
+```
+
+### assistant 2026-05-22T08:08:49.879Z
+
+```text
+你这次只贴了前两行，说明脚本至少已经跳过前两个了，但我还不知道后两个有没有继续输出或是否卡住/报错。
+
+先别关窗口，看它后面有没有继续显示：
+
+- `Installed senior-computer-vision ...`
+- `Installed robot-perception ...`
+- 或者新的 `Error: ...`
+
+如果窗口已经回到提示符 `PS ...>`，你可以在 PowerShell 里跑这个检查：
+
+```powershell
+Get-ChildItem C:\Users\t250c\.codex\skills -Directory | Select-Object -ExpandProperty Name
+```
+
+正常最终应该能看到这几个：
+
+```text
+opencv-g1joshi
+opencv-terminalskills
+senior-computer-vision
+robot-perception
+```
+
+把检查结果发我，我就能确认装没装齐。
+```
+
+### assistant 2026-05-22T08:08:49.883Z
+
+```text
+你这次只贴了前两行，说明脚本至少已经跳过前两个了，但我还不知道后两个有没有继续输出或是否卡住/报错。
+
+先别关窗口，看它后面有没有继续显示：
+
+- `Installed senior-computer-vision ...`
+- `Installed robot-perception ...`
+- 或者新的 `Error: ...`
+
+如果窗口已经回到提示符 `PS ...>`，你可以在 PowerShell 里跑这个检查：
+
+```powershell
+Get-ChildItem C:\Users\t250c\.codex\skills -Directory | Select-Object -ExpandProperty Name
+```
+
+正常最终应该能看到这几个：
+
+```text
+opencv-g1joshi
+opencv-terminalskills
+senior-computer-vision
+robot-perception
+```
+
+把检查结果发我，我就能确认装没装齐。
+```
+
+### user 2026-05-22T08:09:06.939Z
+
+```text
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+Already installed: opencv-g1joshi
+Already installed: opencv-terminalskills
+```
+
+### user 2026-05-22T08:09:06.939Z
+
+```text
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+Already installed: opencv-g1joshi
+Already installed: opencv-terminalskills
+```
+
+### assistant 2026-05-22T08:09:11.454Z
+
+```text
+看这个输出还没有回到 `PS ...>` 的下一行，可能是在下载第三个 skill，也可能卡在 GitHub 请求上。我这边直接帮你查一下本地目录现在有没有新增后两个。
+```
+
+### assistant 2026-05-22T08:09:11.454Z
+
+```text
+看这个输出还没有回到 `PS ...>` 的下一行，可能是在下载第三个 skill，也可能卡在 GitHub 请求上。我这边直接帮你查一下本地目录现在有没有新增后两个。
+```
+
+### assistant 2026-05-22T08:09:17.501Z
+
+```text
+本地还没有新增 `senior-computer-vision` 和 `robot-perception`。现在这次运行大概率是在第三个下载请求上等着，没有明显进度提示。
+```
+
+### assistant 2026-05-22T08:09:17.501Z
+
+```text
+本地还没有新增 `senior-computer-vision` 和 `robot-perception`。现在这次运行大概率是在第三个下载请求上等着，没有明显进度提示。
+```
+
+### assistant 2026-05-22T08:09:42.009Z
+
+```text
+我查到更可靠的来源了：`senior-computer-vision` 的真实路径应是 `alirezarezvani/claude-skills` 里的 `engineering-team/senior-computer-vision`。另外，`majiayu000/claude-skill-registry` 可能仓库太大，用原安装器下载整包容易卡住。
+```
+
+### assistant 2026-05-22T08:09:42.009Z
+
+```text
+我查到更可靠的来源了：`senior-computer-vision` 的真实路径应是 `alirezarezvani/claude-skills` 里的 `engineering-team/senior-computer-vision`。另外，`majiayu000/claude-skill-registry` 可能仓库太大，用原安装器下载整包容易卡住。
+```
+
+### assistant 2026-05-22T08:09:48.613Z
+
+```text
+我会把安装脚本换成一个更稳的版本：不下载整个仓库，也不依赖 Python 或 git，只按 GitHub 目录逐个下载 skill 文件。这样更适合你现在这台机器。
+```
+
+### assistant 2026-05-22T08:09:48.613Z
+
+```text
+我会把安装脚本换成一个更稳的版本：不下载整个仓库，也不依赖 Python 或 git，只按 GitHub 目录逐个下载 skill 文件。这样更适合你现在这台机器。
+```
+
+### assistant 2026-05-22T08:10:14.181Z
+
+```text
+你现在这个运行很可能还在卡住。先在那个 PowerShell 窗口按：
+
+```text
+Ctrl + C
+```
+
+停掉它。
+
+我已经把 [install-vision-skills.ps1](C:/Users/t250c/Documents/Codex/2026-05-22/new-chat/install-vision-skills.ps1) 换成了新版：
+
+- 不依赖系统 Python
+- 不依赖 git
+- 不下载整个大仓库
+- 只从 GitHub 按目录逐个下载 skill 文件
+- 已装的会跳过
+
+然后重新运行：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+正常应该看到类似：
+
+```text
+Already installed: opencv-g1joshi
+Already installed: opencv-terminalskills
+Installed: senior-computer-vision
+Installed: robot-perception
+
+Done. Restart Codex to pick up new skills.
+```
+
+装完后要重启 Codex，新的 skill 才会进入可用列表。
+```
+
+### assistant 2026-05-22T08:10:14.186Z
+
+```text
+你现在这个运行很可能还在卡住。先在那个 PowerShell 窗口按：
+
+```text
+Ctrl + C
+```
+
+停掉它。
+
+我已经把 [install-vision-skills.ps1](C:/Users/t250c/Documents/Codex/2026-05-22/new-chat/install-vision-skills.ps1) 换成了新版：
+
+- 不依赖系统 Python
+- 不依赖 git
+- 不下载整个大仓库
+- 只从 GitHub 按目录逐个下载 skill 文件
+- 已装的会跳过
+
+然后重新运行：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+正常应该看到类似：
+
+```text
+Already installed: opencv-g1joshi
+Already installed: opencv-terminalskills
+Installed: senior-computer-vision
+Installed: robot-perception
+
+Done. Restart Codex to pick up new skills.
+```
+
+装完后要重启 Codex，新的 skill 才会进入可用列表。
+```
+
+### user 2026-05-22T08:10:55.403Z
+
+```text
+
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+Already installed: opencv-g1joshi
+Already installed: opencv-terminalskills
+Invoke-RestMethod : {"message":"Not Found","documentation_url":"https://docs.github.com/rest/repos/contents#get-reposit
+ory-content","status":"404"}
+所在位置 C:\Users\t250c\Documents\Codex\2026-05-22\new-chat\install-vision-skills.ps1:62 字符: 14
++     $Items = Invoke-RestMethod -Uri $ApiUrl -Headers $Headers
++              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod]，WebExce
+    ption
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat>
+```
+
+### user 2026-05-22T08:10:55.404Z
+
+```text
+
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+Already installed: opencv-g1joshi
+Already installed: opencv-terminalskills
+Invoke-RestMethod : {"message":"Not Found","documentation_url":"https://docs.github.com/rest/repos/contents#get-reposit
+ory-content","status":"404"}
+所在位置 C:\Users\t250c\Documents\Codex\2026-05-22\new-chat\install-vision-skills.ps1:62 字符: 14
++     $Items = Invoke-RestMethod -Uri $ApiUrl -Headers $Headers
++              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod]，WebExce
+    ption
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat>
+```
+
+### assistant 2026-05-22T08:11:23.704Z
+
+```text
+这个 404 是第三个源的 GitHub API 目录请求失败。我先把脚本加一点“显示正在下载哪个 skill”的提示，同时把 `senior-computer-vision` 改成另一个公开可见的源路径安装方式。
+```
+
+### assistant 2026-05-22T08:11:23.704Z
+
+```text
+这个 404 是第三个源的 GitHub API 目录请求失败。我先把脚本加一点“显示正在下载哪个 skill”的提示，同时把 `senior-computer-vision` 改成另一个公开可见的源路径安装方式。
+```
+
+### assistant 2026-05-22T08:11:43.951Z
+
+```text
+这个 404 是第三个 `senior-computer-vision` 的源路径请求失败了。刚才那个 GitHub 页面能看见，但 API 下载时不稳定，我已经把脚本改回另一个确认存在的镜像源：
+
+```text
+majiayu000/claude-skill-registry
+skills/other/senior-computer-vision-alirezarezvani-claude-skills
+```
+
+我还加了提示，现在会显示正在检查哪个 skill。
+
+再跑一次：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+如果还报 404，这次输出里会更容易看出卡在哪一个。前两个已经装好了，不会重复装。
+```
+
+### assistant 2026-05-22T08:11:43.951Z
+
+```text
+这个 404 是第三个 `senior-computer-vision` 的源路径请求失败了。刚才那个 GitHub 页面能看见，但 API 下载时不稳定，我已经把脚本改回另一个确认存在的镜像源：
+
+```text
+majiayu000/claude-skill-registry
+skills/other/senior-computer-vision-alirezarezvani-claude-skills
+```
+
+我还加了提示，现在会显示正在检查哪个 skill。
+
+再跑一次：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+如果还报 404，这次输出里会更容易看出卡在哪一个。前两个已经装好了，不会重复装。
+```
+
+### user 2026-05-22T08:12:29.425Z
+
+```text
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+Checking: opencv-g1joshi
+Already installed: opencv-g1joshi
+Checking: opencv-terminalskills
+Already installed: opencv-terminalskills
+Checking: senior-computer-vision
+Installed: senior-computer-vision
+Checking: robot-perception
+Invoke-RestMethod : {"message":"Not Found","documentation_url":"https://docs.github.com/rest/repos/contents#get-reposit
+ory-content","status":"404"}
+所在位置 C:\Users\t250c\Documents\Codex\2026-05-22\new-chat\install-vision-skills.ps1:64 字符: 14
++     $Items = Invoke-RestMethod -Uri $ApiUrl -Headers $Headers
++              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod]，WebExce
+    ption
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+```
+
+### user 2026-05-22T08:12:29.425Z
+
+```text
+PS C:\Users\t250c\Documents\Codex\2026-05-22\new-chat> .\install-vision-skills.ps1
+Checking: opencv-g1joshi
+Already installed: opencv-g1joshi
+Checking: opencv-terminalskills
+Already installed: opencv-terminalskills
+Checking: senior-computer-vision
+Installed: senior-computer-vision
+Checking: robot-perception
+Invoke-RestMethod : {"message":"Not Found","documentation_url":"https://docs.github.com/rest/repos/contents#get-reposit
+ory-content","status":"404"}
+所在位置 C:\Users\t250c\Documents\Codex\2026-05-22\new-chat\install-vision-skills.ps1:64 字符: 14
++     $Items = Invoke-RestMethod -Uri $ApiUrl -Headers $Headers
++              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod]，WebExce
+    ption
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand
+```
+
+### assistant 2026-05-22T08:12:32.637Z
+
+```text
+很好，第三个已经装上了。现在只剩 `robot-perception` 路径 404，我来重新定位它在仓库里的真实目录名。
+```
+
+### assistant 2026-05-22T08:12:32.637Z
+
+```text
+很好，第三个已经装上了。现在只剩 `robot-perception` 路径 404，我来重新定位它在仓库里的真实目录名。
+```
+
+### assistant 2026-05-22T08:12:49.481Z
+
+```text
+`robot-perception` 的市场页面还在，但 GitHub API 对那个目录返回 404，可能是 registry 索引和仓库当前内容不同步。为了不继续卡在这个点，我会给脚本加一个兜底：如果 GitHub 下载不到，就用已查到的 marketplace 内容生成本地 `robot-perception` skill。
+```
+
+### assistant 2026-05-22T08:12:49.481Z
+
+```text
+`robot-perception` 的市场页面还在，但 GitHub API 对那个目录返回 404，可能是 registry 索引和仓库当前内容不同步。为了不继续卡在这个点，我会给脚本加一个兜底：如果 GitHub 下载不到，就用已查到的 marketplace 内容生成本地 `robot-perception` skill。
+```
+
+### assistant 2026-05-22T08:13:32.750Z
+
+```text
+很好，现在只差最后一个。`robot-perception` 的公开索引还在，但它给出的 GitHub 路径现在返回 404，像是上游仓库目录变了。
+
+我已经把脚本改成：先尝试从 GitHub 下载；如果还是 404，就自动安装一个本地 fallback 版 `robot-perception` skill，内容按公开 marketplace 页面整理，覆盖机器人视觉、深度相机、Open3D、RealSense、标定、点云、AprilTag/ArUco 等。
+
+再跑一次：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+预期会看到：
+
+```text
+Installed fallback: robot-perception
+Done. Restart Codex to pick up new skills.
+```
+
+跑完重启 Codex。之后这四个视觉 skill 就都能被新会话识别了。
+```
+
+### assistant 2026-05-22T08:13:32.756Z
+
+```text
+很好，现在只差最后一个。`robot-perception` 的公开索引还在，但它给出的 GitHub 路径现在返回 404，像是上游仓库目录变了。
+
+我已经把脚本改成：先尝试从 GitHub 下载；如果还是 404，就自动安装一个本地 fallback 版 `robot-perception` skill，内容按公开 marketplace 页面整理，覆盖机器人视觉、深度相机、Open3D、RealSense、标定、点云、AprilTag/ArUco 等。
+
+再跑一次：
+
+```powershell
+.\install-vision-skills.ps1
+```
+
+预期会看到：
+
+```text
+Installed fallback: robot-perception
+Done. Restart Codex to pick up new skills.
+```
+
+跑完重启 Codex。之后这四个视觉 skill 就都能被新会话识别了。
+```
+
+### developer 2026-05-23T13:04:00.334Z
+
+```text
+<permissions instructions>
+Filesystem sandboxing defines which files can be read or written. `sandbox_mode` is `danger-full-access`: No filesystem sandboxing - all commands are permitted. Network access is enabled.
+Approval policy is currently never. Do not provide the `sandbox_permissions` for any reason, commands will be rejected.
+</permissions instructions>
+```
+
+### user 2026-05-23T13:04:00.334Z
+
+```text
+<environment_context>
+  <current_date>2026-05-23</current_date>
+  <timezone>Asia/Shanghai</timezone>
+</environment_context>
+```
+
+### user 2026-05-23T13:04:00.342Z
+
+```text
+你现在有多少skill
+```
+
+### user 2026-05-23T13:04:00.342Z
+
+```text
+你现在有多少skill
+```
+
+### assistant 2026-05-23T13:04:05.166Z
+
+```text
+我看一下本地 skill 目录现在实际有多少个 `SKILL.md`，这样回答会准一点。
+```
+
+### assistant 2026-05-23T13:04:05.166Z
+
+```text
+我看一下本地 skill 目录现在实际有多少个 `SKILL.md`，这样回答会准一点。
+```
+
+### assistant 2026-05-23T13:04:12.780Z
+
+```text
+你本地现在有 **13 个 skill**。
+
+其中视觉/OpenCV 相关已经有 **4 个**：
+
+- `opencv-g1joshi`
+- `opencv-terminalskills`
+- `senior-computer-vision`
+- `robot-perception`
+
+另外还有：
+
+- `imagegen`
+- `openai-docs`
+- `plugin-creator`
+- `skill-creator`
+- `skill-installer`
+- `keil5-embedded-c`
+- `pdf`
+- `security-best-practices`
+- `security-threat-model`
+
+如果你刚装完这些，新 skill 通常要 **重启 Codex** 后才会正式进入当前可用列表。
+```
+
+### assistant 2026-05-23T13:04:12.794Z
+
+```text
+你本地现在有 **13 个 skill**。
+
+其中视觉/OpenCV 相关已经有 **4 个**：
+
+- `opencv-g1joshi`
+- `opencv-terminalskills`
+- `senior-computer-vision`
+- `robot-perception`
+
+另外还有：
+
+- `imagegen`
+- `openai-docs`
+- `plugin-creator`
+- `skill-creator`
+- `skill-installer`
+- `keil5-embedded-c`
+- `pdf`
+- `security-best-practices`
+- `security-threat-model`
+
+如果你刚装完这些，新 skill 通常要 **重启 Codex** 后才会正式进入当前可用列表。
+```
+
+### user 2026-05-23T13:09:47.020Z
+
+```text
+excel 没有吗？ 我记得让你装了呀。
+```
+
+### user 2026-05-23T13:09:47.021Z
+
+```text
+excel 没有吗？ 我记得让你装了呀。
+```
+
+### assistant 2026-05-23T13:09:52.072Z
+
+```text
+我再查一下插件缓存里的 skill。Excel 这一类有时不装在 `.codex/skills` 下，而是在 Codex 自带的文档/表格运行时插件里。
+```
+
+### assistant 2026-05-23T13:09:52.084Z
+
+```text
+我再查一下插件缓存里的 skill。Excel 这一类有时不装在 `.codex/skills` 下，而是在 Codex 自带的文档/表格运行时插件里。
+```
+
+### assistant 2026-05-23T13:09:58.457Z
+
+```text
+有的，你记得没错。
+
+刚才我只数了 `C:\Users\t250c\.codex\skills` 下面的本地 skill，所以没把插件缓存里的算进去。Excel 对应的是这个：
+
+- `spreadsheets`：表格/Excel 处理 skill  
+  路径：`C:\Users\t250c\.codex\plugins\cache\openai-primary-runtime\spreadsheets\26.521.10419\skills\spreadsheets\SKILL.md`
+
+所以如果把插件自带的也算上，你现在至少有：
+
+- 本地 skill：13 个
+- 插件 skill：8 个
+- 合计：21 个
+
+Excel/表格能力在，不叫 `excel`，叫 **`spreadsheets`**。
+```
+
+### assistant 2026-05-23T13:09:58.466Z
+
+```text
+有的，你记得没错。
+
+刚才我只数了 `C:\Users\t250c\.codex\skills` 下面的本地 skill，所以没把插件缓存里的算进去。Excel 对应的是这个：
+
+- `spreadsheets`：表格/Excel 处理 skill  
+  路径：`C:\Users\t250c\.codex\plugins\cache\openai-primary-runtime\spreadsheets\26.521.10419\skills\spreadsheets\SKILL.md`
+
+所以如果把插件自带的也算上，你现在至少有：
+
+- 本地 skill：13 个
+- 插件 skill：8 个
+- 合计：21 个
+
+Excel/表格能力在，不叫 `excel`，叫 **`spreadsheets`**。
+```
+
+### user 2026-05-23T13:10:45.962Z
+
+```text
+任务在执行的时候，是不是如果要修改excel 你自己会调用这些skills
+```
+
+### user 2026-05-23T13:10:45.962Z
+
+```text
+任务在执行的时候，是不是如果要修改excel 你自己会调用这些skills
+```
+
+### assistant 2026-05-23T13:10:51.605Z
+
+```text
+会的。
+
+如果任务明显涉及 Excel / 表格，比如：
+
+- 修改 `.xlsx`
+- 读取工作簿数据
+- 生成报表
+- 合并表格
+- 改公式、格式、图表
+- 检查表格内容
+- 导出 CSV / Excel
+
+我会自动使用对应的 **`spreadsheets` skill**，不需要你每次提醒我。
+
+不过有个细节：skill 不是像软件按钮一样“自动弹出”，而是我会先判断任务类型，然后按那个 skill 的规则来做，比如使用表格库、保留格式、检查结果等。
+
+你只要说：
+
+```text
+帮我改这个 Excel
+```
+
+或者上传/指定 `.xlsx` 文件，我就会按表格 skill 来处理。
+```
+
+### assistant 2026-05-23T13:10:51.622Z
+
+```text
+会的。
+
+如果任务明显涉及 Excel / 表格，比如：
+
+- 修改 `.xlsx`
+- 读取工作簿数据
+- 生成报表
+- 合并表格
+- 改公式、格式、图表
+- 检查表格内容
+- 导出 CSV / Excel
+
+我会自动使用对应的 **`spreadsheets` skill**，不需要你每次提醒我。
+
+不过有个细节：skill 不是像软件按钮一样“自动弹出”，而是我会先判断任务类型，然后按那个 skill 的规则来做，比如使用表格库、保留格式、检查结果等。
+
+你只要说：
+
+```text
+帮我改这个 Excel
+```
+
+或者上传/指定 `.xlsx` 文件，我就会按表格 skill 来处理。
+```
+
+### user 2026-05-23T13:11:09.713Z
+
+```text
+PPT呢？
+```
+
+### user 2026-05-23T13:11:09.713Z
+
+```text
+PPT呢？
+```
+
+### assistant 2026-05-23T13:11:22.427Z
+
+```text
+PPT 也有，对应的是 **`presentations` skill**。
+
+如果你让我处理：
+
+- `.pptx`
+- 生成 PPT
+- 修改幻灯片文字
+- 调整版式
+- 做汇报模板
+- 加图表/图片
+- 检查排版
+- 把资料整理成演示文稿
+
+我会自动按 **presentations** 的流程来做。
+
+它在这里：
+
+```text
+C:\Users\t250c\.codex\plugins\cache\openai-primary-runtime\presentations\26.521.10419\skills\presentations\SKILL.md
+```
+
+所以现在文档类基本都有：
+
+- Word / 文档：`documents`
+- Excel / 表格：`spreadsheets`
+- PPT / 演示：`presentations`
+- PDF：`pdf`
+```
+
+### assistant 2026-05-23T13:11:22.440Z
+
+```text
+PPT 也有，对应的是 **`presentations` skill**。
+
+如果你让我处理：
+
+- `.pptx`
+- 生成 PPT
+- 修改幻灯片文字
+- 调整版式
+- 做汇报模板
+- 加图表/图片
+- 检查排版
+- 把资料整理成演示文稿
+
+我会自动按 **presentations** 的流程来做。
+
+它在这里：
+
+```text
+C:\Users\t250c\.codex\plugins\cache\openai-primary-runtime\presentations\26.521.10419\skills\presentations\SKILL.md
+```
+
+所以现在文档类基本都有：
+
+- Word / 文档：`documents`
+- Excel / 表格：`spreadsheets`
+- PPT / 演示：`presentations`
+- PDF：`pdf`
+```
+
+### user 2026-05-23T13:11:54.659Z
+
+```text
+Photoshop呢？ 还有图片的修改，设置像素，之类的。
+```
+
+### user 2026-05-23T13:11:54.659Z
+
+```text
+Photoshop呢？ 还有图片的修改，设置像素，之类的。
+```
+
+### assistant 2026-05-23T13:12:04.060Z
+
+```text
+Photoshop 也有，而且当前已经接入了 **Adobe Photoshop 工具**，不是普通 skill 名字那种。
+
+能做的包括：
+
+- 图片生成式编辑，比如加东西、删东西、换背景、改颜色
+- 移除背景
+- 模糊背景
+- 选择主体、选择某个人、衣服、脸、头发、眼睛等区域
+- 加滤镜效果，比如复古、颗粒、漫画、故障、动感模糊等
+- 调整曝光、亮度、对比度、饱和度、黑白、白平衡等
+- 撤销上一步编辑
+
+图片“设置像素/尺寸”这类，通常我可以用本地图片处理方式来做，比如：
+
+- 改尺寸：`1920x1080`
+- 裁剪
+- 压缩
+- 改格式：PNG/JPG/WebP
+- 改 DPI
+- 做透明背景
+- 按指定像素导出
+
+简单说：
+
+- **创意修改 / 换内容 / 修图**：用 Photoshop 工具或 `imagegen`
+- **精确像素处理 / 批量改尺寸 / 改格式**：用本地图像处理工具
+- **代码里的图像算法 / OpenCV**：用你刚装的 OpenCV/视觉 skill
+
+你以后直接说“把这张图改成 512x512 PNG”或者“去背景并导出透明图”，我会自己选合适的工具。
+```
+
+### assistant 2026-05-23T13:12:04.069Z
+
+```text
+Photoshop 也有，而且当前已经接入了 **Adobe Photoshop 工具**，不是普通 skill 名字那种。
+
+能做的包括：
+
+- 图片生成式编辑，比如加东西、删东西、换背景、改颜色
+- 移除背景
+- 模糊背景
+- 选择主体、选择某个人、衣服、脸、头发、眼睛等区域
+- 加滤镜效果，比如复古、颗粒、漫画、故障、动感模糊等
+- 调整曝光、亮度、对比度、饱和度、黑白、白平衡等
+- 撤销上一步编辑
+
+图片“设置像素/尺寸”这类，通常我可以用本地图片处理方式来做，比如：
+
+- 改尺寸：`1920x1080`
+- 裁剪
+- 压缩
+- 改格式：PNG/JPG/WebP
+- 改 DPI
+- 做透明背景
+- 按指定像素导出
+
+简单说：
+
+- **创意修改 / 换内容 / 修图**：用 Photoshop 工具或 `imagegen`
+- **精确像素处理 / 批量改尺寸 / 改格式**：用本地图像处理工具
+- **代码里的图像算法 / OpenCV**：用你刚装的 OpenCV/视觉 skill
+
+你以后直接说“把这张图改成 512x512 PNG”或者“去背景并导出透明图”，我会自己选合适的工具。
+```
+
+### user 2026-05-23T13:15:09.338Z
+
+```text
+mdk C 是属于老式的C语言。经常有注释，但是经常你会犯错。有这种中文字符处理的skill吗？
+```
+
+### user 2026-05-23T13:15:09.338Z
+
+```text
+mdk C 是属于老式的C语言。经常有注释，但是经常你会犯错。有这种中文字符处理的skill吗？
+```
+
+### assistant 2026-05-23T13:15:15.186Z
+
+```text
+有，最贴近这个场景的是你本地的 **`keil5-embedded-c` skill**。
+
+它就是给 Keil5 / MDK / 单片机 C 这类项目用的，里面明确要求我处理中文注释时要注意：
+
+- 先判断 `.c/.h` 文件编码，尤其是 **GBK / ANSI**
+- 不能随手把老工程文件改成 UTF-8
+- 修改前要备份原文件
+- 修改后要检查中文注释有没有乱码
+- 尽量只改目标函数范围，不大面积重写文件
+- 保留 Keil/MDK 老 C 风格，不乱引入新语法、新抽象
+
+所以你说的 **MDK C、老式 C、中文注释容易乱码**，这个 skill 正好覆盖。
+
+以后你可以直接说：
+
+```text
+按 keil5-embedded-c 处理这个文件，注意中文注释别乱码
+```
+
+我就会按它的规则来做。  
+如果你不说，只要我判断是 Keil/MDK/C51/单片机 C，我也会自动启用它。
+```
+
+### assistant 2026-05-23T13:15:15.194Z
+
+```text
+有，最贴近这个场景的是你本地的 **`keil5-embedded-c` skill**。
+
+它就是给 Keil5 / MDK / 单片机 C 这类项目用的，里面明确要求我处理中文注释时要注意：
+
+- 先判断 `.c/.h` 文件编码，尤其是 **GBK / ANSI**
+- 不能随手把老工程文件改成 UTF-8
+- 修改前要备份原文件
+- 修改后要检查中文注释有没有乱码
+- 尽量只改目标函数范围，不大面积重写文件
+- 保留 Keil/MDK 老 C 风格，不乱引入新语法、新抽象
+
+所以你说的 **MDK C、老式 C、中文注释容易乱码**，这个 skill 正好覆盖。
+
+以后你可以直接说：
+
+```text
+按 keil5-embedded-c 处理这个文件，注意中文注释别乱码
+```
+
+我就会按它的规则来做。  
+如果你不说，只要我判断是 Keil/MDK/C51/单片机 C，我也会自动启用它。
+```
+
+### user 2026-05-23T13:15:50.925Z
+
+```text
+全站仪标定的知识 skill 有吗？
+```
+
+### user 2026-05-23T13:15:50.925Z
+
+```text
+全站仪标定的知识 skill 有吗？
+```
+
+### assistant 2026-05-23T13:15:57.701Z
+
+```text
+我查一下本地 skill 名称和内容里有没有“全站仪、标定、测量、total station”相关的东西。
+```
+
+### assistant 2026-05-23T13:15:57.710Z
+
+```text
+我查一下本地 skill 名称和内容里有没有“全站仪、标定、测量、total station”相关的东西。
+```
+
+### assistant 2026-05-23T13:16:06.290Z
+
+```text
+目前**没有专门的“全站仪标定”skill**。
+
+我查到的相关项只有：
+
+- `robot-perception`：有传感器/相机/深度/点云标定，但偏机器人视觉，不是全站仪。
+- `opencv-terminalskills`：有相机标定、3D 重建，也不是全站仪。
+- `spreadsheets`：能处理测量数据表格、误差分析、拟合计算，但不是领域知识 skill。
+
+所以如果你要做 **全站仪标定/校准/误差补偿/坐标转换/测站计算/棱镜常数/角度距离误差分析**，建议新建一个专门 skill，比如：
+
+```text
+total-station-calibration
+```
+
+它可以覆盖：
+
+- 全站仪测角、测距、棱镜常数
+- 水平角、竖直角、斜距、平距、高差
+- 后方交会、前方交会、导线测量
+- 仪器高、棱镜高修正
+- 两面观测、盘左盘右误差
+- 视准轴误差、横轴误差、竖盘指标差
+- 坐标转换、七参数/四参数/刚体变换
+- 标定数据用 Excel 计算和误差报告输出
+
+如果你想要，我可以帮你建这个 skill。
+```
+
+### assistant 2026-05-23T13:16:06.301Z
+
+```text
+目前**没有专门的“全站仪标定”skill**。
+
+我查到的相关项只有：
+
+- `robot-perception`：有传感器/相机/深度/点云标定，但偏机器人视觉，不是全站仪。
+- `opencv-terminalskills`：有相机标定、3D 重建，也不是全站仪。
+- `spreadsheets`：能处理测量数据表格、误差分析、拟合计算，但不是领域知识 skill。
+
+所以如果你要做 **全站仪标定/校准/误差补偿/坐标转换/测站计算/棱镜常数/角度距离误差分析**，建议新建一个专门 skill，比如：
+
+```text
+total-station-calibration
+```
+
+它可以覆盖：
+
+- 全站仪测角、测距、棱镜常数
+- 水平角、竖直角、斜距、平距、高差
+- 后方交会、前方交会、导线测量
+- 仪器高、棱镜高修正
+- 两面观测、盘左盘右误差
+- 视准轴误差、横轴误差、竖盘指标差
+- 坐标转换、七参数/四参数/刚体变换
+- 标定数据用 Excel 计算和误差报告输出
+
+如果你想要，我可以帮你建这个 skill。
+```
+
+### user 2026-05-23T13:16:37.124Z
+
+```text
+你新建的 有内容吗？
+```
+
+### user 2026-05-23T13:16:37.124Z
+
+```text
+你新建的 有内容吗？
+```
+
+### assistant 2026-05-23T13:16:41.598Z
+
+```text
+你问的是我刚才说的 `total-station-calibration` 吗？
+
+**还没有。**  
+我只是建议可以新建这个 skill，还没有真正创建文件，所以现在本地没有这个 skill，也没有内容。
+
+目前我真正帮你装/建好的视觉相关 skill 是：
+
+- `opencv-g1joshi`
+- `opencv-terminalskills`
+- `senior-computer-vision`
+- `robot-perception`
+
+其中 `robot-perception` 是我做了一个本地 fallback 版，有实际内容。
+
+如果你要，我可以现在给你真正创建一个 **全站仪标定 skill**，里面写入完整规则和知识框架。
+```
+
+### assistant 2026-05-23T13:16:41.598Z
+
+```text
+你问的是我刚才说的 `total-station-calibration` 吗？
+
+**还没有。**  
+我只是建议可以新建这个 skill，还没有真正创建文件，所以现在本地没有这个 skill，也没有内容。
+
+目前我真正帮你装/建好的视觉相关 skill 是：
+
+- `opencv-g1joshi`
+- `opencv-terminalskills`
+- `senior-computer-vision`
+- `robot-perception`
+
+其中 `robot-perception` 是我做了一个本地 fallback 版，有实际内容。
+
+如果你要，我可以现在给你真正创建一个 **全站仪标定 skill**，里面写入完整规则和知识框架。
+```
+
+### user 2026-05-23T13:17:06.987Z
+
+```text
+你全网搜索下。
+```
+
+### user 2026-05-23T13:17:06.987Z
+
+```text
+你全网搜索下。
+```
+
+### assistant 2026-05-23T13:17:47.767Z
+
+```text
+我全网搜了一圈，结论是：**没找到专门叫“全站仪标定 / total station calibration”的现成 skill**。
+
+但找到一个比较接近的：
+
+- **`survey-data-processor`**
+- 地址：[SkillsMP - survey-data-processor](https://skillsmp.com/es/skills/a5c-ai-babysitter-plugins-babysitter-skills-babysit-process-specializations-domains-science-civil-engineering-skills-survey-data-processor-skill-md)
+- 它的范围是测量数据处理，包括：
+  - point cloud processing
+  - DTM/TIN generation
+  - coordinate transformation
+  - traverse adjustment
+  - level loop adjustment
+  - GNSS data processing
+  - 并且配置里明确包含 `total-station`
+
+但是它更偏 **测量数据处理 / 导线平差 / 坐标转换 / 地形建模**，不是专门的 **全站仪仪器标定**。
+
+我也搜到了很多带 `calibration` 的 skill，但大多不是测绘仪器标定，比如模型校准、置信度校准、实验校准、相机标定等，不适合全站仪。
+
+所以最实际的方案是：
+
+1. 可以先装 `survey-data-processor`，补上测量数据处理能力。
+2. 再单独做一个你自己的 `total-station-calibration` skill，专门写全站仪标定知识。
+
+这个自建 skill 可以覆盖：
+
+- 视准轴误差
+- 横轴误差
+- 竖盘指标差
+- 两面观测，盘左/盘右
+- 测距加常数、乘常数
+- 棱镜常数
+- 气象改正
+- 仪器高、棱镜高
+- 角度闭合差
+- 导线平差
+- 坐标转换
+- 标定记录表和 Excel 计算流程
+
+一句话：**网上有测量数据处理 skill，但没有我觉得足够对口的“全站仪标定”专用 skill。**
+```
+
+### assistant 2026-05-23T13:17:47.775Z
+
+```text
+我全网搜了一圈，结论是：**没找到专门叫“全站仪标定 / total station calibration”的现成 skill**。
+
+但找到一个比较接近的：
+
+- **`survey-data-processor`**
+- 地址：[SkillsMP - survey-data-processor](https://skillsmp.com/es/skills/a5c-ai-babysitter-plugins-babysitter-skills-babysit-process-specializations-domains-science-civil-engineering-skills-survey-data-processor-skill-md)
+- 它的范围是测量数据处理，包括：
+  - point cloud processing
+  - DTM/TIN generation
+  - coordinate transformation
+  - traverse adjustment
+  - level loop adjustment
+  - GNSS data processing
+  - 并且配置里明确包含 `total-station`
+
+但是它更偏 **测量数据处理 / 导线平差 / 坐标转换 / 地形建模**，不是专门的 **全站仪仪器标定**。
+
+我也搜到了很多带 `calibration` 的 skill，但大多不是测绘仪器标定，比如模型校准、置信度校准、实验校准、相机标定等，不适合全站仪。
+
+所以最实际的方案是：
+
+1. 可以先装 `survey-data-processor`，补上测量数据处理能力。
+2. 再单独做一个你自己的 `total-station-calibration` skill，专门写全站仪标定知识。
+
+这个自建 skill 可以覆盖：
+
+- 视准轴误差
+- 横轴误差
+- 竖盘指标差
+- 两面观测，盘左/盘右
+- 测距加常数、乘常数
+- 棱镜常数
+- 气象改正
+- 仪器高、棱镜高
+- 角度闭合差
+- 导线平差
+- 坐标转换
+- 标定记录表和 Excel 计算流程
+
+一句话：**网上有测量数据处理 skill，但没有我觉得足够对口的“全站仪标定”专用 skill。**
+```
+
+### user 2026-05-23T13:18:13.667Z
+
+```text
+好。
+```
+
+### user 2026-05-23T13:18:13.667Z
+
+```text
+好。
+```
+
+### assistant 2026-05-23T13:18:19.189Z
+
+```text
+那我建议这样走：先把现成的 `survey-data-processor` 装上，作为测量数据处理底座；然后我再给你建一个本地 `total-station-calibration`，专门放全站仪标定、误差改正、盘左盘右、棱镜常数、Excel 计算流程这些内容。
+
+你只要说一句“开始装和创建”，我就直接做。
+```
+
+### assistant 2026-05-23T13:18:19.202Z
+
+```text
+那我建议这样走：先把现成的 `survey-data-processor` 装上，作为测量数据处理底座；然后我再给你建一个本地 `total-station-calibration`，专门放全站仪标定、误差改正、盘左盘右、棱镜常数、Excel 计算流程这些内容。
+
+你只要说一句“开始装和创建”，我就直接做。
+```
+
+### user 2026-05-23T13:18:31.900Z
+
+```text
+好
+```
+
+### user 2026-05-23T13:18:31.900Z
+
+```text
+好
+```
+
+### assistant 2026-05-23T13:18:35.784Z
+
+```text
+我开始做两件事：先尝试安装网上现成的测量数据处理 skill，然后创建一个本地全站仪标定 skill。做好后我会检查目录，确认 Codex 能扫到它们。
+```
+
+### assistant 2026-05-23T13:18:35.784Z
+
+```text
+我开始做两件事：先尝试安装网上现成的测量数据处理 skill，然后创建一个本地全站仪标定 skill。做好后我会检查目录，确认 Codex 能扫到它们。
+```
+
+### assistant 2026-05-23T13:18:50.541Z
+
+```text
+找到的现成项主要还是 `survey-data-processor`。它没有清晰的 GitHub 直接安装路径，我会用网页公开内容做本地安装版，再创建一个更细的全站仪标定 skill。
+```
+
+### assistant 2026-05-23T13:18:50.542Z
+
+```text
+找到的现成项主要还是 `survey-data-processor`。它没有清晰的 GitHub 直接安装路径，我会用网页公开内容做本地安装版，再创建一个更细的全站仪标定 skill。
+```
+
+### assistant 2026-05-23T13:18:56.672Z
+
+```text
+目录建好了。接下来写入两个 `SKILL.md`：一个是测量数据处理底座，一个是专门针对全站仪标定和误差改正的工作流。
+```
+
+### assistant 2026-05-23T13:18:56.672Z
+
+```text
+目录建好了。接下来写入两个 `SKILL.md`：一个是测量数据处理底座，一个是专门针对全站仪标定和误差改正的工作流。
+```
+
+### assistant 2026-05-23T13:19:39.431Z
+
+```text
+内容已经写入。现在我做一次扫描确认这两个 skill 都能被发现，并顺手数一下总数。
+```
+
+### assistant 2026-05-23T13:19:39.431Z
+
+```text
+内容已经写入。现在我做一次扫描确认这两个 skill 都能被发现，并顺手数一下总数。
+```
+
+### assistant 2026-05-23T13:19:44.731Z
+
+```text
+好了，已经建好并确认能扫到了。
+
+新增了两个：
+
+- `survey-data-processor`：测量数据处理，包含全站仪、GNSS、水准、点云、导线平差、坐标转换等。
+- `total-station-calibration`：专门用于全站仪标定/校准，包含视准轴误差、横轴误差、竖盘指标差、EDM 加常数/乘常数、棱镜常数、盘左盘右、Excel 计算流程等。
+
+现在本地 skill 从 13 个变成 **15 个**。  
+你需要重启 Codex 后，新 skill 才会在后续会话里自动出现在可用列表中。
+```
+
+### assistant 2026-05-23T13:19:44.731Z
+
+```text
+好了，已经建好并确认能扫到了。
+
+新增了两个：
+
+- `survey-data-processor`：测量数据处理，包含全站仪、GNSS、水准、点云、导线平差、坐标转换等。
+- `total-station-calibration`：专门用于全站仪标定/校准，包含视准轴误差、横轴误差、竖盘指标差、EDM 加常数/乘常数、棱镜常数、盘左盘右、Excel 计算流程等。
+
+现在本地 skill 从 13 个变成 **15 个**。  
+你需要重启 Codex 后，新 skill 才会在后续会话里自动出现在可用列表中。
+```
+
+### user 2026-05-23T13:20:28.395Z
+
+```text
+另外bin文件（二进制） 修改以及反编译的skill 有吗？
+```
+
+### user 2026-05-23T13:20:28.396Z
+
+```text
+另外bin文件（二进制） 修改以及反编译的skill 有吗？
+```
+
+### assistant 2026-05-23T13:20:35.590Z
+
+```text
+我查一下本地和插件 skill 里有没有二进制、固件、反编译、逆向相关的专门项。
+```
+
+### assistant 2026-05-23T13:20:35.601Z
+
+```text
+我查一下本地和插件 skill 里有没有二进制、固件、反编译、逆向相关的专门项。
+```
+
+### assistant 2026-05-23T13:20:41.700Z
+
+```text
+目前**没有专门的“bin 二进制修改 / 反编译 / 逆向”skill**。
+
+现在相关的只有：
+
+- `keil5-embedded-c`  
+  它覆盖 **Keil/MDK 固件、bin/hex 验证、协议帧对比、单片机 C**，但重点是源码和固件验证，不是专门做反编译/逆向。
+
+所以如果你要经常处理：
+
+- `.bin` / `.hex` / `.elf` / `.axf`
+- 固件版本对比
+- 查找字符串、协议表、参数表
+- 修改固定地址字节
+- 校验和/CRC 修复
+- Intel HEX / Motorola S-record 转换
+- ARM / 8051 / STM8 / AVR 反汇编
+- 从固件里找函数、常量、跳转表
+- Ghidra / IDA / objdump / radare2 / binwalk
+- 固件补丁前后验证
+
+那应该单独建一个，比如：
+
+```text
+firmware-binary-reverse
+```
+
+它可以和 `keil5-embedded-c` 配合：  
+源码/Keil 工程走 `keil5-embedded-c`，纯二进制固件分析和补丁走 `firmware-binary-reverse`。
+```
+
+### assistant 2026-05-23T13:20:41.715Z
+
+```text
+目前**没有专门的“bin 二进制修改 / 反编译 / 逆向”skill**。
+
+现在相关的只有：
+
+- `keil5-embedded-c`  
+  它覆盖 **Keil/MDK 固件、bin/hex 验证、协议帧对比、单片机 C**，但重点是源码和固件验证，不是专门做反编译/逆向。
+
+所以如果你要经常处理：
+
+- `.bin` / `.hex` / `.elf` / `.axf`
+- 固件版本对比
+- 查找字符串、协议表、参数表
+- 修改固定地址字节
+- 校验和/CRC 修复
+- Intel HEX / Motorola S-record 转换
+- ARM / 8051 / STM8 / AVR 反汇编
+- 从固件里找函数、常量、跳转表
+- Ghidra / IDA / objdump / radare2 / binwalk
+- 固件补丁前后验证
+
+那应该单独建一个，比如：
+
+```text
+firmware-binary-reverse
+```
+
+它可以和 `keil5-embedded-c` 配合：  
+源码/Keil 工程走 `keil5-embedded-c`，纯二进制固件分析和补丁走 `firmware-binary-reverse`。
+```
+
+### user 2026-05-23T13:21:20.450Z
+
+```text
+我单独建一个，我又没有什么技巧给到你。
+```
+
+### user 2026-05-23T13:21:20.450Z
+
+```text
+我单独建一个，我又没有什么技巧给到你。
+```
+
+### assistant 2026-05-23T13:21:26.996Z
+
+```text
+你不需要先给我技巧。skill 的作用就是把“我该怎么谨慎做这类事”写进去，先有一个可靠底座，后面我们在真实任务里再慢慢补你的经验。
+
+我可以先建一个 **通用但偏嵌入式固件** 的 skill，内容包括：
+
+- 先备份原始 `.bin/.hex/.elf/.axf`
+- 识别文件类型、架构、端序、入口地址
+- 对比修改前后差异
+- 查字符串、查协议表、查常量表
+- 小心修改固定地址字节
+- 处理校验和 / CRC / 固件尾部校验
+- Intel HEX / S-record / raw BIN 转换
+- ARM / 8051 / STM8 / AVR 常见反汇编流程
+- Ghidra / objdump / binwalk / hexdump 的使用思路
+- 修改后生成报告：地址、原值、新值、原因、校验方式
+- 安全边界：不碰绕授权、破解、恶意固件这类内容
+
+名字可以叫：
+
+```text
+firmware-binary-reverse
+```
+
+这样你以后说“帮我看这个 bin”或者“比较这两个 hex”，我就知道要按这个流程来。
+```
+
+### assistant 2026-05-23T13:21:27.011Z
+
+```text
+你不需要先给我技巧。skill 的作用就是把“我该怎么谨慎做这类事”写进去，先有一个可靠底座，后面我们在真实任务里再慢慢补你的经验。
+
+我可以先建一个 **通用但偏嵌入式固件** 的 skill，内容包括：
+
+- 先备份原始 `.bin/.hex/.elf/.axf`
+- 识别文件类型、架构、端序、入口地址
+- 对比修改前后差异
+- 查字符串、查协议表、查常量表
+- 小心修改固定地址字节
+- 处理校验和 / CRC / 固件尾部校验
+- Intel HEX / S-record / raw BIN 转换
+- ARM / 8051 / STM8 / AVR 常见反汇编流程
+- Ghidra / objdump / binwalk / hexdump 的使用思路
+- 修改后生成报告：地址、原值、新值、原因、校验方式
+- 安全边界：不碰绕授权、破解、恶意固件这类内容
+
+名字可以叫：
+
+```text
+firmware-binary-reverse
+```
+
+这样你以后说“帮我看这个 bin”或者“比较这两个 hex”，我就知道要按这个流程来。
+```
+
+### user 2026-05-23T13:22:23.149Z
+
+```text
+我倒是有处理这些bin的留下来的记录。到时候你记录下。另外github有吗？ 全网搜下。
+```
+
+### user 2026-05-23T13:22:23.149Z
+
+```text
+我倒是有处理这些bin的留下来的记录。到时候你记录下。另外github有吗？ 全网搜下。
+```
+
+### assistant 2026-05-23T13:22:42.808Z
+
+```text
+我全网搜了，有现成的，而且比我预想的多。比较对口的是这几个：
+
+1. **Reverse Engineering Toolkit**
+   - 地址：[agent-skills.md / reverse_engineer](https://agent-skills.md/skills/agentydragon/ducktape/reverse_engineer)
+   - GitHub：`agentydragon/ducktape`
+   - 路径：`skills/reverse_engineer/SKILL.md`
+   - 适合：二进制反汇编、字符串分析、函数理解、协议还原、版本对比。
+   - 这个最适合作为通用“bin/二进制逆向”底座。
+
+2. **radare2**
+   - 地址：[Smithery / radare2](https://smithery.ai/skills/dnakov/radare2)
+   - GitHub：`dnakov/radare2`
+   - 适合：用 `r2` 分析、反汇编、找函数、提字符串、patch binary、调试。
+   - 如果你想做“修改 bin 某个地址/跳转/字节”，这个很有用。
+
+3. **reverse-engineering-firmware-analysis**
+   - 地址：[SkillMD.ai / reverse-engineering-firmware-analysis](https://skillmd.ai/skills/reverse-engineering-firmware-analysis/)
+   - 适合：IoT 固件、路由器固件、binwalk、文件系统提取、QEMU/Firmadyne 仿真。
+   - 偏 Linux/IoT 固件，不一定适合 MCU 裸机 `.bin`，但思路有价值。
+
+4. **firmware-decryption**
+   - 地址：[SkillsMP / firmware-decryption](https://skillsmp.com/skills/tangjunyi23-iotagent-skills-firmware-decryption-skill-md)
+   - 适合：固件加密、XOR/AES/DES、厂商升级包解包。
+   - 这个偏安全研究，日常 MCU 参数补丁不一定常用。
+
+5. **Firmware Analyst**
+   - 地址：[MCPMarket / firmware-analyst](https://mcpmarket.com/ko/tools/skills/firmware-analyst)
+   - 适合：IoT 固件安全审计、binwalk、Ghidra、QEMU、硬件接口 UART/JTAG/SPI。
+   - 内容大而全，但偏安全审计。
+
+我的建议：先装/建这两个最实用的：
+
+- `reverse_engineer`：通用二进制逆向
+- `radare2`：二进制分析和 patch 工具流程
+
+然后我再建一个你自己的：
+
+```text
+firmware-binary-reverse
+```
+
+专门偏你的实际场景：`.bin/.hex/.elf/.axf`、Keil/MDK、MCU 固件、固定地址修改、CRC/校验、版本对比、中文记录沉淀。
+
+你以前留下来的处理记录，后面直接发给我，我可以整理进这个 skill，变成你的专用经验库。
+```
+
+### assistant 2026-05-23T13:22:42.818Z
+
+```text
+我全网搜了，有现成的，而且比我预想的多。比较对口的是这几个：
+
+1. **Reverse Engineering Toolkit**
+   - 地址：[agent-skills.md / reverse_engineer](https://agent-skills.md/skills/agentydragon/ducktape/reverse_engineer)
+   - GitHub：`agentydragon/ducktape`
+   - 路径：`skills/reverse_engineer/SKILL.md`
+   - 适合：二进制反汇编、字符串分析、函数理解、协议还原、版本对比。
+   - 这个最适合作为通用“bin/二进制逆向”底座。
+
+2. **radare2**
+   - 地址：[Smithery / radare2](https://smithery.ai/skills/dnakov/radare2)
+   - GitHub：`dnakov/radare2`
+   - 适合：用 `r2` 分析、反汇编、找函数、提字符串、patch binary、调试。
+   - 如果你想做“修改 bin 某个地址/跳转/字节”，这个很有用。
+
+3. **reverse-engineering-firmware-analysis**
+   - 地址：[SkillMD.ai / reverse-engineering-firmware-analysis](https://skillmd.ai/skills/reverse-engineering-firmware-analysis/)
+   - 适合：IoT 固件、路由器固件、binwalk、文件系统提取、QEMU/Firmadyne 仿真。
+   - 偏 Linux/IoT 固件，不一定适合 MCU 裸机 `.bin`，但思路有价值。
+
+4. **firmware-decryption**
+   - 地址：[SkillsMP / firmware-decryption](https://skillsmp.com/skills/tangjunyi23-iotagent-skills-firmware-decryption-skill-md)
+   - 适合：固件加密、XOR/AES/DES、厂商升级包解包。
+   - 这个偏安全研究，日常 MCU 参数补丁不一定常用。
+
+5. **Firmware Analyst**
+   - 地址：[MCPMarket / firmware-analyst](https://mcpmarket.com/ko/tools/skills/firmware-analyst)
+   - 适合：IoT 固件安全审计、binwalk、Ghidra、QEMU、硬件接口 UART/JTAG/SPI。
+   - 内容大而全，但偏安全审计。
+
+我的建议：先装/建这两个最实用的：
+
+- `reverse_engineer`：通用二进制逆向
+- `radare2`：二进制分析和 patch 工具流程
+
+然后我再建一个你自己的：
+
+```text
+firmware-binary-reverse
+```
+
+专门偏你的实际场景：`.bin/.hex/.elf/.axf`、Keil/MDK、MCU 固件、固定地址修改、CRC/校验、版本对比、中文记录沉淀。
+
+你以前留下来的处理记录，后面直接发给我，我可以整理进这个 skill，变成你的专用经验库。
+```
+
+### user 2026-05-23T13:23:33.894Z
+
+```text
+好。按你的建议
+```
+
+### user 2026-05-23T13:23:33.894Z
+
+```text
+好。按你的建议
+```
+
+### assistant 2026-05-23T13:23:39.979Z
+
+```text
+我按这个方案来：先安装现成的 `reverse_engineer` 和 `radare2`，再创建一个本地 `firmware-binary-reverse`，专门偏 MCU/Keil/bin/hex 修改和你的后续经验沉淀。
+```
+
+### assistant 2026-05-23T13:23:39.994Z
+
+```text
+我按这个方案来：先安装现成的 `reverse_engineer` 和 `radare2`，再创建一个本地 `firmware-binary-reverse`，专门偏 MCU/Keil/bin/hex 修改和你的后续经验沉淀。
+```
+
+### assistant 2026-05-23T13:23:59.529Z
+
+```text
+现成的 `reverse_engineer` 源文件可以直接拿到；`radare2` 的公开页面能读摘要，但原始仓库路径没有直接暴露，我会按公开摘要整理一个本地版，避免装到不明来源脚本。
+```
+
+### assistant 2026-05-23T13:23:59.529Z
+
+```text
+现成的 `reverse_engineer` 源文件可以直接拿到；`radare2` 的公开页面能读摘要，但原始仓库路径没有直接暴露，我会按公开摘要整理一个本地版，避免装到不明来源脚本。
+```
+
+### assistant 2026-05-23T13:24:06.181Z
+
+```text
+下载还在跑，我等它返回一下。随后会写 `radare2` 和你自己的固件二进制 skill。
+```
+
+### assistant 2026-05-23T13:24:06.181Z
+
+```text
+下载还在跑，我等它返回一下。随后会写 `radare2` 和你自己的固件二进制 skill。
+```
+
+### assistant 2026-05-23T13:24:11.141Z
+
+```text
+`reverse_engineer` 已下载成功。现在写入 `radare2` 的本地 skill，以及 `firmware-binary-reverse` 的 MCU/Keil 固件专用流程。
+```
+
+### assistant 2026-05-23T13:24:11.141Z
+
+```text
+`reverse_engineer` 已下载成功。现在写入 `radare2` 的本地 skill，以及 `firmware-binary-reverse` 的 MCU/Keil 固件专用流程。
+```
+
+### assistant 2026-05-23T13:24:52.715Z
+
+```text
+两个本地 skill 写好了。接下来做一次最终扫描，确认 `reverse_engineer`、`radare2`、`firmware-binary-reverse` 都存在。
+```
+
+### assistant 2026-05-23T13:24:52.715Z
+
+```text
+两个本地 skill 写好了。接下来做一次最终扫描，确认 `reverse_engineer`、`radare2`、`firmware-binary-reverse` 都存在。
+```
+
+### assistant 2026-05-23T13:24:59.065Z
+
+```text
+好了，按建议装/建完了。
+
+新增 3 个：
+
+- `reverse_engineer`：从 GitHub 现成源安装，通用二进制逆向、字符串、反汇编、版本对比。
+- `radare2`：本地整理版，偏 `r2/rabin2/radiff2/rahash2` 的分析和 patch 流程。
+- `firmware-binary-reverse`：我给你建的专用版，偏 `.bin/.hex/.elf/.axf`、Keil/MDK、MCU 固件、固定地址修改、CRC/校验、版本对比、后续经验记录。
+
+现在本地 skill 总数是 **18 个**。  
+你后面把以前处理 bin 的记录发我，我可以整理进 `firmware-binary-reverse`，变成你的专用经验库。重启 Codex 后这些新 skill 会进入后续会话的可用列表。
+```
+
+### assistant 2026-05-23T13:24:59.065Z
+
+```text
+好了，按建议装/建完了。
+
+新增 3 个：
+
+- `reverse_engineer`：从 GitHub 现成源安装，通用二进制逆向、字符串、反汇编、版本对比。
+- `radare2`：本地整理版，偏 `r2/rabin2/radiff2/rahash2` 的分析和 patch 流程。
+- `firmware-binary-reverse`：我给你建的专用版，偏 `.bin/.hex/.elf/.axf`、Keil/MDK、MCU 固件、固定地址修改、CRC/校验、版本对比、后续经验记录。
+
+现在本地 skill 总数是 **18 个**。  
+你后面把以前处理 bin 的记录发我，我可以整理进 `firmware-binary-reverse`，变成你的专用经验库。重启 Codex 后这些新 skill 会进入后续会话的可用列表。
+```
+
+### user 2026-05-23T13:25:05.104Z
+
+```text
+还有芯片的gpio 嵌入式开发 的skill 有吗？ 也找找。
+```
+
+### user 2026-05-23T13:25:05.104Z
+
+```text
+还有芯片的gpio 嵌入式开发 的skill 有吗？ 也找找。
+```
+
+### assistant 2026-05-23T13:25:38.644Z
+
+```text
+有，已经搜到了几个比较对口的。
+
+你本地现在已有的：
+
+- `keil5-embedded-c`：已经覆盖 Keil/MDK、单片机 C、IO/ADC/PWM/CAN/UART/RS485、定时器、中断、硬件协议。
+- 但它偏 **Keil 工程和嵌入式 C 代码安全修改**，不是专门的 GPIO/芯片外设选型 skill。
+
+网上比较有用的：
+
+1. **Embedded Systems Engineer**
+   - GitHub：`Jeffallan/claude-skills`
+   - 路径：`skills/embedded-systems`
+   - 地址：[agent-skills.md / embedded-systems](https://agent-skills.md/skills/Jeffallan/claude-skills/embedded-systems)
+   - 覆盖：STM32、ESP32、FreeRTOS、裸机、低功耗、实时系统、GPIO、外设初始化。
+
+2. **ARM Cortex Expert**
+   - 来源：`sickn33/antigravity-awesome-skills` 或镜像 registry
+   - 地址：[arm-cortex-expert](https://eliteai.tools/agent-skills/arm-cortex-expert-16)
+   - 覆盖：ARM Cortex-M、DMA/cache coherency、中断驱动 I/O、外设驱动、STM32/nRF/SAMD。
+
+3. **GPIO Config**
+   - 来源：`bpolania/embedded-agent-skills`
+   - 文章：[Snyk Top 7 Embedded Skills](https://snyk.io/articles/claude-skills-embedded-systems-engineers/)
+   - 覆盖：Raspberry Pi 和 ESP32 的 GPIO 配置、平台检测、常见坑。
+   - 范围比较窄，不适合 STM32/国产 MCU，但对 ESP32/RPi 有用。
+
+4. **ESP32**
+   - GitHub：`openclaw/skills`
+   - 地址：[agentskill.sh / openclaw esp32](https://agentskill.sh/%40openclaw/esp32)
+   - 覆盖：ESP32 GPIO 冲突、启动绑带脚、ADC2+WiFi 坑、深睡眠、FreeRTOS、内存。
+   - 这个很实用，尤其是 ESP32 引脚选错时。
+
+5. **Embedded Linux Development Patterns**
+   - 地址：[mcpmarket embedded-linux-development-patterns](https://mcpmarket.com/tools/skills/embedded-linux-development-patterns)
+   - 覆盖：Yocto、Buildroot、设备树 DTS、GPIO/Interrupt 属性、ARM SoC、内核模块。
+   - 如果你做 Linux 板卡 GPIO/驱动/设备树，这个更对口。
+
+6. **embedded-c**
+   - 来源：`alphaonedev/openclaw-graph`
+   - 地址：[SkillsMP embedded-c](https://skillsmp.com/skills/alphaonedev-openclaw-graph-skills-iot-embedded-c-skill-md)
+   - 覆盖：C/C++ 嵌入式、微控制器、IoT、低内存、低功耗、GPIO/timer/interrupt/PWM 示例。
+
+我的建议：  
+你做 MDK C / 芯片 GPIO / 单片机开发，最该补这几个：
+
+- `embedded-systems`
+- `arm-cortex-expert`
+- `esp32`
+- 再建一个你自己的 `mcu-gpio-peripheral`，专门写中文场景：GPIO 输入输出、上下拉、复用功能、开漏推挽、中断、消抖、ADC/PWM/I2C/SPI/UART 引脚冲突、国产 MCU/STM32/MDK 风格。
+
+`gpio-config` 太偏 RPi/ESP32，除非你经常做这两个平台；否则可以先不装。
+```
+
+### assistant 2026-05-23T13:25:38.652Z
+
+```text
+有，已经搜到了几个比较对口的。
+
+你本地现在已有的：
+
+- `keil5-embedded-c`：已经覆盖 Keil/MDK、单片机 C、IO/ADC/PWM/CAN/UART/RS485、定时器、中断、硬件协议。
+- 但它偏 **Keil 工程和嵌入式 C 代码安全修改**，不是专门的 GPIO/芯片外设选型 skill。
+
+网上比较有用的：
+
+1. **Embedded Systems Engineer**
+   - GitHub：`Jeffallan/claude-skills`
+   - 路径：`skills/embedded-systems`
+   - 地址：[agent-skills.md / embedded-systems](https://agent-skills.md/skills/Jeffallan/claude-skills/embedded-systems)
+   - 覆盖：STM32、ESP32、FreeRTOS、裸机、低功耗、实时系统、GPIO、外设初始化。
+
+2. **ARM Cortex Expert**
+   - 来源：`sickn33/antigravity-awesome-skills` 或镜像 registry
+   - 地址：[arm-cortex-expert](https://eliteai.tools/agent-skills/arm-cortex-expert-16)
+   - 覆盖：ARM Cortex-M、DMA/cache coherency、中断驱动 I/O、外设驱动、STM32/nRF/SAMD。
+
+3. **GPIO Config**
+   - 来源：`bpolania/embedded-agent-skills`
+   - 文章：[Snyk Top 7 Embedded Skills](https://snyk.io/articles/claude-skills-embedded-systems-engineers/)
+   - 覆盖：Raspberry Pi 和 ESP32 的 GPIO 配置、平台检测、常见坑。
+   - 范围比较窄，不适合 STM32/国产 MCU，但对 ESP32/RPi 有用。
+
+4. **ESP32**
+   - GitHub：`openclaw/skills`
+   - 地址：[agentskill.sh / openclaw esp32](https://agentskill.sh/%40openclaw/esp32)
+   - 覆盖：ESP32 GPIO 冲突、启动绑带脚、ADC2+WiFi 坑、深睡眠、FreeRTOS、内存。
+   - 这个很实用，尤其是 ESP32 引脚选错时。
+
+5. **Embedded Linux Development Patterns**
+   - 地址：[mcpmarket embedded-linux-development-patterns](https://mcpmarket.com/tools/skills/embedded-linux-development-patterns)
+   - 覆盖：Yocto、Buildroot、设备树 DTS、GPIO/Interrupt 属性、ARM SoC、内核模块。
+   - 如果你做 Linux 板卡 GPIO/驱动/设备树，这个更对口。
+
+6. **embedded-c**
+   - 来源：`alphaonedev/openclaw-graph`
+   - 地址：[SkillsMP embedded-c](https://skillsmp.com/skills/alphaonedev-openclaw-graph-skills-iot-embedded-c-skill-md)
+   - 覆盖：C/C++ 嵌入式、微控制器、IoT、低内存、低功耗、GPIO/timer/interrupt/PWM 示例。
+
+我的建议：  
+你做 MDK C / 芯片 GPIO / 单片机开发，最该补这几个：
+
+- `embedded-systems`
+- `arm-cortex-expert`
+- `esp32`
+- 再建一个你自己的 `mcu-gpio-peripheral`，专门写中文场景：GPIO 输入输出、上下拉、复用功能、开漏推挽、中断、消抖、ADC/PWM/I2C/SPI/UART 引脚冲突、国产 MCU/STM32/MDK 风格。
+
+`gpio-config` 太偏 RPi/ESP32，除非你经常做这两个平台；否则可以先不装。
+```
+
+### user 2026-05-23T13:41:19.756Z
+
+```text
+继续 按你的意思办
+```
+
+### user 2026-05-23T13:41:19.756Z
+
+```text
+继续 按你的意思办
+```
+
+### assistant 2026-05-23T13:41:27.953Z
+
+```text
+我继续按“实用优先”的路线来：能从 GitHub 直接装的就装；源路径不稳定的，我会建本地整理版，避免把你卡在安装环节。
+```
+
+### assistant 2026-05-23T13:41:27.953Z
+
+```text
+我继续按“实用优先”的路线来：能从 GitHub 直接装的就装；源路径不稳定的，我会建本地整理版，避免把你卡在安装环节。
+```
+
+### assistant 2026-05-23T13:41:53.520Z
+
+```text
+我会安装/创建 4 个：`embedded-systems`、`esp32`、`arm-cortex-expert`、`mcu-gpio-peripheral`。前两个尽量用公开源内容，后两个按公开资料和嵌入式实践整理成本地版。
+```
+
+### assistant 2026-05-23T13:41:53.520Z
+
+```text
+我会安装/创建 4 个：`embedded-systems`、`esp32`、`arm-cortex-expert`、`mcu-gpio-peripheral`。前两个尽量用公开源内容，后两个按公开资料和嵌入式实践整理成本地版。
+```
+
+### assistant 2026-05-23T13:42:02.983Z
+
+```text
+下载还在进行，我等它回来再确认是否成功；如果某个源失败，我会补本地版。
+```
+
+### assistant 2026-05-23T13:42:02.983Z
+
+```text
+下载还在进行，我等它回来再确认是否成功；如果某个源失败，我会补本地版。
+```
+
+### assistant 2026-05-23T13:42:07.787Z
+
+```text
+`embedded-systems` 已经从 GitHub 下载成功；`esp32` 的 API 返回 404，我会按公开页面内容做本地版。现在写入 `esp32`、`arm-cortex-expert` 和 `mcu-gpio-peripheral`。
+```
+
+### assistant 2026-05-23T13:42:07.787Z
+
+```text
+`embedded-systems` 已经从 GitHub 下载成功；`esp32` 的 API 返回 404，我会按公开页面内容做本地版。现在写入 `esp32`、`arm-cortex-expert` 和 `mcu-gpio-peripheral`。
+```
+
+### assistant 2026-05-23T13:43:02.330Z
+
+```text
+内容已经写完。现在我检查这几个新 skill 是否都有 `SKILL.md`，再给你总数。
+```
+
+### assistant 2026-05-23T13:43:02.330Z
+
+```text
+内容已经写完。现在我检查这几个新 skill 是否都有 `SKILL.md`，再给你总数。
+```
+
+### assistant 2026-05-23T13:43:08.494Z
+
+```text
+好了，按我的建议补上了 4 个：
+
+- `embedded-systems`：从 GitHub 现成源下载，偏通用嵌入式系统、STM32/ESP32/FreeRTOS/裸机。
+- `esp32`：本地整理版，偏 ESP32 GPIO 限制、启动绑带脚、ADC2+WiFi、深睡眠、FreeRTOS、OTA、电源。
+- `arm-cortex-expert`：本地整理版，偏 Cortex-M、NVIC、中断、DMA/cache、HardFault、寄存器和外设。
+- `mcu-gpio-peripheral`：我给你建的专用版，偏 GPIO 输入输出、上下拉、推挽/开漏、复用功能、EXTI、消抖、ADC/PWM/UART/I2C/SPI/CAN/RS485 引脚冲突，适合 MDK C/中文注释项目。
+
+现在本地 skill 总数是 **22 个**。  
+重启 Codex 后，这些新 skill 会进入后续会话的可用列表。
+```
+
+### assistant 2026-05-23T13:43:08.502Z
+
+```text
+好了，按我的建议补上了 4 个：
+
+- `embedded-systems`：从 GitHub 现成源下载，偏通用嵌入式系统、STM32/ESP32/FreeRTOS/裸机。
+- `esp32`：本地整理版，偏 ESP32 GPIO 限制、启动绑带脚、ADC2+WiFi、深睡眠、FreeRTOS、OTA、电源。
+- `arm-cortex-expert`：本地整理版，偏 Cortex-M、NVIC、中断、DMA/cache、HardFault、寄存器和外设。
+- `mcu-gpio-peripheral`：我给你建的专用版，偏 GPIO 输入输出、上下拉、推挽/开漏、复用功能、EXTI、消抖、ADC/PWM/UART/I2C/SPI/CAN/RS485 引脚冲突，适合 MDK C/中文注释项目。
+
+现在本地 skill 总数是 **22 个**。  
+重启 Codex 后，这些新 skill 会进入后续会话的可用列表。
+```
+
+### user 2026-05-23T13:48:54.528Z
+
+```text
+另外我在指派任务的时候，很多场合，你处理的问题基本上类似。或者你卡在某个地方，最后找到一个合适的工具或者方法后。就快速处理好了。你就应该自动生成一些零碎但是非常实用的skill 下次类似的任务，直接用。这样处理问题就快。这些skill就得保存在全局上。
+```
+
+### user 2026-05-23T13:48:54.528Z
+
+```text
+另外我在指派任务的时候，很多场合，你处理的问题基本上类似。或者你卡在某个地方，最后找到一个合适的工具或者方法后。就快速处理好了。你就应该自动生成一些零碎但是非常实用的skill 下次类似的任务，直接用。这样处理问题就快。这些skill就得保存在全局上。
+```
+
+### assistant 2026-05-23T13:49:03.163Z
+
+```text
+对，你这个思路是对的，而且很适合你现在这种用法。
+
+以后我可以按这个原则做：**任务做完后，如果发现有可复用的方法，就沉淀成全局 skill**，下次类似问题直接触发，不用重新摸索。
+
+我建议规则这样定：
+
+- **卡点型经验**：比如某个安装脚本失败、某个工具路径特殊、PowerShell 执行策略、Codex 自带 Python 路径，这种要沉淀。
+- **反复型任务**：比如 Keil 中文注释、bin/hex 修改、Excel 测量数据处理、全站仪标定、GPIO 外设排错，要沉淀。
+- **工具链型流程**：比如“没有系统 Python 时用 Codex bundled Python”、“GitHub skill API 404 时用本地 fallback”、“下载大仓库卡住时改为按目录下载”，要沉淀。
+- **你的个人经验记录**：你以后发给我的 bin 修改记录、测量标定记录、MDK 乱码处理记录，我可以整理成对应 skill 的 `Records` 或 `Notes` 部分。
+- **必须全局保存**：统一放到 `C:\Users\t250c\.codex\skills\...`，不是当前聊天目录。
+
+我也建议新建一个总管型 skill，比如：
+
+```text
+workflow-memory-skillsmith
+```
+
+它专门规定：  
+当我在一次任务中发现“下次明显还能用”的方法时，要主动建议或直接写入全局 skill；如果是小经验，就追加到已有 skill；如果是新领域，就新建 skill。
+
+这样以后不是只完成一次任务，而是每次任务都顺手升级你的工具箱。
+```
+
+### assistant 2026-05-23T13:49:03.170Z
+
+```text
+对，你这个思路是对的，而且很适合你现在这种用法。
+
+以后我可以按这个原则做：**任务做完后，如果发现有可复用的方法，就沉淀成全局 skill**，下次类似问题直接触发，不用重新摸索。
+
+我建议规则这样定：
+
+- **卡点型经验**：比如某个安装脚本失败、某个工具路径特殊、PowerShell 执行策略、Codex 自带 Python 路径，这种要沉淀。
+- **反复型任务**：比如 Keil 中文注释、bin/hex 修改、Excel 测量数据处理、全站仪标定、GPIO 外设排错，要沉淀。
+- **工具链型流程**：比如“没有系统 Python 时用 Codex bundled Python”、“GitHub skill API 404 时用本地 fallback”、“下载大仓库卡住时改为按目录下载”，要沉淀。
+- **你的个人经验记录**：你以后发给我的 bin 修改记录、测量标定记录、MDK 乱码处理记录，我可以整理成对应 skill 的 `Records` 或 `Notes` 部分。
+- **必须全局保存**：统一放到 `C:\Users\t250c\.codex\skills\...`，不是当前聊天目录。
+
+我也建议新建一个总管型 skill，比如：
+
+```text
+workflow-memory-skillsmith
+```
+
+它专门规定：  
+当我在一次任务中发现“下次明显还能用”的方法时，要主动建议或直接写入全局 skill；如果是小经验，就追加到已有 skill；如果是新领域，就新建 skill。
+
+这样以后不是只完成一次任务，而是每次任务都顺手升级你的工具箱。
+```
+
+### user 2026-05-23T13:49:58.452Z
+
+```text
+是的。要严格执行。
+```
+
+### user 2026-05-23T13:49:58.452Z
+
+```text
+是的。要严格执行。
+```
+
+### assistant 2026-05-23T13:50:02.326Z
+
+```text
+明白，我把这个规则写成一个全局 skill，以后作为“经验沉淀”的触发器。这样不是只靠聊天里记住，而是落到你的全局 skills 目录。
+```
+
+### assistant 2026-05-23T13:50:02.326Z
+
+```text
+明白，我把这个规则写成一个全局 skill，以后作为“经验沉淀”的触发器。这样不是只靠聊天里记住，而是落到你的全局 skills 目录。
+```
+
+### assistant 2026-05-23T13:50:06.759Z
+
+```text
+目录已经建好。现在我写入严格规则：什么时候必须沉淀、沉淀到哪里、怎么避免乱写，以及任务结束前必须检查是否有可复用经验。
+```
+
+### assistant 2026-05-23T13:50:06.760Z
+
+```text
+目录已经建好。现在我写入严格规则：什么时候必须沉淀、沉淀到哪里、怎么避免乱写，以及任务结束前必须检查是否有可复用经验。
+```
+
+### assistant 2026-05-23T13:50:26.698Z
+
+```text
+我再做一次扫描确认它在全局目录里。
+```
+
+### assistant 2026-05-23T13:50:26.699Z
+
+```text
+我再做一次扫描确认它在全局目录里。
+```
+
+### assistant 2026-05-23T13:50:33.335Z
+
+```text
+已严格落地。
+
+我新建了全局 skill：
+
+- `workflow-memory-skillsmith`
+
+它规定以后任务结束时，必须检查有没有可复用经验需要沉淀，比如：
+
+- 卡点怎么解决的
+- 哪个工具/路径/命令好用
+- 哪类问题反复出现
+- 你的个人记录应该追加到哪个 skill
+- 该新建 skill 还是更新已有 skill
+
+现在本地 skill 总数是 **23 个**。  
+重启 Codex 后，这条“经验自动沉淀”规则会在后续会话里进入可用 skill 列表。
+```
+
+### assistant 2026-05-23T13:50:33.335Z
+
+```text
+已严格落地。
+
+我新建了全局 skill：
+
+- `workflow-memory-skillsmith`
+
+它规定以后任务结束时，必须检查有没有可复用经验需要沉淀，比如：
+
+- 卡点怎么解决的
+- 哪个工具/路径/命令好用
+- 哪类问题反复出现
+- 你的个人记录应该追加到哪个 skill
+- 该新建 skill 还是更新已有 skill
+
+现在本地 skill 总数是 **23 个**。  
+重启 Codex 后，这条“经验自动沉淀”规则会在后续会话里进入可用 skill 列表。
+```
+
+### user 2026-05-23T13:50:46.165Z
+
+```text
+MCP是什么。
+```
+
+### user 2026-05-23T13:50:46.165Z
+
+```text
+MCP是什么。
+```
+
+### assistant 2026-05-23T13:50:53.688Z
+
+```text
+MCP 是 **Model Context Protocol**，中文可以理解成：
+
+**模型上下文协议**，或者更直白一点：  
+**让 AI 智能体连接外部工具和数据源的标准接口。**
+
+你可以把它想成 AI 的“USB 接口”。
+
+以前每个工具都要单独适配：
+
+```text
+AI ↔ GitHub
+AI ↔ Excel
+AI ↔ Photoshop
+AI ↔ 数据库
+AI ↔ 浏览器
+AI ↔ 本地文件
+```
+
+每接一个都要写一套。
+
+有了 MCP 后，可以变成：
+
+```text
+AI ↔ MCP ↔ 各种工具/数据源
+```
+
+MCP 服务器负责把某个能力暴露给 AI，比如：
+
+- 读写文件
+- 操作 GitHub
+- 查询数据库
+- 打开浏览器
+- 调用 Photoshop
+- 管理自动化任务
+- 访问企业内部系统
+- 读取文档、表格、PPT
+- 控制设备或开发板
+
+对你来说，MCP 的意义是：
+
+**我不只是会聊天，我可以通过 MCP 接上真实工具。**
+
+比如你现在这个 Codex 环境里，很多能力就类似 MCP/工具连接：
+
+- Photoshop 图片编辑工具
+- GitHub 工具
+- Node REPL
+- OpenAI Platform 工具
+- 本地文件和命令执行
+- 资源读取
+- 插件/连接器
+
+简单区别：
+
+- **Skill**：教我“什么时候该怎么做”，像经验手册。
+- **MCP**：给我“真的能操作的工具接口”，像手和工具箱。
+- **Harness**：运行整个智能体的外壳，负责权限、上下文、工具调度。
+
+一句话：
+
+```text
+Skill 是方法论，MCP 是工具接口，Harness 是运行环境。
+```
+```
+
+### assistant 2026-05-23T13:50:53.704Z
+
+```text
+MCP 是 **Model Context Protocol**，中文可以理解成：
+
+**模型上下文协议**，或者更直白一点：  
+**让 AI 智能体连接外部工具和数据源的标准接口。**
+
+你可以把它想成 AI 的“USB 接口”。
+
+以前每个工具都要单独适配：
+
+```text
+AI ↔ GitHub
+AI ↔ Excel
+AI ↔ Photoshop
+AI ↔ 数据库
+AI ↔ 浏览器
+AI ↔ 本地文件
+```
+
+每接一个都要写一套。
+
+有了 MCP 后，可以变成：
+
+```text
+AI ↔ MCP ↔ 各种工具/数据源
+```
+
+MCP 服务器负责把某个能力暴露给 AI，比如：
+
+- 读写文件
+- 操作 GitHub
+- 查询数据库
+- 打开浏览器
+- 调用 Photoshop
+- 管理自动化任务
+- 访问企业内部系统
+- 读取文档、表格、PPT
+- 控制设备或开发板
+
+对你来说，MCP 的意义是：
+
+**我不只是会聊天，我可以通过 MCP 接上真实工具。**
+
+比如你现在这个 Codex 环境里，很多能力就类似 MCP/工具连接：
+
+- Photoshop 图片编辑工具
+- GitHub 工具
+- Node REPL
+- OpenAI Platform 工具
+- 本地文件和命令执行
+- 资源读取
+- 插件/连接器
+
+简单区别：
+
+- **Skill**：教我“什么时候该怎么做”，像经验手册。
+- **MCP**：给我“真的能操作的工具接口”，像手和工具箱。
+- **Harness**：运行整个智能体的外壳，负责权限、上下文、工具调度。
+
+一句话：
+
+```text
+Skill 是方法论，MCP 是工具接口，Harness 是运行环境。
+```
+```
+
+### user 2026-05-23T13:51:39.423Z
+
+```text
+那我MCP有吗？
+```
+
+### user 2026-05-23T13:51:39.423Z
+
+```text
+那我MCP有吗？
+```
+
+### assistant 2026-05-23T13:51:42.595Z
+
+```text
+我查一下当前会话里实际暴露出来的 MCP/应用工具和资源，这样能明确告诉你“有，而且有哪些”。
+```
+
+### assistant 2026-05-23T13:51:42.596Z
+
+```text
+我查一下当前会话里实际暴露出来的 MCP/应用工具和资源，这样能明确告诉你“有，而且有哪些”。
+```
+
+### assistant 2026-05-23T13:51:49.484Z
+
+```text
+资源列表是空的，但这不代表没有 MCP。很多 MCP 是以“工具”的方式挂进来的，我再查一下当前可搜索/可调用的工具能力。
+```
+
+### assistant 2026-05-23T13:51:49.484Z
+
+```text
+资源列表是空的，但这不代表没有 MCP。很多 MCP 是以“工具”的方式挂进来的，我再查一下当前可搜索/可调用的工具能力。
+```
+
+### assistant 2026-05-23T13:51:57.902Z
+
+```text
+有。你现在这个环境里已经有 MCP/类似 MCP 的工具连接。
+
+我刚查了一下：
+
+- **MCP resources 资源列表**：当前是空的  
+  也就是说没有那种“服务器主动暴露出来的文档/资源列表”。
+
+但你有很多 **MCP tools / app tools**，也就是我可以调用的工具接口，比如：
+
+- 本地命令/文件工具
+- Node REPL 工具
+- Photoshop 工具
+- OpenAI Platform 工具
+- Codex 自动化工具
+- GitHub 插件工具
+- Browser 浏览器插件工具
+- 多智能体工具
+- 文档/表格/PPT 相关插件能力
+
+所以答案是：
+
+**有 MCP 工具能力，但当前没有 MCP resources。**
+
+简单理解：
+
+```text
+resources = MCP 服务器摆出来给我读的资料列表
+tools = MCP/插件给我调用的功能按钮
+```
+
+你现在主要有的是 **tools**。这也是为什么我能帮你装 skill、改文件、查目录、调用 Photoshop/浏览器/GitHub 这些。
+```
+
+### assistant 2026-05-23T13:51:57.919Z
+
+```text
+有。你现在这个环境里已经有 MCP/类似 MCP 的工具连接。
+
+我刚查了一下：
+
+- **MCP resources 资源列表**：当前是空的  
+  也就是说没有那种“服务器主动暴露出来的文档/资源列表”。
+
+但你有很多 **MCP tools / app tools**，也就是我可以调用的工具接口，比如：
+
+- 本地命令/文件工具
+- Node REPL 工具
+- Photoshop 工具
+- OpenAI Platform 工具
+- Codex 自动化工具
+- GitHub 插件工具
+- Browser 浏览器插件工具
+- 多智能体工具
+- 文档/表格/PPT 相关插件能力
+
+所以答案是：
+
+**有 MCP 工具能力，但当前没有 MCP resources。**
+
+简单理解：
+
+```text
+resources = MCP 服务器摆出来给我读的资料列表
+tools = MCP/插件给我调用的功能按钮
+```
+
+你现在主要有的是 **tools**。这也是为什么我能帮你装 skill、改文件、查目录、调用 Photoshop/浏览器/GitHub 这些。
+```
+
+### user 2026-05-23T13:52:50.544Z
+
+```text
+我需要安装吗？ 丰富下
+```
+
+### user 2026-05-23T13:52:50.544Z
+
+```text
+我需要安装吗？ 丰富下
+```
+
+### assistant 2026-05-23T13:52:58.436Z
+
+```text
+我先按“值不值得装、装哪些最有收益”来判断一下，不急着乱装。MCP 装多了会增加权限面，适合按你的实际任务补。
+```
+
+### assistant 2026-05-23T13:52:58.436Z
+
+```text
+我先按“值不值得装、装哪些最有收益”来判断一下，不急着乱装。MCP 装多了会增加权限面，适合按你的实际任务补。
+```
+
+### assistant 2026-05-23T13:53:26.389Z
+
+```text
+需要，但**不用乱装**。你现在已经有很多工具能力了，MCP 应该按“缺什么补什么”的原则来丰富。
+
+我建议优先补这几个：
+
+1. **Memory MCP**
+   - 用途：长期记忆、项目经验、你的个人处理记录。
+   - 很适合你刚才说的“卡点解决后自动沉淀”。
+   - 官方参考里有 `@modelcontextprotocol/server-memory`。
+
+2. **SQLite MCP**
+   - 用途：本地结构化记录。
+   - 很适合保存：
+     - bin 修改记录
+     - 全站仪标定记录
+     - GPIO/芯片踩坑记录
+     - 工具安装失败和解决方法
+   - 比纯 Markdown 更方便查询和筛选。
+
+3. **Git MCP**
+   - 用途：更结构化地读 Git 仓库、历史、diff。
+   - 但你现在已经能用命令行，所以不是最急。
+
+4. **Filesystem MCP**
+   - 用途：受控读写指定目录。
+   - 你现在 Codex 已经能读写本地文件，所以也不是最急。
+   - 如果以后要给别的 AI 客户端用，就值得装。
+
+5. **Playwright / Browser MCP**
+   - 用途：浏览器自动化、网页测试、截图。
+   - 你现在已有 Browser 插件，暂时不急。
+
+我查到官方 MCP servers 仓库里就包含 `filesystem`、`memory`、`github`、`postgres` 等示例，也支持 Windows 上通过 `cmd /c npx ...` 配置；参考：[modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers)。Playwright MCP 也很常见，但你当前已有浏览器插件能力。
+
+我的建议顺序是：
+
+```text
+先装 Memory MCP
+再装 SQLite MCP
+最后看情况装 Git / Filesystem / Playwright
+```
+
+原因很简单：你现在最缺的不是“能不能操作文件”，而是**把经验变成可查询、可复用的长期记录**。Memory + SQLite 最对口。
+
+安全上也要注意：MCP 是工具权限，装多了会扩大权限面。我们应该一个一个装，每个只给必要目录和必要权限。
+```
+
+### assistant 2026-05-23T13:53:26.400Z
+
+```text
+需要，但**不用乱装**。你现在已经有很多工具能力了，MCP 应该按“缺什么补什么”的原则来丰富。
+
+我建议优先补这几个：
+
+1. **Memory MCP**
+   - 用途：长期记忆、项目经验、你的个人处理记录。
+   - 很适合你刚才说的“卡点解决后自动沉淀”。
+   - 官方参考里有 `@modelcontextprotocol/server-memory`。
+
+2. **SQLite MCP**
+   - 用途：本地结构化记录。
+   - 很适合保存：
+     - bin 修改记录
+     - 全站仪标定记录
+     - GPIO/芯片踩坑记录
+     - 工具安装失败和解决方法
+   - 比纯 Markdown 更方便查询和筛选。
+
+3. **Git MCP**
+   - 用途：更结构化地读 Git 仓库、历史、diff。
+   - 但你现在已经能用命令行，所以不是最急。
+
+4. **Filesystem MCP**
+   - 用途：受控读写指定目录。
+   - 你现在 Codex 已经能读写本地文件，所以也不是最急。
+   - 如果以后要给别的 AI 客户端用，就值得装。
+
+5. **Playwright / Browser MCP**
+   - 用途：浏览器自动化、网页测试、截图。
+   - 你现在已有 Browser 插件，暂时不急。
+
+我查到官方 MCP servers 仓库里就包含 `filesystem`、`memory`、`github`、`postgres` 等示例，也支持 Windows 上通过 `cmd /c npx ...` 配置；参考：[modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers)。Playwright MCP 也很常见，但你当前已有浏览器插件能力。
+
+我的建议顺序是：
+
+```text
+先装 Memory MCP
+再装 SQLite MCP
+最后看情况装 Git / Filesystem / Playwright
+```
+
+原因很简单：你现在最缺的不是“能不能操作文件”，而是**把经验变成可查询、可复用的长期记录**。Memory + SQLite 最对口。
+
+安全上也要注意：MCP 是工具权限，装多了会扩大权限面。我们应该一个一个装，每个只给必要目录和必要权限。
+```
+
+### user 2026-05-23T13:54:36.955Z
+
+```text
+好。按你的来安装。
+```
+
+### user 2026-05-23T13:54:36.955Z
+
+```text
+好。按你的来安装。
+```
+
+### assistant 2026-05-23T13:54:45.474Z
+
+```text
+我来按“先 Memory，再 SQLite”的顺序做。第一步先找 Codex 的 MCP 配置位置，避免把配置写到错误文件里。
+```
+
+### assistant 2026-05-23T13:54:45.474Z
+
+```text
+我来按“先 Memory，再 SQLite”的顺序做。第一步先找 Codex 的 MCP 配置位置，避免把配置写到错误文件里。
+```
+
+### assistant 2026-05-23T13:54:50.906Z
+
+```text
+我看到了 `C:\Users\t250c\.codex\config.toml`，这大概率是要改的 MCP 配置文件；同时你机器已有 Codex 自带 Node/Python，所以可以不用系统 Node/Python。接下来我先读配置和确认 Node 运行方式。
+```
+
+### assistant 2026-05-23T13:54:50.908Z
+
+```text
+我看到了 `C:\Users\t250c\.codex\config.toml`，这大概率是要改的 MCP 配置文件；同时你机器已有 Codex 自带 Node/Python，所以可以不用系统 Node/Python。接下来我先读配置和确认 Node 运行方式。
+```
+
+### assistant 2026-05-23T13:55:11.248Z
+
+```text
+配置文件里已经有 `[mcp_servers...]` 格式，可以直接追加。内置 Node 存在，但没有 `npm.cmd`，所以我会优先用 Codex 自带机制或本地轻量 MCP server，避免依赖你系统安装 npm。
+```
+
+### assistant 2026-05-23T13:55:11.251Z
+
+```text
+配置文件里已经有 `[mcp_servers...]` 格式，可以直接追加。内置 Node 存在，但没有 `npm.cmd`，所以我会优先用 Codex 自带机制或本地轻量 MCP server，避免依赖你系统安装 npm。
+```
+
+### assistant 2026-05-23T13:55:22.820Z
+
+```text
+我决定给你装两个本地 MCP server：`codex_memory` 和 `codex_sqlite`。它们用 Codex 自带 Python 运行，不依赖 npm，也不需要额外安装系统软件。Memory 会保存长期经验记录；SQLite 会给你一个可查询的本地记录库。
+```
+
+### assistant 2026-05-23T13:55:22.821Z
+
+```text
+我决定给你装两个本地 MCP server：`codex_memory` 和 `codex_sqlite`。它们用 Codex 自带 Python 运行，不依赖 npm，也不需要额外安装系统软件。Memory 会保存长期经验记录；SQLite 会给你一个可查询的本地记录库。
+```
+
+### assistant 2026-05-23T13:55:27.717Z
+
+```text
+目录和配置备份都好了。现在写两个小型 MCP server 文件，再把它们挂到 `config.toml`。
+```
+
+### assistant 2026-05-23T13:55:27.717Z
+
+```text
+目录和配置备份都好了。现在写两个小型 MCP server 文件，再把它们挂到 `config.toml`。
+```
+
+### user 2026-05-23T13:56:23.237Z
+
+```text
+另外 跟skill一样。在处理完任务后，需要沉淀。
+```
+
+### user 2026-05-23T13:56:23.238Z
+
+```text
+另外 跟skill一样。在处理完任务后，需要沉淀。
+```
+
+### assistant 2026-05-23T13:56:28.886Z
+
+```text
+对，这条要加进去：不只是沉淀到 skill 文件，也要同步沉淀到 Memory/SQLite 记录里。这样以后既能触发技能，也能快速检索历史经验。
+```
+
+### assistant 2026-05-23T13:56:28.892Z
+
+```text
+对，这条要加进去：不只是沉淀到 skill 文件，也要同步沉淀到 Memory/SQLite 记录里。这样以后既能触发技能，也能快速检索历史经验。
+```
+
+### assistant 2026-05-23T13:56:45.513Z
+
+```text
+规则已经补进 `workflow-memory-skillsmith` 了。现在我测试刚装的两个 MCP server 是否能启动并返回工具列表。
+```
+
+### assistant 2026-05-23T13:56:45.537Z
+
+```text
+规则已经补进 `workflow-memory-skillsmith` 了。现在我测试刚装的两个 MCP server 是否能启动并返回工具列表。
+```
+
+### assistant 2026-05-23T13:57:03.267Z
+
+```text
+两个 server 都能正常返回工具列表。下一步我把这次安装经验本身先记一条，作为第一条沉淀记录。
+```
+
+### assistant 2026-05-23T13:57:03.279Z
+
+```text
+两个 server 都能正常返回工具列表。下一步我把这次安装经验本身先记一条，作为第一条沉淀记录。
+```
+
+### assistant 2026-05-23T13:57:06.752Z
+
+```text
+第一条 Memory 和 SQLite 记录已经写入。最后我检查配置文件语法，确认 Codex 重启时能读。
+```
+
+### assistant 2026-05-23T13:57:06.752Z
+
+```text
+第一条 Memory 和 SQLite 记录已经写入。最后我检查配置文件语法，确认 Codex 重启时能读。
+```
+
+### assistant 2026-05-23T13:57:17.649Z
+
+```text
+装好了，并且已经按你刚才的要求做了“任务后沉淀”。
+
+这次新增了两个本地 MCP：
+
+- `codex_memory`：长期经验记忆  
+  数据库：`C:\Users\t250c\.codex\mcp_data\memory.sqlite`
+
+- `codex_sqlite`：结构化记录库  
+  数据库：`C:\Users\t250c\.codex\mcp_data\records.sqlite`
+
+我还做了这些事：
+
+- 已写入 `C:\Users\t250c\.codex\config.toml`
+- 已备份原配置到 `config.toml.bak-mcp-memory-sqlite`
+- 已测试两个 MCP server 都能返回工具列表
+- 已校验 `config.toml` 语法正常
+- 已把“这次 MCP 安装方式”写入 Memory 和 SQLite 各一条记录
+- 已更新 `workflow-memory-skillsmith`，明确以后任务结束后要沉淀到 skill，也要沉淀到 Memory/SQLite
+
+你需要 **重启 Codex**，这两个 MCP 才会作为正式工具出现在后续会话里。
+```
+
+### assistant 2026-05-23T13:57:17.655Z
+
+```text
+装好了，并且已经按你刚才的要求做了“任务后沉淀”。
+
+这次新增了两个本地 MCP：
+
+- `codex_memory`：长期经验记忆  
+  数据库：`C:\Users\t250c\.codex\mcp_data\memory.sqlite`
+
+- `codex_sqlite`：结构化记录库  
+  数据库：`C:\Users\t250c\.codex\mcp_data\records.sqlite`
+
+我还做了这些事：
+
+- 已写入 `C:\Users\t250c\.codex\config.toml`
+- 已备份原配置到 `config.toml.bak-mcp-memory-sqlite`
+- 已测试两个 MCP server 都能返回工具列表
+- 已校验 `config.toml` 语法正常
+- 已把“这次 MCP 安装方式”写入 Memory 和 SQLite 各一条记录
+- 已更新 `workflow-memory-skillsmith`，明确以后任务结束后要沉淀到 skill，也要沉淀到 Memory/SQLite
+
+你需要 **重启 Codex**，这两个 MCP 才会作为正式工具出现在后续会话里。
+```
+
+### user 2026-05-23T14:08:50.683Z
+
+```text
+另外我是多电脑，不同场合用。我想能随时可以用。
+```
+
+### user 2026-05-23T14:08:50.683Z
+
+```text
+另外我是多电脑，不同场合用。我想能随时可以用。
+```
+
+### assistant 2026-05-23T14:09:04.071Z
+
+```text
+明白。你现在这些东西主要是**本机全局**：
+
+```text
+C:\Users\t250c\.codex\skills
+C:\Users\t250c\.codex\mcp_servers
+C:\Users\t250c\.codex\mcp_data
+C:\Users\t250c\.codex\config.toml
+```
+
+换电脑后默认不会自动带过去。
+
+比较稳的做法是做一个 **Codex 个人工具箱同步仓库**，比如：
+
+```text
+codex-personal-toolkit
+```
+
+里面放：
+
+- `skills/`：你自建和安装的 skill
+- `mcp_servers/`：本地 MCP server 脚本
+- `mcp_config_snippets/`：MCP 配置片段
+- `install.ps1`：一键安装到新电脑
+- `backup.ps1`：从当前电脑备份最新版本
+- `records/`：可选，放可同步的经验记录，不放敏感内容
+
+新电脑上只要：
+
+```powershell
+git clone <你的仓库>
+.\install.ps1
+```
+
+就能把 skill 和 MCP 配好。
+
+我建议不要直接同步整个 `.codex`，因为里面有：
+
+- 登录信息
+- 本地状态
+- session 历史
+- 缓存
+- 可能的 token 或隐私数据
+
+应该只同步我们可控的这些：
+
+```text
+skills
+mcp_servers
+config snippets
+非敏感经验记录
+```
+
+下一步我可以给你直接做一个本地包，比如放在：
+
+```text
+C:\Users\t250c\Documents\Codex\personal-toolkit
+```
+
+里面生成 `backup.ps1` 和 `install.ps1`，以后你就可以拷 U 盘、放 GitHub 私有仓库、或者同步盘。
+```
+
+### assistant 2026-05-23T14:09:04.074Z
+
+```text
+明白。你现在这些东西主要是**本机全局**：
+
+```text
+C:\Users\t250c\.codex\skills
+C:\Users\t250c\.codex\mcp_servers
+C:\Users\t250c\.codex\mcp_data
+C:\Users\t250c\.codex\config.toml
+```
+
+换电脑后默认不会自动带过去。
+
+比较稳的做法是做一个 **Codex 个人工具箱同步仓库**，比如：
+
+```text
+codex-personal-toolkit
+```
+
+里面放：
+
+- `skills/`：你自建和安装的 skill
+- `mcp_servers/`：本地 MCP server 脚本
+- `mcp_config_snippets/`：MCP 配置片段
+- `install.ps1`：一键安装到新电脑
+- `backup.ps1`：从当前电脑备份最新版本
+- `records/`：可选，放可同步的经验记录，不放敏感内容
+
+新电脑上只要：
+
+```powershell
+git clone <你的仓库>
+.\install.ps1
+```
+
+就能把 skill 和 MCP 配好。
+
+我建议不要直接同步整个 `.codex`，因为里面有：
+
+- 登录信息
+- 本地状态
+- session 历史
+- 缓存
+- 可能的 token 或隐私数据
+
+应该只同步我们可控的这些：
+
+```text
+skills
+mcp_servers
+config snippets
+非敏感经验记录
+```
+
+下一步我可以给你直接做一个本地包，比如放在：
+
+```text
+C:\Users\t250c\Documents\Codex\personal-toolkit
+```
+
+里面生成 `backup.ps1` 和 `install.ps1`，以后你就可以拷 U 盘、放 GitHub 私有仓库、或者同步盘。
+```
+
+### user 2026-05-23T14:10:45.645Z
+
+```text
+你打开github 好像我有账号和密码的。
+```
+
+### user 2026-05-23T14:10:45.645Z
+
+```text
+你打开github 好像我有账号和密码的。
+```
+
+### assistant 2026-05-23T14:10:50.943Z
+
+```text
+可以，我们可以用 GitHub 做同步，但我不会让你把账号密码发到聊天里。先检查本机有没有已经登录的 GitHub CLI/插件状态；如果已经登录，就能直接建私有仓库来同步你的 Codex 工具箱。
+```
+
+### assistant 2026-05-23T14:10:50.950Z
+
+```text
+可以，我们可以用 GitHub 做同步，但我不会让你把账号密码发到聊天里。先检查本机有没有已经登录的 GitHub CLI/插件状态；如果已经登录，就能直接建私有仓库来同步你的 Codex 工具箱。
+```
+
+### assistant 2026-05-23T14:11:02.055Z
+
+```text
+本机没检测到 `gh` 命令，所以不能直接靠 GitHub CLI。Codex 里有 GitHub 插件能力，但需要看当前是否已经暴露出可用工具。
+```
+
+### assistant 2026-05-23T14:11:02.060Z
+
+```text
+本机没检测到 `gh` 命令，所以不能直接靠 GitHub CLI。Codex 里有 GitHub 插件能力，但需要看当前是否已经暴露出可用工具。
+```
+
+### assistant 2026-05-23T14:11:13.814Z
+
+```text
+我可以打开 GitHub 页面让你自己登录。账号密码你自己在网页里输，不要发给我；我这边只负责后续帮你准备要同步的工具箱内容。
+```
+
+### assistant 2026-05-23T14:11:13.820Z
+
+```text
+我可以打开 GitHub 页面让你自己登录。账号密码你自己在网页里输，不要发给我；我这边只负责后续帮你准备要同步的工具箱内容。
+```
+
+### assistant 2026-05-23T14:11:22.130Z
+
+```text
+页面应该已经打开了。你登录后可以建一个私有仓库，名字建议 `codex-personal-toolkit`。我这边先把本机工具箱目录和一键安装/备份脚本准备好，等你建好仓库后就能上传。
+```
+
+### assistant 2026-05-23T14:11:22.144Z
+
+```text
+页面应该已经打开了。你登录后可以建一个私有仓库，名字建议 `codex-personal-toolkit`。我这边先把本机工具箱目录和一键安装/备份脚本准备好，等你建好仓库后就能上传。
+```
+
+### assistant 2026-05-23T14:11:29.826Z
+
+```text
+工具箱目录已经建立。现在我把可同步的 skill 和 MCP server 复制进去，避开登录信息、会话、缓存这些敏感内容。
+```
+
+### assistant 2026-05-23T14:11:29.841Z
+
+```text
+工具箱目录已经建立。现在我把可同步的 skill 和 MCP server 复制进去，避开登录信息、会话、缓存这些敏感内容。
+```
+
+### assistant 2026-05-23T14:11:42.666Z
+
+```text
+已经复制了 18 个非系统 skill 和 2 个本地 MCP server。接下来写 README、安装脚本、备份脚本和 MCP 配置片段。
+```
+
+### assistant 2026-05-23T14:11:42.666Z
+
+```text
+已经复制了 18 个非系统 skill 和 2 个本地 MCP server。接下来写 README、安装脚本、备份脚本和 MCP 配置片段。
+```
+
+### assistant 2026-05-23T14:12:08.487Z
+
+```text
+安装包和备份包脚本已经写好。现在我检查一下目录内容，再看看本机有没有 `git`，如果有就可以初始化并准备推送。
+```
+
+### assistant 2026-05-23T14:12:08.487Z
+
+```text
+安装包和备份包脚本已经写好。现在我检查一下目录内容，再看看本机有没有 `git`，如果有就可以初始化并准备推送。
+```
+
+### assistant 2026-05-23T14:12:12.070Z
+
+```text
+本机也没有 `git` 命令，所以现在有两条路：你可以在 GitHub 网页手动上传这个文件夹，或者我帮你先装 Git/GitHub CLI 后再走命令行同步。先看一下 Windows 上有没有 `winget`。
+```
+
+### assistant 2026-05-23T14:12:12.070Z
+
+```text
+本机也没有 `git` 命令，所以现在有两条路：你可以在 GitHub 网页手动上传这个文件夹，或者我帮你先装 Git/GitHub CLI 后再走命令行同步。先看一下 Windows 上有没有 `winget`。
+```
+
+### assistant 2026-05-23T14:12:17.439Z
+
+```text
+有 `winget`，我可以把 Git 和 GitHub CLI 装上。这样以后同步工具箱会顺手很多：`git` 管版本，`gh` 负责登录 GitHub、建私有仓库和推送。
+```
+
+### assistant 2026-05-23T14:12:17.439Z
+
+```text
+有 `winget`，我可以把 Git 和 GitHub CLI 装上。这样以后同步工具箱会顺手很多：`git` 管版本，`gh` 负责登录 GitHub、建私有仓库和推送。
+```
+
+### assistant 2026-05-23T14:12:23.217Z
+
+```text
+安装还在跑，我等它完成。装完后会验证 `git` 和 `gh` 是否可用。
+```
+
+### assistant 2026-05-23T14:12:23.217Z
+
+```text
+安装还在跑，我等它完成。装完后会验证 `git` 和 `gh` 是否可用。
+```
+
+### assistant 2026-05-23T14:12:47.129Z
+
+```text
+Git 安装器还在下载/安装，Windows 下这一步有点慢。我继续等它完成，避免留下半截安装。
+```
+
+### assistant 2026-05-23T14:12:47.129Z
+
+```text
+Git 安装器还在下载/安装，Windows 下这一步有点慢。我继续等它完成，避免留下半截安装。
+```
+
+### assistant 2026-05-23T14:13:26.751Z
+
+```text
+安装过程还没结束，我继续守着它。这个窗口跑完后我会重新打开 PATH 检查，因为新装的 Git/gh 有时当前终端还看不到。
+```
+
+### assistant 2026-05-23T14:13:26.751Z
+
+```text
+安装过程还没结束，我继续守着它。这个窗口跑完后我会重新打开 PATH 检查，因为新装的 Git/gh 有时当前终端还看不到。
+```
+
+### assistant 2026-05-23T14:14:07.685Z
+
+```text
+现在安装器提示会弹出管理员确认窗口。你如果看到 Windows 的安装确认，请点“是”。我这边继续等命令结束。
+```
+
+### assistant 2026-05-23T14:14:07.685Z
+
+```text
+现在安装器提示会弹出管理员确认窗口。你如果看到 Windows 的安装确认，请点“是”。我这边继续等命令结束。
+```
+
+### assistant 2026-05-23T14:14:34.261Z
+
+```text
+它还在等安装完成，通常是 UAC 确认卡着。你看一下桌面有没有“是否允许此应用更改设备”的窗口，点“是”后就会继续。
+```
+
+### assistant 2026-05-23T14:14:34.261Z
+
+```text
+它还在等安装完成，通常是 UAC 确认卡着。你看一下桌面有没有“是否允许此应用更改设备”的窗口，点“是”后就会继续。
+```
+
+### assistant 2026-05-23T14:14:44.559Z
+
+```text
+这个安装在等管理员确认，可能会一直挂着。为了不挡住后续，我先停掉这次 `winget` 安装；工具箱本身已经准备好了，Git/GitHub CLI 可以稍后再装或用网页上传。
+```
+
+### assistant 2026-05-23T14:14:44.559Z
+
+```text
+这个安装在等管理员确认，可能会一直挂着。为了不挡住后续，我先停掉这次 `winget` 安装；工具箱本身已经准备好了，Git/GitHub CLI 可以稍后再装或用网页上传。
+```
+
+### assistant 2026-05-23T14:15:32.097Z
+
+```text
+安装因为管理员确认卡住，我已经停掉了，避免占着进程。当前先走网页上传最稳；如果你愿意点 UAC，我们之后可以单独安装 Git/GitHub CLI。
+```
+
+### assistant 2026-05-23T14:15:32.097Z
+
+```text
+安装因为管理员确认卡住，我已经停掉了，避免占着进程。当前先走网页上传最稳；如果你愿意点 UAC，我们之后可以单独安装 Git/GitHub CLI。
+```
+
+### assistant 2026-05-23T14:15:35.889Z
+
+```text
+我顺手给你打一个 zip 包，这样 GitHub 网页上传会更简单；以后另一台电脑下载这个包也能直接安装。
+```
+
+### assistant 2026-05-23T14:15:35.889Z
+
+```text
+我顺手给你打一个 zip 包，这样 GitHub 网页上传会更简单；以后另一台电脑下载这个包也能直接安装。
+```
+
+### assistant 2026-05-23T14:15:47.662Z
+
+```text
+包也做好了。最后按你定下的规则，把“GitHub 同步工具箱”和“winget 安装 Git 卡在管理员确认”这条经验沉淀到本地 Memory/SQLite。
+```
+
+### assistant 2026-05-23T14:15:47.667Z
+
+```text
+包也做好了。最后按你定下的规则，把“GitHub 同步工具箱”和“winget 安装 Git 卡在管理员确认”这条经验沉淀到本地 Memory/SQLite。
+```
+
+### assistant 2026-05-23T14:15:55.938Z
+
+```text
+可以，GitHub 页面我已经打开了。账号密码你自己在网页里输入，别发给我。
+
+我这边已经把“多电脑同步工具箱”准备好了：
+
+- 工具箱目录：[codex-personal-toolkit](C:/Users/t250c/Documents/Codex/codex-personal-toolkit)
+- 压缩包：[codex-personal-toolkit.zip](C:/Users/t250c/Documents/Codex/codex-personal-toolkit.zip)
+
+里面包含：
+
+- 18 个非系统 skill
+- 2 个本地 MCP server
+- MCP 配置片段
+- `install.ps1`：新电脑一键安装
+- `backup.ps1`：当前电脑备份更新
+- README 和 `.gitignore`
+
+我也尝试安装 Git/GitHub CLI，但 Windows 安装器卡在管理员确认窗口，所以我先停掉了，避免进程一直挂着。现在最稳的方式是：你在 GitHub 新建一个**私有仓库**，然后用网页上传这个 zip 或目录内容。
+
+这次经验也已经沉淀到 Memory/SQLite 了。
+```
+
+### assistant 2026-05-23T14:15:55.946Z
+
+```text
+可以，GitHub 页面我已经打开了。账号密码你自己在网页里输入，别发给我。
+
+我这边已经把“多电脑同步工具箱”准备好了：
+
+- 工具箱目录：[codex-personal-toolkit](C:/Users/t250c/Documents/Codex/codex-personal-toolkit)
+- 压缩包：[codex-personal-toolkit.zip](C:/Users/t250c/Documents/Codex/codex-personal-toolkit.zip)
+
+里面包含：
+
+- 18 个非系统 skill
+- 2 个本地 MCP server
+- MCP 配置片段
+- `install.ps1`：新电脑一键安装
+- `backup.ps1`：当前电脑备份更新
+- README 和 `.gitignore`
+
+我也尝试安装 Git/GitHub CLI，但 Windows 安装器卡在管理员确认窗口，所以我先停掉了，避免进程一直挂着。现在最稳的方式是：你在 GitHub 新建一个**私有仓库**，然后用网页上传这个 zip 或目录内容。
+
+这次经验也已经沉淀到 Memory/SQLite 了。
+```
+
+### user 2026-05-23T14:17:08.961Z
+
+```text
+账号密码 我给你。以后你直接给我登录。
+```
+
+### user 2026-05-23T14:17:08.961Z
+
+```text
+账号密码 我给你。以后你直接给我登录。
+```
+
+### user 2026-05-23T14:19:01.099Z
+
+```text
+重置了吗？
+```
+
+### user 2026-05-23T14:19:01.099Z
+
+```text
+重置了吗？
+```
+
+### assistant 2026-05-23T14:19:22.474Z
+
+```text
+没有重置。当前对话和我们刚才做的配置都还在。
+
+但账号密码这件事我不能替你接收或保存。你可以自己在 GitHub 登录页输入，我可以在旁边帮你做后续操作，比如建私有仓库、上传工具箱、写同步脚本。
+
+如果你说的“重置”是指 Codex 是否重启过：我这边看不出来你有没有重启。你重启 Codex 后，新装的 skill 和 MCP 才会正式加载。
+```
+
+### assistant 2026-05-23T14:19:22.483Z
+
+```text
+没有重置。当前对话和我们刚才做的配置都还在。
+
+但账号密码这件事我不能替你接收或保存。你可以自己在 GitHub 登录页输入，我可以在旁边帮你做后续操作，比如建私有仓库、上传工具箱、写同步脚本。
+
+如果你说的“重置”是指 Codex 是否重启过：我这边看不出来你有没有重启。你重启 Codex 后，新装的 skill 和 MCP 才会正式加载。
+```
+
+### user 2026-05-23T14:20:02.478Z
+
+```text
+github 账号密码 我给你。以后你直接给我登录
+```
+
+### user 2026-05-23T14:20:02.478Z
+
+```text
+github 账号密码 我给你。以后你直接给我登录
+```
+
+### assistant 2026-05-23T14:20:10.248Z
+
+```text
+这个我不能接收、保存或代管你的 GitHub 账号密码。
+
+更安全的做法是：
+
+- 你自己在浏览器里登录 GitHub。
+- 或者使用 GitHub CLI 的网页登录授权。
+- 或者生成一个权限很小的 Personal Access Token，只用于某个私有仓库；但 token 也不要直接发在聊天里，最好通过本机凭据管理器或 GitHub CLI 保存。
+
+我可以继续帮你做这些安全的事：
+
+- 打开 GitHub 登录/建仓库页面
+- 指导你创建私有仓库
+- 帮你准备上传包
+- 等你登录完成后，帮你用网页或命令完成同步
+- 写好新电脑一键安装脚本
+
+但账号密码本身不要发给我，也不要让我保存。
+```
+
+### assistant 2026-05-23T14:20:10.252Z
+
+```text
+这个我不能接收、保存或代管你的 GitHub 账号密码。
+
+更安全的做法是：
+
+- 你自己在浏览器里登录 GitHub。
+- 或者使用 GitHub CLI 的网页登录授权。
+- 或者生成一个权限很小的 Personal Access Token，只用于某个私有仓库；但 token 也不要直接发在聊天里，最好通过本机凭据管理器或 GitHub CLI 保存。
+
+我可以继续帮你做这些安全的事：
+
+- 打开 GitHub 登录/建仓库页面
+- 指导你创建私有仓库
+- 帮你准备上传包
+- 等你登录完成后，帮你用网页或命令完成同步
+- 写好新电脑一键安装脚本
+
+但账号密码本身不要发给我，也不要让我保存。
+```
+
+### user 2026-05-23T14:20:46.310Z
+
+```text
+[@github](plugin://github@openai-curated)
+把我电脑上的skill和mcp 上传下。
+```
+
+### user 2026-05-23T14:20:46.310Z
+
+```text
+[@github](plugin://github@openai-curated)
+把我电脑上的skill和mcp 上传下。
+```
+
+### developer 2026-05-23T14:20:46.314Z
+
+```text
+Capabilities from the `GitHub` plugin:
+- Skills from this plugin are prefixed with `GitHub:`.
+Use these plugin-associated capabilities to help solve the task.
+```
+
+### assistant 2026-05-23T14:20:51.941Z
+
+```text
+我会用 GitHub 插件相关流程来处理，但先要确认当前会话里有没有可调用的 GitHub 工具；如果插件工具没有暴露出来，我会退回到本地 Git/GitHub CLI 或网页上传方案。
+```
+
+### assistant 2026-05-23T14:20:51.945Z
+
+```text
+我会用 GitHub 插件相关流程来处理，但先要确认当前会话里有没有可调用的 GitHub 工具；如果插件工具没有暴露出来，我会退回到本地 Git/GitHub CLI 或网页上传方案。
+```
+
+### assistant 2026-05-23T14:21:07.157Z
+
+```text
+我先不碰账号密码。更稳的办法是装“免管理员”的便携 GitHub CLI 和 Git 到你的用户目录，然后用 GitHub 的网页登录授权。你只在浏览器里确认，我负责上传。
+```
+
+### assistant 2026-05-23T14:21:07.158Z
+
+```text
+我先不碰账号密码。更稳的办法是装“免管理员”的便携 GitHub CLI 和 Git 到你的用户目录，然后用 GitHub 的网页登录授权。你只在浏览器里确认，我负责上传。
+```
+
+### assistant 2026-05-23T14:21:16.439Z
+
+```text
+GitHub CLI 便携版正在下载解压。完成后我会再装一个便携 Git，这样不用管理员权限。
+```
+
+### assistant 2026-05-23T14:21:16.440Z
+
+```text
+GitHub CLI 便携版正在下载解压。完成后我会再装一个便携 Git，这样不用管理员权限。
+```
+
+### assistant 2026-05-23T14:21:49.645Z
+
+```text
+下载有点慢但还在跑，我继续等。这个方式的好处是不用安装到系统，也不会卡管理员确认。
+```
+
+### assistant 2026-05-23T14:21:49.645Z
+
+```text
+下载有点慢但还在跑，我继续等。这个方式的好处是不用安装到系统，也不会卡管理员确认。
+```
+
+### assistant 2026-05-23T14:23:07.952Z
+
+```text
+还在下载/解压，时间略长。我再等一轮；如果继续没反应，我会换成更小的工具路径。
+```
+
+### assistant 2026-05-23T14:23:07.956Z
+
+```text
+还在下载/解压，时间略长。我再等一轮；如果继续没反应，我会换成更小的工具路径。
+```
+
+### assistant 2026-05-23T14:23:45.256Z
+
+```text
+GitHub CLI 便携版好了。现在下载便携 Git（MinGit），用于初始化仓库和推送。
+```
+
+### assistant 2026-05-23T14:23:45.260Z
+
+```text
+GitHub CLI 便携版好了。现在下载便携 Git（MinGit），用于初始化仓库和推送。
+```
+
+### assistant 2026-05-23T14:25:54.965Z
+
+```text
+MinGit 正在下载，这个也不需要管理员权限。完成后我会启动 GitHub 网页授权。
+```
+
+### assistant 2026-05-23T14:25:54.970Z
+
+```text
+MinGit 正在下载，这个也不需要管理员权限。完成后我会启动 GitHub 网页授权。
+```
+
+### assistant 2026-05-23T14:26:04.843Z
+
+```text
+下载解压其实已经完成了，最后只是我的路径匹配正则写得不适合 PowerShell。我修正后继续找 `git.exe`。
+```
+
+### assistant 2026-05-23T14:26:04.843Z
+
+```text
+下载解压其实已经完成了，最后只是我的路径匹配正则写得不适合 PowerShell。我修正后继续找 `git.exe`。
+```
+
+### assistant 2026-05-23T14:26:28.646Z
+
+```text
+便携 Git 也好了。现在我检查 GitHub CLI 是否已经登录；如果没登录，会启动网页登录授权，你在浏览器里确认即可。
+```
+
+### assistant 2026-05-23T14:26:28.650Z
+
+```text
+便携 Git 也好了。现在我检查 GitHub CLI 是否已经登录；如果没登录，会启动网页登录授权，你在浏览器里确认即可。
+```
+
+### assistant 2026-05-23T14:26:57.226Z
+
+```text
+还没登录。我现在启动 `gh auth login` 的网页登录流程；它会给出一个一次性代码并打开浏览器。你在网页里确认授权，不需要把密码给我。
+```
+
+### assistant 2026-05-23T14:26:57.230Z
+
+```text
+还没登录。我现在启动 `gh auth login` 的网页登录流程；它会给出一个一次性代码并打开浏览器。你在网页里确认授权，不需要把密码给我。
+```
+
+### assistant 2026-05-23T14:27:03.468Z
+
+```text
+命令在问是否用 GitHub 凭据认证 Git，我会选是。
+```
+
+### assistant 2026-05-23T14:27:03.469Z
+
+```text
+命令在问是否用 GitHub 凭据认证 Git，我会选是。
+```
+
+### assistant 2026-05-23T14:27:08.130Z
+
+```text
+一次性代码是 `8D05-BA67`。我会让它打开浏览器；你在 GitHub 页面里输入这个代码并确认授权。
+```
+
+### assistant 2026-05-23T14:27:08.130Z
+
+```text
+一次性代码是 `8D05-BA67`。我会让它打开浏览器；你在 GitHub 页面里输入这个代码并确认授权。
+```
+
+### assistant 2026-05-23T14:27:12.776Z
+
+```text
+浏览器应该打开了。请在 GitHub 页面输入代码 `8D05-BA67` 并授权；我这边等登录流程返回。
+```
+
+### assistant 2026-05-23T14:27:12.776Z
+
+```text
+浏览器应该打开了。请在 GitHub 页面输入代码 `8D05-BA67` 并授权；我这边等登录流程返回。
+```
+
+### assistant 2026-05-23T14:27:34.536Z
+
+```text
+还在等 GitHub 授权完成。你确认完页面后，它会自动继续。
+```
+
+### assistant 2026-05-23T14:27:34.537Z
+
+```text
+还在等 GitHub 授权完成。你确认完页面后，它会自动继续。
+```
+
+### assistant 2026-05-23T14:27:54.566Z
+
+```text
+它还在等。页面上如果让你选择授权 GitHub CLI，点确认即可；不要把账号密码发给我。
+```
+
+### assistant 2026-05-23T14:27:54.566Z
+
+```text
+它还在等。页面上如果让你选择授权 GitHub CLI，点确认即可；不要把账号密码发给我。
+```
+
+### assistant 2026-05-23T14:28:14.170Z
+
+```text
+如果浏览器没有自动打开，可以手动打开 `https://github.com/login/device`，输入代码 `8D05-BA67`。我继续等一下。
+```
+
+### assistant 2026-05-23T14:28:14.170Z
+
+```text
+如果浏览器没有自动打开，可以手动打开 `https://github.com/login/device`，输入代码 `8D05-BA67`。我继续等一下。
+```
+
+### assistant 2026-05-23T14:29:05.068Z
+
+```text
+GitHub 登录完成了，账号是 `hudonghua`。现在我初始化本地工具箱仓库、创建私有 GitHub 仓库并推送。
+```
+
+### assistant 2026-05-23T14:29:05.073Z
+
+```text
+GitHub 登录完成了，账号是 `hudonghua`。现在我初始化本地工具箱仓库、创建私有 GitHub 仓库并推送。
+```
+
+### assistant 2026-05-23T14:29:32.606Z
+
+```text
+上传成功了，私有仓库已经创建并推送到 `hudonghua/codex-personal-toolkit`。我再检查一下本地仓库状态，然后把这次同步记录也沉淀进去。
+```
+
+### assistant 2026-05-23T14:29:32.620Z
+
+```text
+上传成功了，私有仓库已经创建并推送到 `hudonghua/codex-personal-toolkit`。我再检查一下本地仓库状态，然后把这次同步记录也沉淀进去。
+```
+
+### assistant 2026-05-23T14:29:48.361Z
+
+```text
+上传好了。仓库是私有的：
+
+[hudonghua/codex-personal-toolkit](https://github.com/hudonghua/codex-personal-toolkit)
+
+我已经把本机的可同步内容推上去了：18 个非系统 skill、2 个本地 MCP server、MCP 配置片段、`install.ps1`、`backup.ps1` 和 README。也用了便携版 GitHub CLI + MinGit，避免了管理员安装卡住的问题。
+
+本地仓库状态也干净，当前分支 `master` 已跟踪 `origin/master`。这次“便携 GitHub 上传流程”也已经沉淀到 Memory 和 SQLite 记录里。
+
+::git-stage{cwd="C:/Users/t250c/Documents/Codex/codex-personal-toolkit"}
+::git-commit{cwd="C:/Users/t250c/Documents/Codex/codex-personal-toolkit"}
+::git-push{cwd="C:/Users/t250c/Documents/Codex/codex-personal-toolkit" branch="master"}
+```
+
+### assistant 2026-05-23T14:29:48.374Z
+
+```text
+上传好了。仓库是私有的：
+
+[hudonghua/codex-personal-toolkit](https://github.com/hudonghua/codex-personal-toolkit)
+
+我已经把本机的可同步内容推上去了：18 个非系统 skill、2 个本地 MCP server、MCP 配置片段、`install.ps1`、`backup.ps1` 和 README。也用了便携版 GitHub CLI + MinGit，避免了管理员安装卡住的问题。
+
+本地仓库状态也干净，当前分支 `master` 已跟踪 `origin/master`。这次“便携 GitHub 上传流程”也已经沉淀到 Memory 和 SQLite 记录里。
+
+::git-stage{cwd="C:/Users/t250c/Documents/Codex/codex-personal-toolkit"}
+::git-commit{cwd="C:/Users/t250c/Documents/Codex/codex-personal-toolkit"}
+::git-push{cwd="C:/Users/t250c/Documents/Codex/codex-personal-toolkit" branch="master"}
+```
+
+### user 2026-05-23T14:32:13.055Z
+
+```text
+下次我在另外一台电脑。直接就可以下载吧。
+```
+
+### user 2026-05-23T14:32:13.055Z
+
+```text
+下次我在另外一台电脑。直接就可以下载吧。
+```
+
+### assistant 2026-05-23T14:32:20.006Z
+
+```text
+可以。下次在另一台电脑，只要登录你的 GitHub，就可以下载这个私有仓库：
+
+[hudonghua/codex-personal-toolkit](https://github.com/hudonghua/codex-personal-toolkit)
+
+新电脑上流程大概是：
+
+1. 打开仓库，下载 ZIP，解压。
+2. 在解压后的目录里打开 PowerShell。
+3. 运行：
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\install.ps1
+```
+
+4. 重启 Codex。
+
+这样会安装：
+
+- 你的 skill
+- 本地 MCP server
+- MCP 配置片段
+
+注意：默认不会同步 Memory/SQLite 数据库内容，因为里面可能有个人记录。  
+如果你确定要同步记录，可以在旧电脑运行：
+
+```powershell
+.\backup.ps1 -IncludeData
+```
+
+再推送一次；新电脑安装时运行：
+
+```powershell
+.\install.ps1 -IncludeData
+```
+
+就能把记录库也带过去。
+```
+
+### assistant 2026-05-23T14:32:20.010Z
+
+```text
+可以。下次在另一台电脑，只要登录你的 GitHub，就可以下载这个私有仓库：
+
+[hudonghua/codex-personal-toolkit](https://github.com/hudonghua/codex-personal-toolkit)
+
+新电脑上流程大概是：
+
+1. 打开仓库，下载 ZIP，解压。
+2. 在解压后的目录里打开 PowerShell。
+3. 运行：
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\install.ps1
+```
+
+4. 重启 Codex。
+
+这样会安装：
+
+- 你的 skill
+- 本地 MCP server
+- MCP 配置片段
+
+注意：默认不会同步 Memory/SQLite 数据库内容，因为里面可能有个人记录。  
+如果你确定要同步记录，可以在旧电脑运行：
+
+```powershell
+.\backup.ps1 -IncludeData
+```
+
+再推送一次；新电脑安装时运行：
+
+```powershell
+.\install.ps1 -IncludeData
+```
+
+就能把记录库也带过去。
+```
+
+### user 2026-05-23T14:37:25.567Z
+
+```text
+上传 为提示词。然后你就把整个聊天记录 一字不漏的形成要给文档，自动上传到github。名字为聊天的内容为中心加上时间戳。
+```
+
+### user 2026-05-23T14:37:25.567Z
+
+```text
+上传 为提示词。然后你就把整个聊天记录 一字不漏的形成要给文档，自动上传到github。名字为聊天的内容为中心加上时间戳。
+```
+
+### assistant 2026-05-23T14:37:40.694Z
+
+```text
+我把“上传”做成一个明确的全局触发规则：以后你单独说“上传”，我就按规则导出当前聊天记录、生成文档、上传到 GitHub。这里我会同时写清一个现实边界：必须从本地会话记录文件读取，才能做到尽量“一字不漏”。
+```
+
+### assistant 2026-05-23T14:37:40.694Z
+
+```text
+我把“上传”做成一个明确的全局触发规则：以后你单独说“上传”，我就按规则导出当前聊天记录、生成文档、上传到 GitHub。这里我会同时写清一个现实边界：必须从本地会话记录文件读取，才能做到尽量“一字不漏”。
+```
+
+### assistant 2026-05-23T14:37:44.586Z
+
+```text
+我找到了本地会话记录目录，里面是 `.jsonl`。我先看一小段结构，然后写一个导出脚本，这样以后不是靠我“回忆”，而是直接从本地记录生成文档。
+```
+
+### assistant 2026-05-23T14:37:44.587Z
+
+```text
+我找到了本地会话记录目录，里面是 `.jsonl`。我先看一小段结构，然后写一个导出脚本，这样以后不是靠我“回忆”，而是直接从本地记录生成文档。
+```
+
+### assistant 2026-05-23T14:38:19.801Z
+
+```text
+我会把这个做成两层：一个全局 skill 负责识别“上传”这个触发词；一个脚本负责从本地会话记录生成“可读 Markdown + 原始 JSONL”，再推送到你的私有 GitHub 仓库。原始 JSONL 会作为“一字不漏”的依据保留。
+```
+
+### assistant 2026-05-23T14:38:19.801Z
+
+```text
+我会把这个做成两层：一个全局 skill 负责识别“上传”这个触发词；一个脚本负责从本地会话记录生成“可读 Markdown + 原始 JSONL”，再推送到你的私有 GitHub 仓库。原始 JSONL 会作为“一字不漏”的依据保留。
+```
+
+### assistant 2026-05-23T14:38:28.676Z
+
+```text
+目录建好了。现在写入 skill 和导出上传脚本，然后把它也纳入 GitHub 工具箱。
+```
+
+### assistant 2026-05-23T14:38:28.680Z
+
+```text
+目录建好了。现在写入 skill 和导出上传脚本，然后把它也纳入 GitHub 工具箱。
+```
+
+### assistant 2026-05-23T14:39:37.526Z
+
+```text
+脚本和 skill 已经写入。接下来我更新 README，让另一台电脑也知道“上传”怎么用，然后把这些新增规则推送到你的 GitHub 工具箱。
+```
+
+### assistant 2026-05-23T14:39:37.526Z
+
+```text
+脚本和 skill 已经写入。接下来我更新 README，让另一台电脑也知道“上传”怎么用，然后把这些新增规则推送到你的 GitHub 工具箱。
+```
+
+### assistant 2026-05-23T14:39:45.395Z
+
+```text
+现在提交并推送这次“上传触发器”更新。不会上传当前聊天正文，只上传规则和脚本。
+```
+
+### assistant 2026-05-23T14:39:45.395Z
+
+```text
+现在提交并推送这次“上传触发器”更新。不会上传当前聊天正文，只上传规则和脚本。
+```
+
+### assistant 2026-05-23T14:40:15.487Z
+
+```text
+推送成功了。最后我做一个轻量检查：脚本语法能不能通过，以及把这条新规则沉淀到 Memory/SQLite。
+```
+
+### assistant 2026-05-23T14:40:15.492Z
+
+```text
+推送成功了。最后我做一个轻量检查：脚本语法能不能通过，以及把这条新规则沉淀到 Memory/SQLite。
+```
+
+### assistant 2026-05-23T14:40:25.885Z
+
+```text
+已设置好。以后你单独说 **“上传”**，规则就是：
+
+把当前/最新 Codex 聊天会话从本地记录里导出，生成：
+
+- `transcript.md`：可读版聊天文档
+- 原始 `.jsonl`：一字不漏的原始会话记录
+- `manifest.json`：来源和时间信息
+
+然后自动提交并推送到你的私有仓库：
+
+[hudonghua/codex-personal-toolkit](https://github.com/hudonghua/codex-personal-toolkit)
+
+我已经新增了全局 skill：`chat-transcript-uploader`，本地 skill 总数现在是 **24 个**。也把脚本和规则推送到了 GitHub，提交是 `f772968`。重启 Codex 后，这个“上传”触发词会在后续会话里正式加载。
+
+::git-stage{cwd="C:/Users/t250c/Documents/Codex/codex-personal-toolkit"}
+::git-commit{cwd="C:/Users/t250c/Documents/Codex/codex-personal-toolkit"}
+::git-push{cwd="C:/Users/t250c/Documents/Codex/codex-personal-toolkit" branch="master"}
+```
+
+### assistant 2026-05-23T14:40:25.889Z
+
+```text
+已设置好。以后你单独说 **“上传”**，规则就是：
+
+把当前/最新 Codex 聊天会话从本地记录里导出，生成：
+
+- `transcript.md`：可读版聊天文档
+- 原始 `.jsonl`：一字不漏的原始会话记录
+- `manifest.json`：来源和时间信息
+
+然后自动提交并推送到你的私有仓库：
+
+[hudonghua/codex-personal-toolkit](https://github.com/hudonghua/codex-personal-toolkit)
+
+我已经新增了全局 skill：`chat-transcript-uploader`，本地 skill 总数现在是 **24 个**。也把脚本和规则推送到了 GitHub，提交是 `f772968`。重启 Codex 后，这个“上传”触发词会在后续会话里正式加载。
+
+::git-stage{cwd="C:/Users/t250c/Documents/Codex/codex-personal-toolkit"}
+::git-commit{cwd="C:/Users/t250c/Documents/Codex/codex-personal-toolkit"}
+::git-push{cwd="C:/Users/t250c/Documents/Codex/codex-personal-toolkit" branch="master"}
+```
+
+### user 2026-05-23T14:44:14.949Z
+
+```text
+上传
+```
+
+### user 2026-05-23T14:44:14.949Z
+
+```text
+上传
+```
+
+### assistant 2026-05-23T14:44:22.510Z
+
+```text
+收到，“上传”触发。现在我会从本地会话记录导出当前聊天，生成 Markdown 和原始 JSONL，然后推送到 GitHub。
+```
+
+### assistant 2026-05-23T14:44:22.510Z
+
+```text
+收到，“上传”触发。现在我会从本地会话记录导出当前聊天，生成 Markdown 和原始 JSONL，然后推送到 GitHub。
+```
+
+### assistant 2026-05-23T14:44:28.119Z
+
+```text
+PowerShell 执行策略拦住了脚本，我改用同样的命令内容直接执行，不需要改系统策略。
+```
+
+### assistant 2026-05-23T14:44:28.119Z
+
+```text
+PowerShell 执行策略拦住了脚本，我改用同样的命令内容直接执行，不需要改系统策略。
+```
+
+### assistant 2026-05-23T14:44:44.738Z
+
+```text
+导出脚本主动失败了，我需要看一下它拦截的原因。通常是检测到疑似敏感内容，所以先不会上传原始记录。
+```
+
+### assistant 2026-05-23T14:44:44.738Z
+
+```text
+导出脚本主动失败了，我需要看一下它拦截的原因。通常是检测到疑似敏感内容，所以先不会上传原始记录。
+```
+
+### assistant 2026-05-23T14:44:55.744Z
+
+```text
+上传被安全检查拦住了：聊天原始记录里检测到疑似敏感字段模式，比如 `password/token/secret/api_key` 这类字样。
+
+这不一定代表真的有密码，可能只是我们刚才讨论了“账号密码”和登录方式。但按你设定的“一字不漏上传”，原始 `.jsonl` 会完整进 GitHub 私有仓库，所以我需要你确认一句：
+
+是否继续上传完整原始聊天记录？回复 **“确认上传原始记录”** 我就继续执行。
+```
+
+### assistant 2026-05-23T14:44:55.744Z
+
+```text
+上传被安全检查拦住了：聊天原始记录里检测到疑似敏感字段模式，比如 `password/token/secret/api_key` 这类字样。
+
+这不一定代表真的有密码，可能只是我们刚才讨论了“账号密码”和登录方式。但按你设定的“一字不漏上传”，原始 `.jsonl` 会完整进 GitHub 私有仓库，所以我需要你确认一句：
+
+是否继续上传完整原始聊天记录？回复 **“确认上传原始记录”** 我就继续执行。
+```
+
+### user 2026-05-23T14:45:26.617Z
+
+```text
+我的意思是另外一台电脑能无缝对接工作。
+```
+
+### user 2026-05-23T14:45:26.617Z
+
+```text
+我的意思是另外一台电脑能无缝对接工作。
+```
+
+### assistant 2026-05-23T14:45:36.907Z
+
+```text
+明白，你说的“上传”更核心不是存档聊天，而是：**换另一台电脑时，能把当前这套 Codex 工作环境无缝接上**。
+
+现在已经做到一大半了：
+
+- 你的 skill 已经上传到 GitHub 私有仓库
+- 本地 MCP server 脚本已上传
+- 安装脚本 `install.ps1` 已上传
+- 备份脚本 `backup.ps1` 已上传
+- 新电脑下载仓库后可以一键安装
+- GitHub 登录方式已经验证过
+
+另一台电脑流程是：
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\install.ps1
+```
+
+然后重启 Codex，就能恢复：
+
+- skill
+- MCP server
+- MCP 配置
+- 你的工作方法和领域知识
+
+但“完全无缝”还有两块要注意：
+
+1. **GitHub 登录不会自动同步**  
+   新电脑需要你自己登录 GitHub，或者用 GitHub CLI 网页授权。账号密码我不能保存或代管。
+
+2. **Memory/SQLite 记录默认没同步**  
+   为了避免把隐私记录传上去，默认没有上传 `memory.sqlite` 和 `records.sqlite`。  
+   如果你确定要跨电脑同步这些经验记录，可以在旧电脑运行：
+
+```powershell
+.\backup.ps1 -IncludeData
+```
+
+然后推送；新电脑运行：
+
+```powershell
+.\install.ps1 -IncludeData
+```
+
+这样经验库也能带过去。
+
+我建议下一步把“无缝对接”做成一个明确流程：  
+**旧电脑说“上传环境”**：备份 skill/MCP/安全记录并推 GitHub。  
+**新电脑说“恢复环境”**：从 GitHub 拉取并安装。
+```
+
+### assistant 2026-05-23T14:45:36.912Z
+
+```text
+明白，你说的“上传”更核心不是存档聊天，而是：**换另一台电脑时，能把当前这套 Codex 工作环境无缝接上**。
+
+现在已经做到一大半了：
+
+- 你的 skill 已经上传到 GitHub 私有仓库
+- 本地 MCP server 脚本已上传
+- 安装脚本 `install.ps1` 已上传
+- 备份脚本 `backup.ps1` 已上传
+- 新电脑下载仓库后可以一键安装
+- GitHub 登录方式已经验证过
+
+另一台电脑流程是：
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\install.ps1
+```
+
+然后重启 Codex，就能恢复：
+
+- skill
+- MCP server
+- MCP 配置
+- 你的工作方法和领域知识
+
+但“完全无缝”还有两块要注意：
+
+1. **GitHub 登录不会自动同步**  
+   新电脑需要你自己登录 GitHub，或者用 GitHub CLI 网页授权。账号密码我不能保存或代管。
+
+2. **Memory/SQLite 记录默认没同步**  
+   为了避免把隐私记录传上去，默认没有上传 `memory.sqlite` 和 `records.sqlite`。  
+   如果你确定要跨电脑同步这些经验记录，可以在旧电脑运行：
+
+```powershell
+.\backup.ps1 -IncludeData
+```
+
+然后推送；新电脑运行：
+
+```powershell
+.\install.ps1 -IncludeData
+```
+
+这样经验库也能带过去。
+
+我建议下一步把“无缝对接”做成一个明确流程：  
+**旧电脑说“上传环境”**：备份 skill/MCP/安全记录并推 GitHub。  
+**新电脑说“恢复环境”**：从 GitHub 拉取并安装。
+```
+
+### user 2026-05-23T14:46:19.352Z
+
+```text
+不止这些。是所有的工作，我都会上传，然后可能另外一台电脑 会无缝对接进度。
+```
+
+### user 2026-05-23T14:46:19.352Z
+
+```text
+不止这些。是所有的工作，我都会上传，然后可能另外一台电脑 会无缝对接进度。
+```
+
+### assistant 2026-05-23T14:46:35.310Z
+
+```text
+明白了，你要的不是“聊天存档”，而是一个跨电脑的 **工作进度同步点**：当前资料、脚本、skill、MCP、记录、会话上下文都能上传，另一台电脑能接着干。我现在把“上传”的规则升级成这个含义。
+```
+
+### assistant 2026-05-23T14:46:35.310Z
+
+```text
+明白了，你要的不是“聊天存档”，而是一个跨电脑的 **工作进度同步点**：当前资料、脚本、skill、MCP、记录、会话上下文都能上传，另一台电脑能接着干。我现在把“上传”的规则升级成这个含义。
+```
+
+### assistant 2026-05-23T14:46:45.789Z
+
+```text
+我会做成两个命令层次：`上传` 以后同步“工作状态包”；原来只存聊天的能力保留为脚本，但不再把“上传”狭义理解成聊天存档。工作状态包会包含：当前工作区快照、会话记录、可读说明、skill/MCP 更新、Memory/SQLite 记录和恢复说明。
+```
+
+### assistant 2026-05-23T14:46:45.789Z
+
+```text
+我会做成两个命令层次：`上传` 以后同步“工作状态包”；原来只存聊天的能力保留为脚本，但不再把“上传”狭义理解成聊天存档。工作状态包会包含：当前工作区快照、会话记录、可读说明、skill/MCP 更新、Memory/SQLite 记录和恢复说明。
+```
+
+### assistant 2026-05-23T14:47:31.202Z
+
+```text
+规则已经改成“上传 = 工作状态同步”。现在我写实际导出脚本：它会从最新会话找当前工作目录，打包工作区，同时保存 transcript/raw session、skills/MCP 列表和恢复说明。
+```
+
+### assistant 2026-05-23T14:47:31.206Z
+
+```text
+规则已经改成“上传 = 工作状态同步”。现在我写实际导出脚本：它会从最新会话找当前工作目录，打包工作区，同时保存 transcript/raw session、skills/MCP 列表和恢复说明。
+```
+
+### assistant 2026-05-23T14:48:32.222Z
+
+```text
+脚本已经就位。我先跑一次语法检查，再提交这套“工作连续性同步”规则到 GitHub。
+```
+
+### assistant 2026-05-23T14:48:32.227Z
+
+```text
+脚本已经就位。我先跑一次语法检查，再提交这套“工作连续性同步”规则到 GitHub。
+```
+
+### assistant 2026-05-23T14:48:35.881Z
+
+```text
+语法检查通过了。出现了一个 Python 临时缓存目录，我会把它删掉并加入忽略规则，避免同步垃圾文件。
+```
+
+### assistant 2026-05-23T14:48:35.881Z
+
+```text
+语法检查通过了。出现了一个 Python 临时缓存目录，我会把它删掉并加入忽略规则，避免同步垃圾文件。
+```
+
+### assistant 2026-05-23T14:48:42.334Z
+
+```text
+现在提交并推送这些规则更新。之后我会执行一次真正的“上传工作状态”来生成快照。
+```
+
+### assistant 2026-05-23T14:48:42.334Z
+
+```text
+现在提交并推送这些规则更新。之后我会执行一次真正的“上传工作状态”来生成快照。
+```
+
+### assistant 2026-05-23T14:49:16.000Z
+
+```text
+推送还在进行，可能是网络有点慢。我继续等它返回。
+```
+
+### assistant 2026-05-23T14:49:16.000Z
+
+```text
+推送还在进行，可能是网络有点慢。我继续等它返回。
+```
+
+### assistant 2026-05-23T14:49:29.255Z
+
+```text
+提交已经在本地完成了，但推送时 GitHub TLS 握手失败。这通常是临时网络问题，我会直接重试推送。
+```
+
+### assistant 2026-05-23T14:49:29.255Z
+
+```text
+提交已经在本地完成了，但推送时 GitHub TLS 握手失败。这通常是临时网络问题，我会直接重试推送。
+```
+
+### assistant 2026-05-23T14:49:39.138Z
+
+```text
+推送成功了。现在我执行一次真正的工作状态上传：生成 work-state 快照并推送。
+```
+
+### assistant 2026-05-23T14:49:39.138Z
+
+```text
+推送成功了。现在我执行一次真正的工作状态上传：生成 work-state 快照并推送。
+```
