@@ -1,11 +1,11 @@
 ---
 name: chat-transcript-uploader
-description: Triggered when the user says "上传" as a standalone instruction or asks to upload the chat. Export the full local Codex chat/session record to a timestamped document and upload it to the user's GitHub toolkit repository.
+description: Export local Codex chat/session records to timestamped documents and upload them to the user's GitHub toolkit repository. Use for explicit chat transcript/archive requests. For standalone "上传", prefer work-continuity-sync.
 ---
 
 # Chat Transcript Uploader
 
-Use this skill when the user says `上传` as a standalone command, or asks to upload the current chat record to GitHub.
+Use this skill when the user explicitly asks to upload or archive the chat transcript. For a standalone `上传` command, use `work-continuity-sync` instead because the user wants cross-computer work continuity, not only a chat transcript.
 
 ## Required Behavior
 

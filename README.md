@@ -39,9 +39,36 @@ To also copy local Memory/SQLite databases:
 
 Only use `-IncludeData` if the records are safe to sync.
 
-## Upload Current Chat
+## Upload Work State
 
-After installing this toolkit, saying `上传` to Codex should trigger the `chat-transcript-uploader` skill.
+After installing this toolkit, saying `上传` to Codex should trigger the `work-continuity-sync` skill.
+
+This creates a cross-computer work-state snapshot containing:
+
+- current workspace zip
+- readable transcript
+- raw session `.jsonl`
+- skill list
+- MCP summary
+- Memory/SQLite data when available
+- restore instructions
+
+Manual fallback:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\upload-work.ps1
+```
+
+The upload writes to:
+
+```text
+work-states/YYYY/topic_YYYYMMDD-HHMMSS/
+```
+
+## Upload Current Chat Only
+
+For chat transcript only, use:
 
 Manual fallback:
 
