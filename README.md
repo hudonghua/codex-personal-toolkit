@@ -39,6 +39,23 @@ To also copy local Memory/SQLite databases:
 
 Only use `-IncludeData` if the records are safe to sync.
 
+## Upload Current Chat
+
+After installing this toolkit, saying `上传` to Codex should trigger the `chat-transcript-uploader` skill.
+
+Manual fallback:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\upload-chat.ps1
+```
+
+The upload creates:
+
+- `transcript.md`: readable transcript
+- raw `.jsonl`: exact local Codex session archive
+- `manifest.json`: source and export metadata
+
 ## Do Not Sync
 
 Do not sync the whole `.codex` directory. It can contain login state, sessions, cache, local logs, and private data.
