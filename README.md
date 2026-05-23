@@ -66,6 +66,22 @@ The upload writes to:
 work-states/YYYY/topic_YYYYMMDD-HHMMSS/
 ```
 
+## Merge Another Computer
+
+If another computer has its own toolkit export, copy or clone it locally, then run:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\merge-toolkit.ps1 -Incoming "D:\path\to\other\codex-personal-toolkit"
+```
+
+The merge is non-destructive:
+
+- new files are added
+- identical files are skipped
+- conflicting files are saved as `*.incoming-YYYYMMDD-HHMMSS.*`
+- a report is written under `merge-reports/`
+
 ## Upload Current Chat Only
 
 For chat transcript only, use:
