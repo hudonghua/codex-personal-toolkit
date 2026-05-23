@@ -77,3 +77,12 @@ Use this skill for Keil5/uVision firmware, embedded C, MCU-side logic, hardware 
 - Include exact file paths and line references when explaining code.
 - Say "not verified" for anything not directly checked.
 - Avoid broad rewrites and unrelated cleanup unless the user explicitly asks.
+
+## Field Notes From Legacy Records
+
+- When importing old Cursor/Codex notes from another machine, treat them as operational clues, not current proof. Re-check the live project files before editing.
+- For GBK/GB2312 C/H files, never use text tools that may silently convert encoding. Use byte-safe read/decode/edit/encode, then re-open and inspect the touched lines.
+- For garbled Chinese comments, only repair comments and explanatory text. Do not alter protocol IDs, bit positions, CAN frame layout, macros, function calls, or output order as part of a comment cleanup.
+- For protocol documents and output tables, derive the table from actual receive/send code paths. Search the frame ID, parser, setter, output function, and hardware pin/channel mapping before writing the document.
+- If a hardware rule sounds simple, keep the implementation simple too: avoid dynamic re-registration or state machines unless the code path proves they are necessary.
+- If a device fails to boot after a CAN/EEPROM/config change, first restore a known-booting path, then isolate persistence, startup registration, and runtime switching separately.
