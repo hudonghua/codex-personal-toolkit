@@ -1,0 +1,17 @@
+[mcp_servers.codex_memory]
+command = 'C:\Users\__USER__\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+args = ['C:\Users\__USER__\.codex\mcp_servers\codex_memory_mcp.py']
+startup_timeout_sec = 30
+
+[mcp_servers.codex_memory.env]
+CODEX_HOME = 'C:\Users\__USER__\.codex'
+CODEX_MEMORY_DB = 'C:\Users\__USER__\.codex\mcp_data\memory.sqlite'
+
+[mcp_servers.codex_sqlite]
+command = 'C:\Users\__USER__\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
+args = ['C:\Users\__USER__\.codex\mcp_servers\codex_sqlite_mcp.py']
+startup_timeout_sec = 30
+
+[mcp_servers.codex_sqlite.env]
+CODEX_HOME = 'C:\Users\__USER__\.codex'
+CODEX_SQLITE_DB = 'C:\Users\__USER__\.codex\mcp_data\records.sqlite'

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Keil5 Embedded C"
+  short_description: "Keil5 C firmware and hardware guardrails"
+  default_prompt: "Use $keil5-embedded-c for Keil5 C firmware, hardware protocol, timing, interrupt, and GBK-safe code work."
+
+policy:
+  allow_implicit_invocation: true
