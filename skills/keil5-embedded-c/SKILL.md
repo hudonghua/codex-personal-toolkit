@@ -86,3 +86,14 @@ Use this skill for Keil5/uVision firmware, embedded C, MCU-side logic, hardware 
 - For protocol documents and output tables, derive the table from actual receive/send code paths. Search the frame ID, parser, setter, output function, and hardware pin/channel mapping before writing the document.
 - If a hardware rule sounds simple, keep the implementation simple too: avoid dynamic re-registration or state machines unless the code path proves they are necessary.
 - If a device fails to boot after a CAN/EEPROM/config change, first restore a known-booting path, then isolate persistence, startup registration, and runtime switching separately.
+
+## Field Notes
+
+### 2026-05-25 - 119 CAN ID Offset And EEPROM Buffer Note
+
+- Context: Legacy Keil/GBK 119 receiver firmware with CAN1 business ID offset command `0x4AE`.
+- Rule confirmed with user: `0x4AE` byte6/byte7 `CC CC` saves offset enabled; `BB BB` saves offset disabled. The actual ID mode can be selected from one saved flag on reboot or by a deliberately simple runtime path. Avoid dynamic receive-table clearing unless proven necessary.
+- Boot failure cause found: the local AT24 read helper ultimately writes one extra byte compared with the requested length. A 4-byte stack buffer used with `AT24_Read_Str(..., vBuf, 4)` can corrupt the stack. Use a larger buffer such as `unsigned char vBuf[8]` for small EEPROM flag records.
+- Keep `0x4AE` fixed and do not offset it. Keep `0x680` frames fixed. Protect standard CAN IDs so `0x700`-range frames are not shifted past `0x7FF`.
+- For GBK comments, generate Chinese text via byte-safe Python or code points; PowerShell pipeline text can turn Chinese into `?`. Verify by GBK decoding and scanning touched comment lines.
+- Verification pattern: first restore a known-booting firmware, isolate EEPROM persistence from CAN registration changes, then Keil build and test boot before adding receive-ID changes.
