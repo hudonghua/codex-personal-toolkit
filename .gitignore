@@ -1,6 +1,8 @@
 .codex/
 *.tmp
 *.bak
+*.bak_*
+*.corrupted_*
 *.log
 *.sqlite-shm
 *.sqlite-wal
