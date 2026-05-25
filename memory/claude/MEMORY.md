@@ -2,6 +2,9 @@
 
 **⚠️ 恢复记忆后必须首先读取：[编程手册与纪律.md](编程手册与纪律.md)**
 
+## Setup / Layout
+- [reference_shared_memory_layout.md](reference_shared_memory_layout.md) — Junction map: this dir + .cursor/memory → toolkit/memory/* on GitHub (hudonghua/codex-personal-toolkit); Stop hook auto-pushes; portable git/gh paths
+
 ## Project Memories
 - [project_qdn_full_computer.md](project_qdn_full_computer.md) — 全电脑模型项目核心信息、文档位置、工作流程
 - [project_qdn_calibration_strategy.md](project_qdn_calibration_strategy.md) — 现场标定策略：两层标定、视觉自学习修正、倾角补偿机制
