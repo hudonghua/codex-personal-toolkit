@@ -1,0 +1,4 @@
+interface:
+  display_name: "Safe Collab Workflow"
+  short_description: "Default safe edit workflow for collaborative coding tasks."
+  default_prompt: "Use $safe-collab-workflow to handle this coding change with understanding, backup, verification, and honest reporting."
