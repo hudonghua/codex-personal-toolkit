@@ -1,0 +1,4 @@
+interface:
+  display_name: "Keil MDK5"
+  short_description: "Inspect and edit Keil5 embedded projects safely."
+  default_prompt: "Use $keil5 to inspect this Keil5 project, trace its target settings, and make a safe embedded code change."
