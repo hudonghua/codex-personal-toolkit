@@ -24,6 +24,7 @@ SECRET_PATTERNS = [
 
 EXCLUDE_DIRS = {
     ".git",
+    "work-states",
     "node_modules",
     ".venv",
     "venv",
