@@ -1,10 +1,13 @@
 # dell电脑
 
-This folder stores shareable exports from this computer.
+这个目录用于共享 Dell 电脑上的 Codex 工作记录。
 
-- `codex-chat-records/`: redacted Markdown exports of local Codex chats
-- `codex-memory/`: local Codex memory snapshot
-- `cursor-chat-records/`: redacted Markdown exports of local Cursor chats
-- `cursor-skills/`: local Cursor skills snapshot
-- `cursor-memory/`: local Cursor memory Markdown files
-- `prompt-notes/`: user-provided prompt files to sync across computers
+在 Dell 电脑上克隆本仓库后，运行：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\sync-device-chats.ps1 -DeviceName "dell电脑"
+```
+
+脚本会先拉取 GitHub 最新内容，再导出 Dell 本机 Codex App 左侧栏聊天记录，最后提交并推送。
+
+注意：联想电脑无法自动生成 Dell 电脑本机的聊天记录；`dell电脑` 目录需要在 Dell 电脑上同步，或者把 Dell 的 `.codex\sessions` 和 `session_index.jsonl` 带到当前电脑后再导出。
