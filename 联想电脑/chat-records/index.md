@@ -1,6 +1,6 @@
 # 联想电脑 Codex 聊天记录
 
-- Exported at: `2026-05-27T11:59:10`
+- Exported at: `2026-05-27T12:08:01`
 - Exported chats: `24`
 - Missing source files: `0`
 - Content policy: raw Codex `.jsonl` files are not uploaded; Markdown exports are redacted.
@@ -14,7 +14,7 @@
 - [nihao](005_019e4b7c-2f26-7b20-94d2-a41ad9b2d17d_nihao.md) `019e4b7c-2f26-7b20-94d2-a41ad9b2d17d` messages: `74`
 - [你好](006_019e4b90-74db-7e31-9c40-b40d5bcc9397_你好.md) `019e4b90-74db-7e31-9c40-b40d5bcc9397` messages: `260`
 - [你好](007_019e4ba3-3a1f-7dc1-828f-519c1ded6f84_你好.md) `019e4ba3-3a1f-7dc1-828f-519c1ded6f84` messages: `33`
-- [现在打开codex app 进不了主界面。](008_019e52c1-87ec-7b90-b34d-960b8192997b_现在打开codex-app-进不了主界面。.md) `019e52c1-87ec-7b90-b34d-960b8192997b` messages: `73`
+- [现在打开codex app 进不了主界面。](008_019e52c1-87ec-7b90-b34d-960b8192997b_现在打开codex-app-进不了主界面。.md) `019e52c1-87ec-7b90-b34d-960b8192997b` messages: `78`
 - [有没有电磁阀得电，就能吸住铁丝网的装置？](009_019e52c3-9b34-7aa1-bfa6-c5b59064d0f8_有没有电磁阀得电，就能吸住铁丝网的装置？.md) `019e52c3-9b34-7aa1-bfa6-c5b59064d0f8` messages: `79`
 - [读下u盘的记录。](010_019e5557-3947-7a13-9966-302a1436f635_读下u盘的记录。.md) `019e5557-3947-7a13-9966-302a1436f635` messages: `36`
 - [ssh 服务 与codex app 能链接吗？](011_019e5593-cc9b-7281-9754-fb3df0c97b1f_ssh-服务-与codex-app-能链接吗？.md) `019e5593-cc9b-7281-9754-fb3df0c97b1f` messages: `169`
