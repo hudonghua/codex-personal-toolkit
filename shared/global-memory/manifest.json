@@ -1,0 +1,76 @@
+{
+  "generated_at": "2026-05-27T15:58:37",
+  "devices": [
+    "联想电脑",
+    "dell电脑"
+  ],
+  "file_count": 11,
+  "files": [
+    {
+      "relative_path": "codex-memory/MEMORY.md",
+      "source_device": "dell电脑",
+      "source_file": "dell电脑/codex-memory/MEMORY.md",
+      "updated_at": "2026-05-20T23:39:40"
+    },
+    {
+      "relative_path": "codex-memory/extensions/ad_hoc/instructions.md",
+      "source_device": "dell电脑",
+      "source_file": "dell电脑/codex-memory/extensions/ad_hoc/instructions.md",
+      "updated_at": "2026-05-09T22:38:03"
+    },
+    {
+      "relative_path": "codex-memory/extensions/ad_hoc/notes/2026-05-20-162031-ykq-display-mapping.md",
+      "source_device": "dell电脑",
+      "source_file": "dell电脑/codex-memory/extensions/ad_hoc/notes/2026-05-20-162031-ykq-display-mapping.md",
+      "updated_at": "2026-05-20T16:21:32"
+    },
+    {
+      "relative_path": "codex-memory/memory_summary.md",
+      "source_device": "dell电脑",
+      "source_file": "dell电脑/codex-memory/memory_summary.md",
+      "updated_at": "2026-05-20T23:40:25"
+    },
+    {
+      "relative_path": "codex-memory/raw_memories.md",
+      "source_device": "dell电脑",
+      "source_file": "dell电脑/codex-memory/raw_memories.md",
+      "updated_at": "2026-05-27T11:24:41"
+    },
+    {
+      "relative_path": "cursor-memory/CURSOR_AGENT_MEMORY.md",
+      "source_device": "dell电脑",
+      "source_file": "dell电脑/cursor-memory/CURSOR_AGENT_MEMORY.md",
+      "updated_at": "2026-05-27T11:04:38"
+    },
+    {
+      "relative_path": "cursor-memory/CURSOR_AGENT_MEMORY.md.bak_20260523_171305",
+      "source_device": "dell电脑",
+      "source_file": "dell电脑/cursor-memory/CURSOR_AGENT_MEMORY.md.bak_20260523_171305",
+      "updated_at": "2026-05-23T13:18:18"
+    },
+    {
+      "relative_path": "cursor-memory/CURSOR_AGENT_MEMORY.md.bak_20260523_171357",
+      "source_device": "dell电脑",
+      "source_file": "dell电脑/cursor-memory/CURSOR_AGENT_MEMORY.md.bak_20260523_171357",
+      "updated_at": "2026-05-23T17:13:05"
+    },
+    {
+      "relative_path": "cursor-memory/vision_T_shell_cam_node_20260512.md",
+      "source_device": "dell电脑",
+      "source_file": "dell电脑/cursor-memory/vision_T_shell_cam_node_20260512.md",
+      "updated_at": "2026-05-27T11:04:38"
+    },
+    {
+      "relative_path": "cursor-memory/vision_edge_distortion_kd_node_20260512.md",
+      "source_device": "dell电脑",
+      "source_file": "dell电脑/cursor-memory/vision_edge_distortion_kd_node_20260512.md",
+      "updated_at": "2026-05-27T11:04:38"
+    },
+    {
+      "relative_path": "prompt-notes/README.md",
+      "source_device": "dell电脑",
+      "source_file": "dell电脑/prompt-notes/README.md",
+      "updated_at": "2026-05-27T11:48:39"
+    }
+  ]
+}

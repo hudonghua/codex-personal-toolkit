@@ -1,6 +1,6 @@
 # dell电脑 Cursor Chat Records
 
-- Exported at: `2026-05-27T11:49:27`
+- Exported at: `2026-05-27T15:58:37`
 - Exported chats: `32`
 - Source: local Cursor `agent-transcripts/*.jsonl`, rendered as redacted Markdown.
 

@@ -369,6 +369,63 @@ def sync_prompt_notes(repo: Path, device_names: list[str]) -> dict:
     return {"count": len(manifest_entries), "path": str(shared_root)}
 
 
+def sync_global_memory(repo: Path, device_names: list[str]) -> dict:
+    shared_root = repo / "shared" / "global-memory"
+    reset_dir(shared_root)
+    latest: dict[str, tuple[Path, float, str]] = {}
+    for device_name in device_names:
+        candidates = [
+            repo / device_name / "prompt-notes",
+            repo / device_name / "cursor-memory",
+            repo / device_name / "codex-memory",
+        ]
+        for base in candidates:
+            if not base.exists():
+                continue
+            prefix = base.name
+            for path in base.rglob("*"):
+                if not path.is_file():
+                    continue
+                rel = f"{prefix}/{path.relative_to(base).as_posix()}"
+                stamp = path.stat().st_mtime
+                current = latest.get(rel)
+                if current is None or stamp > current[1]:
+                    latest[rel] = (path, stamp, device_name)
+    manifest_entries = []
+    for rel, (source, stamp, device_name) in sorted(latest.items()):
+        target = shared_root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+        manifest_entries.append(
+            {
+                "relative_path": rel,
+                "source_device": device_name,
+                "source_file": str(source.relative_to(repo)).replace("\\", "/"),
+                "updated_at": datetime.fromtimestamp(stamp).isoformat(timespec="seconds"),
+            }
+        )
+    write_text(
+        shared_root / "README.md",
+        "# Global Memory\n\n"
+        "This folder is rebuilt from each computer's `prompt-notes`, `cursor-memory`, and `codex-memory`.\n"
+        "For the same relative path inside the same category, the newer file wins.\n",
+    )
+    write_text(
+        shared_root / "manifest.json",
+        json.dumps(
+            {
+                "generated_at": datetime.now().isoformat(timespec="seconds"),
+                "devices": device_names,
+                "file_count": len(manifest_entries),
+                "files": manifest_entries,
+            },
+            ensure_ascii=False,
+            indent=2,
+        ),
+    )
+    return {"count": len(manifest_entries), "path": str(shared_root)}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo", required=True)
@@ -387,6 +444,7 @@ def main() -> int:
     codex_skill_count = copy_tree(Path(args.codex_home) / "skills", repo / "skills", reset=False)
     cursor_skill_count = copy_tree(Path(args.cursor_home) / "skills", device_dir / "cursor-skills")
     cursor_memory_count = copy_tree(Path(args.cursor_home) / "memory", device_dir / "cursor-memory")
+    codex_memory_count = copy_tree(Path(args.codex_home) / "memories", device_dir / "codex-memory")
 
     prompt_dir = device_dir / "prompt-notes"
     prompt_dir.mkdir(parents=True, exist_ok=True)
@@ -402,6 +460,7 @@ def main() -> int:
         f"# {args.device_name}\n\n"
         "This folder stores shareable exports from this computer.\n\n"
         "- `codex-chat-records/`: redacted Markdown exports of local Codex chats\n"
+        "- `codex-memory/`: local Codex memory snapshot\n"
         "- `cursor-chat-records/`: redacted Markdown exports of local Cursor chats\n"
         "- `cursor-skills/`: local Cursor skills snapshot\n"
         "- `cursor-memory/`: local Cursor memory Markdown files\n"
@@ -409,14 +468,17 @@ def main() -> int:
     )
 
     prompt_result = sync_prompt_notes(repo, [args.peer_device, args.device_name])
+    global_memory_result = sync_global_memory(repo, [args.peer_device, args.device_name])
     summary = {
         "device": args.device_name,
         "codex_chats": codex_result["count"],
+        "codex_memory_files": codex_memory_count,
         "cursor_chats": cursor_result["count"],
         "codex_skills": codex_skill_count,
         "cursor_skills": cursor_skill_count,
         "cursor_memory_files": cursor_memory_count,
         "shared_prompt_files": prompt_result["count"],
+        "shared_global_memory_files": global_memory_result["count"],
     }
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     return 0

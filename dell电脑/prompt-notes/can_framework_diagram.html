@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAN协议编辑器</title>
+  <style>
+    :root {
+      --paper: #fffdfa;
+      --text: #1f2d3d;
+      --muted: #667487;
+      --line: #ded3c2;
+      --can1-rx: #b9e6cf;
+      --can1-tx: #ffd0a8;
+      --can2-rx: #bcd7ff;
+      --can2-tx: #ffc1a0;
+      --soft: #faf6ef;
+      --blue: #2b5f9e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #f8f4ed 0%, #eee7db 100%);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+    .wrap {
+      width: min(1920px, 98vw);
+      margin: 12px auto 20px;
+      padding: 16px;
+      background: rgba(255,253,248,.97);
+      border: 1px solid #e8dece;
+      border-radius: 18px;
+      box-shadow: 0 18px 44px rgba(60,45,20,.06);
+    }
+    h1 { margin: 0; font-size: 28px; }
+    .sub {
+      margin: 8px 0 12px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    select, input, button {
+      font: inherit;
+      border: 1px solid #d8cfbf;
+      border-radius: 8px;
+      background: #fff;
+    }
+    select, input { padding: 7px 9px; }
+    button {
+      padding: 8px 12px;
+      cursor: pointer;
+      background: #fff7ea;
+    }
+    button.primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+    .hint {
+      margin-bottom: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: pre-wrap;
+    }
+    .panel {
+      border: 1px solid #e7dece;
+      border-radius: 16px;
+      background: var(--paper);
+      overflow: hidden;
+    }
+    .panel-head {
+      padding: 12px 16px;
+      background: var(--soft);
+      border-bottom: 1px solid #e7dece;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .panel-body { padding: 12px 14px 16px; }
+    .section { margin-bottom: 16px; }
+    .section-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid #e1d6c7;
+      border-radius: 12px;
+      background: #fff;
+    }
+    table.editor {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1780px;
+      font-size: 12px;
+    }
+    .editor th, .editor td {
+      border: 1px solid #eadfce;
+      padding: 6px;
+      vertical-align: top;
+    }
+    .editor th {
+      background: #faf6ef;
+      font-weight: 700;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .editor input[type="text"] {
+      width: 100%;
+      min-width: 0;
+      padding: 6px 7px;
+      font-size: 12px;
+      border: 1px solid #d7cebf;
+      border-radius: 6px;
+    }
+    .editor input[readonly] {
+      background: rgba(255,255,255,.7);
+      color: #4d5c6e;
+    }
+    .rx-can1 { background: var(--can1-rx); }
+    .tx-can1 { background: var(--can1-tx); }
+    .rx-can2 { background: var(--can2-rx); }
+    .tx-can2 { background: var(--can2-tx); }
+    .col-id { width: 92px; }
+    .col-byte { width: 150px; }
+    .byte-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .byte-tools {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+    .byte-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .mini-btn {
+      padding: 4px 7px;
+      font-size: 11px;
+      border-radius: 6px;
+      background: #fff;
+    }
+    .bit-box {
+      display: none;
+      border: 1px solid #eadfce;
+      border-radius: 8px;
+      background: #fcfaf6;
+      padding: 6px;
+    }
+    .bit-box.show { display: block; }
+    .bit-picks {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 4px 6px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .bit-grid {
+      display: grid;
+      gap: 6px;
+    }
+    .bit-item {
+      border: 1px solid #e7ddcf;
+      border-radius: 6px;
+      background: #fff;
+      padding: 5px;
+    }
+    .bit-item label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .bit-item input {
+      width: 100%;
+      padding: 5px 6px;
+      font-size: 11px;
+    }
+    .result {
+      margin-top: 16px;
+      border: 1px solid #e7dece;
+      border-radius: 12px;
+      background: #fffefb;
+      padding: 12px;
+    }
+    .result-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .small { font-size: 12px; color: var(--muted); }
+    table.result-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+    .result-table th, .result-table td {
+      border: 1px solid #e6ddcf;
+      padding: 7px 8px;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .result-table th {
+      background: #faf6ef;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>CAN 协议编辑器</h1>
+    <div class="sub">固定 ID 全部直接展示。接收段只读参考，发送段可填写。算法PCB 的 CAN1 传感器接收 ID 已按程序默认填入传感器含义。</div>
+
+    <div class="legend">
+      <span><i class="dot" style="background:var(--can1-rx)"></i> CAN1 接收</span>
+      <span><i class="dot" style="background:var(--can1-tx)"></i> CAN1 发送</span>
+      <span><i class="dot" style="background:var(--can2-rx)"></i> CAN2 接收</span>
+      <span><i class="dot" style="background:var(--can2-tx)"></i> CAN2 发送</span>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">固定 ID 协议编辑</div>
+      <div class="panel-body">
+        <div class="toolbar">
+          <label for="moduleSelect">模块：</label>
+          <select id="moduleSelect">
+            <option value="algo">算法PCB</option>
+            <option value="main">主控控制器</option>
+            <option value="net">CAN_TO_NET</option>
+          </select>
+          <button id="generateBtn" class="primary" type="button">生成协议表</button>
+        </div>
+
+        <div id="moduleHint" class="hint"></div>
+        <div id="editorArea"></div>
+
+        <div class="result">
+          <div class="result-title">生成结果</div>
+          <div id="resultArea"><small>点击“生成协议表”后在这里输出。</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "can_protocol_editor_state_v8";
+
+    function rangeHex(start, end) {
+      const out = [];
+      for (let i = start; i <= end; i++) out.push("0x" + i.toString(16).toUpperCase());
+      return out;
+    }
+
+    function makeByte(summary = "") {
+      return {
+        summary,
+        bits: Array.from({ length: 8 }, () => ""),
+        bitEnabled: Array.from({ length: 8 }, () => false),
+        showBits: false
+      };
+    }
+
+    function makeRow(id, editable, defaults = []) {
+      return {
+        id,
+        editable,
+        bytes: Array.from({ length: 8 }, (_, i) => makeByte(defaults[i] || ""))
+      };
+    }
+
+    function sensorRow(id, label) {
+      return makeRow(id, false, [
+        `${label}低字节`,
+        `${label}高字节`,
+        "", "", "", "", "", ""
+      ]);
+    }
+
+    const algoCan1RxRows = [
+      sensorRow("0x181", "左臂root_raw"),
+      sensorRow("0x182", "左臂base_raw"),
+      sensorRow("0x183", "左臂boom_raw"),
+      sensorRow("0x184", "左臂d1_raw"),
+      sensorRow("0x185", "左臂e1_raw"),
+      sensorRow("0x186", "左臂f_raw"),
+      sensorRow("0x187", "左臂cd_raw"),
+      sensorRow("0x188", "左臂gg1_raw"),
+      sensorRow("0x189", "左臂备用/校验位移"),
+      sensorRow("0x192", "中臂base_raw"),
+      sensorRow("0x193", "中臂boom_raw"),
+      sensorRow("0x194", "中臂d1_raw"),
+      sensorRow("0x195", "中臂e1_raw"),
+      sensorRow("0x196", "中臂f_raw"),
+      sensorRow("0x197", "中臂cd_raw"),
+      sensorRow("0x198", "中臂gg1_raw"),
+      sensorRow("0x199", "中臂备用/校验位移"),
+      sensorRow("0x1A1", "右臂root_raw"),
+      sensorRow("0x1A2", "右臂base_raw"),
+      sensorRow("0x1A3", "右臂boom_raw"),
+      sensorRow("0x1A4", "右臂d1_raw"),
+      sensorRow("0x1A5", "右臂e1_raw"),
+      sensorRow("0x1A6", "右臂f_raw"),
+      sensorRow("0x1A7", "右臂cd_raw"),
+      sensorRow("0x1A8", "右臂gg1_raw"),
+      sensorRow("0x1A9", "右臂备用/校验位移"),
+      makeRow("0x28F", false, ["body_roll低字节", "body_roll高字节", "body_pitch低字节", "body_pitch高字节", "", "", "", ""])
+    ];
+
+    const store = {
+      net: {
+        rx: rangeHex(0x30, 0x40).map(id => makeRow(id, false)),
+        tx: rangeHex(0x130, 0x140).map(id => makeRow(id, true))
+      },
+      algo: {
+        rx: [...algoCan1RxRows, ...rangeHex(0x50, 0x60).map(id => makeRow(id, false))],
+        tx: rangeHex(0x150, 0x160).map(id => makeRow(id, true))
+      },
+      main: {
+        rx: rangeHex(0x70, 0x80).map(id => makeRow(id, false)),
+        tx: rangeHex(0x170, 0x180).map(id => makeRow(id, true))
+      }
+    };
+
+    const hints = {
+      algo: "算法PCB：CAN1 的 27 个实时传感器 ID 已结合程序预填默认含义；CAN2 的 0x50~0x60 为固定接收，0x150~0x160 为固定发送填写区。",
+      main: "主控模块：0x70~0x80 为固定接收；0x170~0x180 为固定发送填写区。",
+      net: "CAN_TO_NET：0x30~0x40 为固定接收；0x130~0x140 为固定发送填写区。"
+    };
+
+    const moduleSelect = document.getElementById("moduleSelect");
+    const editorArea = document.getElementById("editorArea");
+    const generateBtn = document.getElementById("generateBtn");
+    const resultArea = document.getElementById("resultArea");
+    const moduleHint = document.getElementById("moduleHint");
+
+    function esc(str) {
+      return String(str ?? "").replace(/[&<>"]/g, s => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[s]));
+    }
+
+    function saveState() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(store)); } catch (e) {}
+    }
+
+    function applySavedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const saved = JSON.parse(raw);
+        ["algo", "main", "net"].forEach((moduleKey) => {
+          ["rx", "tx"].forEach((dir) => {
+            if (!Array.isArray(saved?.[moduleKey]?.[dir])) return;
+            const map = new Map(saved[moduleKey][dir].map(row => [row.id, row]));
+            store[moduleKey][dir].forEach((row) => {
+              const old = map.get(row.id);
+              if (!old || !Array.isArray(old.bytes)) return;
+              for (let i = 0; i < Math.min(8, old.bytes.length); i++) {
+                const src = old.bytes[i];
+                if (src.summary !== undefined && src.summary !== "") row.bytes[i].summary = src.summary;
+                if (Array.isArray(src.bits)) row.bytes[i].bits = src.bits.slice(0, 8).map(v => v || "").concat(Array(8)).slice(0, 8);
+                if (Array.isArray(src.bitEnabled)) row.bytes[i].bitEnabled = src.bitEnabled.slice(0, 8).map(Boolean).concat(Array(8).fill(false)).slice(0, 8);
+                row.bytes[i].showBits = !!src.showBits;
+              }
+            });
+          });
+        });
+      } catch (e) {}
+    }
+
+    function renderByteCell(moduleKey, dir, rowIndex, byteObj, byteIndex, editable) {
+      return `
+        <div class="byte-cell">
+          <input type="text" placeholder="Byte${byteIndex}" data-module="${moduleKey}" data-dir="${dir}" data-row="${rowIndex}" data-byte="${byteIndex}" data-kind="summary" value="${esc(byteObj.summary)}" ${editable ? "" : "readonly"}>
+          <div class="byte-tools">
+            <span class="byte-label">Byte${byteIndex}</span>
+            <button type="button" class="mini-btn" data-toggle="${moduleKey}" data-dir="${dir}" data-row="${rowIndex}" data-byte="${byteIndex}">
+              ${byteObj.showBits ? "收起" : "位定义"}
+            </button>
+          </div>
+          <div class="bit-box ${byteObj.showBits ? "show" : ""}">
+            <div class="bit-picks">
+              ${Array.from({ length: 8 }, (_, bitIndex) => `
+                <label>
+                  <input type="checkbox"
+                    data-module="${moduleKey}"
+                    data-dir="${dir}"
+                    data-row="${rowIndex}"
+                    data-byte="${byteIndex}"
+                    data-bitcheck="${bitIndex}"
+                    ${byteObj.bitEnabled[bitIndex] ? "checked" : ""}
+                    ${editable ? "" : "disabled"}>
+                  bit${7 - bitIndex}
+                </label>
+              `).join("")}
+            </div>
+            <div class="bit-grid">
+              ${byteObj.bits.map((bit, bitIndex) => byteObj.bitEnabled[bitIndex] ? `
+                <div class="bit-item">
+                  <label>bit${7 - bitIndex}</label>
+                  <input type="text" placeholder="定义" data-module="${moduleKey}" data-dir="${dir}" data-row="${rowIndex}" data-byte="${byteIndex}" data-bit="${bitIndex}" data-kind="bit" value="${esc(bit)}" ${editable ? "" : "readonly"}>
+                </div>
+              ` : "").join("")}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSection(moduleKey, dir, title, rowClass, dotColor) {
+      const rows = store[moduleKey][dir];
+      const editable = dir === "tx";
+      return `
+        <div class="section">
+          <div class="section-title"><span class="dot" style="background:${dotColor}"></span>${title}</div>
+          <div class="table-wrap">
+            <table class="editor">
+              <thead>
+                <tr>
+                  <th class="col-id">ID</th>
+                  <th class="col-byte">Byte0</th>
+                  <th class="col-byte">Byte1</th>
+                  <th class="col-byte">Byte2</th>
+                  <th class="col-byte">Byte3</th>
+                  <th class="col-byte">Byte4</th>
+                  <th class="col-byte">Byte5</th>
+                  <th class="col-byte">Byte6</th>
+                  <th class="col-byte">Byte7</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows.map((row, rowIndex) => `
+                  <tr class="${rowClass}">
+                    <td><input type="text" value="${esc(row.id)}" readonly></td>
+                    ${row.bytes.map((byteObj, byteIndex) => `<td>${renderByteCell(moduleKey, dir, rowIndex, byteObj, byteIndex, editable)}</td>`).join("")}
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderEditor() {
+      const key = moduleSelect.value;
+      moduleHint.textContent = hints[key];
+
+      if (key === "algo") {
+        editorArea.innerHTML =
+          renderSection(key, "rx", "CAN1 / CAN2 固定接收 ID", "rx-can1", "var(--rx)") +
+          renderSection(key, "tx", "CAN2 固定发送 ID（填写区）", "tx-can2", "var(--tx)");
+      } else if (key === "main") {
+        editorArea.innerHTML =
+          renderSection(key, "rx", "CAN2 固定接收 ID", "rx-can2", "var(--rx)") +
+          renderSection(key, "tx", "CAN2 固定发送 ID（填写区）", "tx-can2", "var(--tx)");
+      } else {
+        editorArea.innerHTML =
+          renderSection(key, "rx", "CAN2 固定接收 ID", "rx-can2", "var(--rx)") +
+          renderSection(key, "tx", "CAN2 固定发送 ID（填写区）", "tx-can2", "var(--tx)");
+      }
+    }
+
+    document.addEventListener("input", (e) => {
+      const t = e.target;
+      const key = t.dataset.module;
+      const dir = t.dataset.dir;
+      const rowIndex = Number(t.dataset.row);
+      const byteIndex = Number(t.dataset.byte);
+      if (!key || !dir || Number.isNaN(rowIndex) || Number.isNaN(byteIndex)) return;
+      const row = store[key]?.[dir]?.[rowIndex];
+      if (!row || dir !== "tx") return;
+
+      if (t.dataset.kind === "summary") {
+        row.bytes[byteIndex].summary = t.value;
+        saveState();
+        return;
+      }
+
+      if (t.dataset.kind === "bit") {
+        const bitIndex = Number(t.dataset.bit);
+        if (!Number.isNaN(bitIndex)) {
+          row.bytes[byteIndex].bits[bitIndex] = t.value;
+          saveState();
+        }
+      }
+    });
+
+    document.addEventListener("change", (e) => {
+      const t = e.target;
+      const key = t.dataset.module;
+      const dir = t.dataset.dir;
+      const rowIndex = Number(t.dataset.row);
+      const byteIndex = Number(t.dataset.byte);
+      const bitIndex = Number(t.dataset.bitcheck);
+      if (!key || !dir || dir !== "tx" || Number.isNaN(rowIndex) || Number.isNaN(byteIndex) || Number.isNaN(bitIndex)) return;
+      const row = store[key]?.[dir]?.[rowIndex];
+      if (!row) return;
+      row.bytes[byteIndex].bitEnabled[bitIndex] = t.checked;
+      saveState();
+      renderEditor();
+    });
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target;
+      if (btn.dataset.toggle) {
+        const key = btn.dataset.toggle;
+        const dir = btn.dataset.dir;
+        const rowIndex = Number(btn.dataset.row);
+        const byteIndex = Number(btn.dataset.byte);
+        const row = store[key]?.[dir]?.[rowIndex];
+        if (!row) return;
+        row.bytes[byteIndex].showBits = !row.bytes[byteIndex].showBits;
+        saveState();
+        renderEditor();
+      }
+    });
+
+    function buildByteTable(row) {
+      let html = '<table class="result-table"><thead><tr><th>Byte</th><th>含义</th><th>bit7</th><th>bit6</th><th>bit5</th><th>bit4</th><th>bit3</th><th>bit2</th><th>bit1</th><th>bit0</th></tr></thead><tbody>';
+      row.bytes.forEach((b, idx) => {
+        html += `<tr>
+          <td>Byte${idx}</td>
+          <td>${esc(b.summary)}</td>
+          <td>${esc(b.bits[0])}</td>
+          <td>${esc(b.bits[1])}</td>
+          <td>${esc(b.bits[2])}</td>
+          <td>${esc(b.bits[3])}</td>
+          <td>${esc(b.bits[4])}</td>
+          <td>${esc(b.bits[5])}</td>
+          <td>${esc(b.bits[6])}</td>
+          <td>${esc(b.bits[7])}</td>
+        </tr>`;
+      });
+      html += "</tbody></table>";
+      return html;
+    }
+
+    generateBtn.addEventListener("click", () => {
+      let html = '<table class="result-table"><thead><tr><th>模块</th><th>方向</th><th>ID</th></tr></thead><tbody>';
+      ["algo", "main", "net"].forEach((moduleKey) => {
+        ["rx", "tx"].forEach((dir) => {
+          store[moduleKey][dir].forEach((row) => {
+            html += `<tr>
+              <td>${moduleKey === "algo" ? "算法PCB" : moduleKey === "main" ? "主控控制器" : "CAN_TO_NET"}</td>
+              <td>${dir === "rx" ? "接收" : "发送"}</td>
+              <td>${esc(row.id)}</td>
+            </tr>`;
+            html += `<tr><td colspan="3">${buildByteTable(row)}</td></tr>`;
+          });
+        });
+      });
+      html += "</tbody></table>";
+      resultArea.innerHTML = html;
+    });
+
+    moduleSelect.addEventListener("change", renderEditor);
+    applySavedState();
+    renderEditor();
+  </script>
+</body>
+</html>

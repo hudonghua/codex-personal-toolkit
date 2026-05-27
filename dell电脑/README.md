@@ -3,6 +3,7 @@
 This folder stores shareable exports from this computer.
 
 - `codex-chat-records/`: redacted Markdown exports of local Codex chats
+- `codex-memory/`: local Codex memory snapshot
 - `cursor-chat-records/`: redacted Markdown exports of local Cursor chats
 - `cursor-skills/`: local Cursor skills snapshot
 - `cursor-memory/`: local Cursor memory Markdown files

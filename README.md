@@ -104,6 +104,7 @@ The upload creates:
 This repository also supports per-computer shared folders such as `联想电脑/` and `dell电脑/`.
 
 - `codex-chat-records/`: redacted Markdown exports of Codex chats
+- `codex-memory/`: Codex global memory snapshot from that computer
 - `cursor-chat-records/`: redacted Markdown exports of Cursor chats
 - `cursor-skills/`: Cursor skill snapshot for that computer
 - `cursor-memory/`: Cursor memory Markdown files
@@ -118,6 +119,9 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 The script rebuilds `shared/latest-prompts/` by comparing `联想电脑/prompt-notes/` and `dell电脑/prompt-notes/`.
 For the same relative path, the newer file wins and is pushed back to GitHub.
+
+It also rebuilds `shared/global-memory/` as the cross-computer global memory pool.
+This aggregates each computer's `prompt-notes`, `cursor-memory`, and `codex-memory`.
 
 ## Do Not Sync
 
