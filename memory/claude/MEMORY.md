@@ -25,7 +25,8 @@
 - [reference_can_id_naming.md](reference_can_id_naming.md) — CAN ID命名规则：EA05→0x2EA.05，变量名与CAN帧的映射关系
 
 ## Feedback & Principles
-- [feedback_backup_discipline.md](feedback_backup_discipline.md) — **文件修改备份纪律：改前必备份（带时间戳），改坏不私自回退，退档需用户确认**
+- [feedback_backup_discipline.md](feedback_backup_discipline.md) — **文件修改备份纪律：改前必备份（带时间戳），每文件 3 份轮转，改坏不私自回退，退档需用户确认**
+- [feedback_memory_sync_workflow.md](feedback_memory_sync_workflow.md) — **记忆同步流程：改 memory/claude/* 必须走联想电脑本地仓库 + sync-memory.ps1，不直接 gh api**
 - [feedback_gbk_file_modification.md](feedback_gbk_file_modification.md) — **GBK编码文件修改方法：只能用Python保持原编码，禁用sed/Edit工具**
 - [feedback_brace_problem_fix.md](feedback_brace_problem_fix.md) — **大括号问题修复方法：读程序分析逻辑，找真实配对关系，现场修复，绝不退档**
 - [feedback_context_management.md](feedback_context_management.md) — 上下文管理约定：对话过长时主动提醒用户压缩，防止API 400错误
