@@ -1,0 +1,295 @@
+{
+  "device": "dell电脑",
+  "kind": "codex",
+  "exported_at": "2026-05-27T11:49:27",
+  "exported_count": 41,
+  "exports": [
+    {
+      "id": "019e6784-b018-71c2-a0fa-5588d496e8df",
+      "title": "F:\\工作\\Cursor_deepseek\\正解算法",
+      "file": "001_019e6784-b018-71c2-a0fa-5588d496e8df_F工作Cursor_deepseek正解算法.md",
+      "updated_at": "2026-05-27T11:49:26",
+      "message_count": 25
+    },
+    {
+      "id": "019e677d-afe6-7981-a028-db1dc7034b6d",
+      "title": "F:\\工作\\Cursor_deepseek\\正解算法",
+      "file": "002_019e677d-afe6-7981-a028-db1dc7034b6d_F工作Cursor_deepseek正解算法.md",
+      "updated_at": "2026-05-27T11:40:48",
+      "message_count": 31
+    },
+    {
+      "id": "019de916-195d-7802-a270-c823e5d2ff5b",
+      "title": "F:\\工作\\Cursor_deepseek\\正解算法",
+      "file": "003_019de916-195d-7802-a270-c823e5d2ff5b_F工作Cursor_deepseek正解算法.md",
+      "updated_at": "2026-05-27T11:32:02",
+      "message_count": 45
+    },
+    {
+      "id": "019dedec-02f3-7f22-a520-0b40f10d895d",
+      "title": "F:\\工作\\AI模型\\c除锈机器人",
+      "file": "004_019dedec-02f3-7f22-a520-0b40f10d895d_F工作AI模型c除锈机器人.md",
+      "updated_at": "2026-05-26T18:03:19",
+      "message_count": 851
+    },
+    {
+      "id": "019e62ec-e30e-7c72-8b19-247c403da23c",
+      "title": "C:\\Users\\DELL\\Documents\\改bin文件的项目",
+      "file": "005_019e62ec-e30e-7c72-8b19-247c403da23c_CUsersDELLDocuments改bin文件的项目.md",
+      "updated_at": "2026-05-26T17:46:47",
+      "message_count": 333
+    },
+    {
+      "id": "019e4ef3-fae9-75d1-acd8-363985837107",
+      "title": "C:\\Users\\DELL",
+      "file": "006_019e4ef3-fae9-75d1-acd8-363985837107_CUsersDELL.md",
+      "updated_at": "2026-05-22T17:12:26",
+      "message_count": 8
+    },
+    {
+      "id": "019e4eeb-c61c-7c21-9d31-c0623621908f",
+      "title": "C:\\Users\\DELL",
+      "file": "007_019e4eeb-c61c-7c21-9d31-c0623621908f_CUsersDELL.md",
+      "updated_at": "2026-05-22T17:10:15",
+      "message_count": 11
+    },
+    {
+      "id": "019e398f-3e4a-7393-9600-8f4da97546e9",
+      "title": "C:\\Users\\DELL\\Documents\\Z20",
+      "file": "008_019e398f-3e4a-7393-9600-8f4da97546e9_CUsersDELLDocumentsZ20.md",
+      "updated_at": "2026-05-20T23:36:21",
+      "message_count": 41
+    },
+    {
+      "id": "019e2ee6-085a-7233-ae91-8125dd32ce46",
+      "title": "C:\\Users\\DELL\\Documents\\Codex\\2026-05-16\\new-chat",
+      "file": "009_019e2ee6-085a-7233-ae91-8125dd32ce46_CUsersDELLDocumentsCodex2026-05-16new-chat.md",
+      "updated_at": "2026-05-16T12:55:36",
+      "message_count": 32
+    },
+    {
+      "id": "019e2eda-e085-7b01-a0f8-1fd4a2a5dcb6",
+      "title": "F:\\工作\\AI模型\\c除锈机器人",
+      "file": "010_019e2eda-e085-7b01-a0f8-1fd4a2a5dcb6_F工作AI模型c除锈机器人.md",
+      "updated_at": "2026-05-16T12:38:33",
+      "message_count": 66
+    },
+    {
+      "id": "019e25b8-4996-75d0-b490-b8f41b5a910f",
+      "title": "F:\\工作\\AI模型\\c除锈机器人",
+      "file": "011_019e25b8-4996-75d0-b490-b8f41b5a910f_F工作AI模型c除锈机器人.md",
+      "updated_at": "2026-05-14T17:32:55",
+      "message_count": 6
+    },
+    {
+      "id": "019e1bef-55ac-78f2-a796-fc3e633783ed",
+      "title": "C:\\Users\\DELL\\Documents\\New project 3",
+      "file": "012_019e1bef-55ac-78f2-a796-fc3e633783ed_CUsersDELLDocumentsNew-project-3.md",
+      "updated_at": "2026-05-13T15:28:09",
+      "message_count": 62
+    },
+    {
+      "id": "019e1d10-1ed4-7070-ba57-d8ca657bc653",
+      "title": "C:\\Users\\DELL\\Documents\\New project 3",
+      "file": "013_019e1d10-1ed4-7070-ba57-d8ca657bc653_CUsersDELLDocumentsNew-project-3.md",
+      "updated_at": "2026-05-13T13:09:16",
+      "message_count": 33
+    },
+    {
+      "id": "019e1a17-edca-7722-91a6-75ec68729e63",
+      "title": "C:\\Users\\DELL\\Documents\\New project 2",
+      "file": "014_019e1a17-edca-7722-91a6-75ec68729e63_CUsersDELLDocumentsNew-project-2.md",
+      "updated_at": "2026-05-12T13:57:03",
+      "message_count": 26
+    },
+    {
+      "id": "019e19db-b2d4-7873-9024-c5133a8eccc4",
+      "title": "C:\\Users\\DELL\\Documents\\New project 2",
+      "file": "015_019e19db-b2d4-7873-9024-c5133a8eccc4_CUsersDELLDocumentsNew-project-2.md",
+      "updated_at": "2026-05-12T10:35:04",
+      "message_count": 56
+    },
+    {
+      "id": "019e15e3-8c60-7303-ad7a-2b31fb18cc2a",
+      "title": "C:\\Users\\DELL\\Documents\\New project 3",
+      "file": "016_019e15e3-8c60-7303-ad7a-2b31fb18cc2a_CUsersDELLDocumentsNew-project-3.md",
+      "updated_at": "2026-05-12T00:05:43",
+      "message_count": 42
+    },
+    {
+      "id": "019e10a9-4f87-7de0-a1d1-dd9e49da0035",
+      "title": "C:\\Users\\DELL\\Documents\\New project 3",
+      "file": "017_019e10a9-4f87-7de0-a1d1-dd9e49da0035_CUsersDELLDocumentsNew-project-3.md",
+      "updated_at": "2026-05-10T15:47:11",
+      "message_count": 53
+    },
+    {
+      "id": "019e0ba1-25b2-79d0-8ee5-e46251bb7195",
+      "title": "C:\\Users\\DELL\\Documents\\New project 3",
+      "file": "018_019e0ba1-25b2-79d0-8ee5-e46251bb7195_CUsersDELLDocumentsNew-project-3.md",
+      "updated_at": "2026-05-10T14:14:24",
+      "message_count": 346
+    },
+    {
+      "id": "019df39c-b78f-7600-9119-82110d26a8c7",
+      "title": "F:\\工作\\AI模型\\c除锈机器人\\KX_LCD70_200_10AI",
+      "file": "019_019df39c-b78f-7600-9119-82110d26a8c7_F工作AI模型c除锈机器人KX_LCD70_200_10AI.md",
+      "updated_at": "2026-05-09T22:38:06",
+      "message_count": 9
+    },
+    {
+      "id": "019e0072-2451-71e0-8951-83655d579536",
+      "title": "C:\\Users\\DELL\\Documents\\New project 4",
+      "file": "020_019e0072-2451-71e0-8951-83655d579536_CUsersDELLDocumentsNew-project-4.md",
+      "updated_at": "2026-05-09T14:17:15",
+      "message_count": 707
+    },
+    {
+      "id": "019e0525-49fc-7072-9fc0-5bfc60ab41ce",
+      "title": "C:\\Users\\DELL\\Documents\\New project 5",
+      "file": "021_019e0525-49fc-7072-9fc0-5bfc60ab41ce_CUsersDELLDocumentsNew-project-5.md",
+      "updated_at": "2026-05-08T11:15:22",
+      "message_count": 33
+    },
+    {
+      "id": "019df0f7-c467-74d1-bccd-1d9b2b08e7fe",
+      "title": "C:\\Users\\DELL\\Documents\\New project 2",
+      "file": "022_019df0f7-c467-74d1-bccd-1d9b2b08e7fe_CUsersDELLDocumentsNew-project-2.md",
+      "updated_at": "2026-05-07T18:35:00",
+      "message_count": 172
+    },
+    {
+      "id": "019dec39-a097-73c0-8c26-e6979763d666",
+      "title": "F:\\工作\\Cursor_deepseek\\正解算法",
+      "file": "023_019dec39-a097-73c0-8c26-e6979763d666_F工作Cursor_deepseek正解算法.md",
+      "updated_at": "2026-05-03T19:51:47",
+      "message_count": 90
+    },
+    {
+      "id": "019dec9a-6608-74e3-a1e9-0419fd9bc25a",
+      "title": "f:\\工作\\AI模型\\c除锈机器人\\KX_LCD70_200_10AI",
+      "file": "024_019dec9a-6608-74e3-a1e9-0419fd9bc25a_f工作AI模型c除锈机器人KX_LCD70_200_10AI.md",
+      "updated_at": "2026-05-03T14:56:55",
+      "message_count": 20
+    },
+    {
+      "id": "019de852-2455-7990-9ca2-3c6a8834c605",
+      "title": "C:\\Users\\DELL",
+      "file": "025_019de852-2455-7990-9ca2-3c6a8834c605_CUsersDELL.md",
+      "updated_at": "2026-05-02T19:02:21",
+      "message_count": 15
+    },
+    {
+      "id": "019de84f-da35-7b40-9f27-7b1468a85e07",
+      "title": "C:\\Users\\DELL",
+      "file": "026_019de84f-da35-7b40-9f27-7b1468a85e07_CUsersDELL.md",
+      "updated_at": "2026-05-02T18:51:52",
+      "message_count": 4
+    },
+    {
+      "id": "019de77c-c6ce-7ea2-a2ba-d77d0381200f",
+      "title": "C:\\Users\\DELL",
+      "file": "027_019de77c-c6ce-7ea2-a2ba-d77d0381200f_CUsersDELL.md",
+      "updated_at": "2026-05-02T15:06:24",
+      "message_count": 13
+    },
+    {
+      "id": "019de754-993d-7402-8827-6ed1dbbfdff0",
+      "title": "C:\\Users\\DELL",
+      "file": "028_019de754-993d-7402-8827-6ed1dbbfdff0_CUsersDELL.md",
+      "updated_at": "2026-05-02T14:16:47",
+      "message_count": 7
+    },
+    {
+      "id": "019de731-c2ff-7050-b3c7-dc5d9db35dc6",
+      "title": "F:\\工作\\AI模型\\c除锈机器人",
+      "file": "029_019de731-c2ff-7050-b3c7-dc5d9db35dc6_F工作AI模型c除锈机器人.md",
+      "updated_at": "2026-05-02T14:04:17",
+      "message_count": 7
+    },
+    {
+      "id": "019de72f-e427-7f50-98ed-536ae10930ba",
+      "title": "f:\\工作\\AI模型\\c除锈机器人",
+      "file": "030_019de72f-e427-7f50-98ed-536ae10930ba_f工作AI模型c除锈机器人.md",
+      "updated_at": "2026-05-02T13:47:48",
+      "message_count": 7
+    },
+    {
+      "id": "019de6af-ca93-7603-b231-e1596bff011a",
+      "title": "f:\\工作\\AI模型\\c除锈机器人",
+      "file": "031_019de6af-ca93-7603-b231-e1596bff011a_f工作AI模型c除锈机器人.md",
+      "updated_at": "2026-05-02T12:22:49",
+      "message_count": 20
+    },
+    {
+      "id": "019de6ab-adfd-7891-be19-e754b84a37b8",
+      "title": "C:\\Users\\DELL",
+      "file": "032_019de6ab-adfd-7891-be19-e754b84a37b8_CUsersDELL.md",
+      "updated_at": "2026-05-02T11:11:58",
+      "message_count": 5
+    },
+    {
+      "id": "019de695-3803-7941-bf5c-ade82e721e27",
+      "title": "C:\\Users\\DELL",
+      "file": "033_019de695-3803-7941-bf5c-ade82e721e27_CUsersDELL.md",
+      "updated_at": "2026-05-02T10:47:31",
+      "message_count": 3
+    },
+    {
+      "id": "019de68c-25c2-7773-9f7b-ef569aa028ae",
+      "title": "C:\\Users\\DELL",
+      "file": "034_019de68c-25c2-7773-9f7b-ef569aa028ae_CUsersDELL.md",
+      "updated_at": "2026-05-02T10:38:44",
+      "message_count": 4
+    },
+    {
+      "id": "019de689-dafe-7f63-ad06-ea1833519ee9",
+      "title": "C:\\Users\\DELL",
+      "file": "035_019de689-dafe-7f63-ad06-ea1833519ee9_CUsersDELL.md",
+      "updated_at": "2026-05-02T10:35:21",
+      "message_count": 3
+    },
+    {
+      "id": "019de67f-3b23-73d0-9b86-91f5ba66e0c7",
+      "title": "C:\\Users\\DELL",
+      "file": "036_019de67f-3b23-73d0-9b86-91f5ba66e0c7_CUsersDELL.md",
+      "updated_at": "2026-05-02T10:27:31",
+      "message_count": 4
+    },
+    {
+      "id": "019de66a-7aa0-7510-a61f-4e9d44eb865f",
+      "title": "C:\\Users\\DELL",
+      "file": "037_019de66a-7aa0-7510-a61f-4e9d44eb865f_CUsersDELL.md",
+      "updated_at": "2026-05-02T10:21:36",
+      "message_count": 20
+    },
+    {
+      "id": "019de670-1d85-7433-a8f5-05f6bd6c4695",
+      "title": "F:\\工作\\AI模型\\c除锈机器人",
+      "file": "038_019de670-1d85-7433-a8f5-05f6bd6c4695_F工作AI模型c除锈机器人.md",
+      "updated_at": "2026-05-02T10:14:25",
+      "message_count": 6
+    },
+    {
+      "id": "019de674-782d-7860-8335-257a9992f1a2",
+      "title": "F:\\工作\\AI模型\\c除锈机器人",
+      "file": "039_019de674-782d-7860-8335-257a9992f1a2_F工作AI模型c除锈机器人.md",
+      "updated_at": "2026-05-02T10:11:27",
+      "message_count": 3
+    },
+    {
+      "id": "019de666-38c8-7b02-8e59-256d1b313574",
+      "title": "C:\\Users\\DELL",
+      "file": "040_019de666-38c8-7b02-8e59-256d1b313574_CUsersDELL.md",
+      "updated_at": "2026-05-02T09:56:24",
+      "message_count": 5
+    },
+    {
+      "id": "019de665-a1d5-7df0-8f89-8e11291a9758",
+      "title": "C:\\Users\\DELL",
+      "file": "041_019de665-a1d5-7df0-8f89-8e11291a9758_CUsersDELL.md",
+      "updated_at": "2026-05-02T09:55:18",
+      "message_count": 5
+    }
+  ]
+}

@@ -53,24 +53,3 @@ with open('目标文件', 'wb') as f:
 - ✅ 已验证：关键函数边界完整
 
 如果发现问题，立即报告并提供修复方案。
-
-
-## 中文写入硬规则（2026-05-25）
-
-只要写入内容包含中文，尤其是 GBK/GB2312 C/H 源码，禁止把中文直接写在 PowerShell/cmd/shell 命令字符串中再传给 Python。
-
-错误方式示例：
-
-```powershell
-python -c "content = content.replace('old', '锚杆自动启动')"
-```
-
-原因：中文在进入 Python 前可能已经被终端代码页转成 `?`、`锟`、`�`，即使 Python 按 GBK 写回也会把坏字写进源码。
-
-正确方式：
-
-```python
-text = ''.join(chr(x) for x in [0x951a, 0x6746, 0x81ea, 0x52a8, 0x542f, 0x52a8])
-```
-
-或从可靠 GBK 原文件按字节复制原文。修改后必须用 Python 读取 GBK 并检查关键中文的 Unicode 码点，再 Keil 编译验证。

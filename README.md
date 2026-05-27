@@ -99,6 +99,26 @@ The upload creates:
 - raw `.jsonl`: exact local Codex session archive
 - `manifest.json`: source and export metadata
 
+## Shared By Computer
+
+This repository also supports per-computer shared folders such as `联想电脑/` and `dell电脑/`.
+
+- `codex-chat-records/`: redacted Markdown exports of Codex chats
+- `cursor-chat-records/`: redacted Markdown exports of Cursor chats
+- `cursor-skills/`: Cursor skill snapshot for that computer
+- `cursor-memory/`: Cursor memory Markdown files
+- `prompt-notes/`: reusable prompt files for that computer
+
+To sync the current Dell computer and rebuild the shared prompt pool:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\sync-device-share.ps1
+```
+
+The script rebuilds `shared/latest-prompts/` by comparing `联想电脑/prompt-notes/` and `dell电脑/prompt-notes/`.
+For the same relative path, the newer file wins and is pushed back to GitHub.
+
 ## Do Not Sync
 
 Do not sync the whole `.codex` directory. It can contain login state, sessions, cache, local logs, and private data.

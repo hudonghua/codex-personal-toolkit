@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-05-27T11:49:28",
+  "devices": [
+    "联想电脑",
+    "dell电脑"
+  ],
+  "file_count": 1,
+  "files": [
+    {
+      "relative_path": "README.md",
+      "source_device": "dell电脑",
+      "source_file": "dell电脑/prompt-notes/README.md",
+      "updated_at": "2026-05-27T11:48:39"
+    }
+  ]
+}
