@@ -1,6 +1,6 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-05-27T11:38:28",
+  "exported_at": "2026-05-27T11:56:32",
   "exported_count": 24,
   "missing_count": 0,
   "exports": [
@@ -58,7 +58,7 @@
       "title": "现在打开codex app 进不了主界面。",
       "file": "联想电脑/chat-records/008_019e52c1-87ec-7b90-b34d-960b8192997b_现在打开codex-app-进不了主界面。.md",
       "updated_at": "2026-05-23T02:54:35.501Z",
-      "message_count": 56
+      "message_count": 67
     },
     {
       "id": "019e52c3-9b34-7aa1-bfa6-c5b59064d0f8",
