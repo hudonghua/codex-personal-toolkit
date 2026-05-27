@@ -1,6 +1,6 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-05-27T17:21:19",
+  "exported_at": "2026-05-27T17:28:25",
   "exported_count": 25,
   "missing_count": 0,
   "exports": [
@@ -177,7 +177,7 @@
       "title": "定制全机CAN协议",
       "file": "联想电脑/chat-records/025_019e6872-ac59-7722-8c34-16bab479341c_定制全机CAN协议.md",
       "updated_at": "2026-05-27T08:00:06.233Z",
-      "message_count": 55
+      "message_count": 60
     }
   ],
   "missing": []
