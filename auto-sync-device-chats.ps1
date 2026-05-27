@@ -31,12 +31,12 @@ function Get-ChatState {
     }
 
     if (Test-Path -LiteralPath $SessionsRoot) {
-        Get-ChildItem -LiteralPath $SessionsRoot -Recurse -File -Filter "*.jsonl" -ErrorAction SilentlyContinue |
-            Where-Object { $_.Name -notmatch "\.bak" } |
-            ForEach-Object {
-                $script:latest = [Math]::Max($script:latest, [int64]$_.LastWriteTimeUtc.Ticks)
-                $script:count++
-            }
+        $files = Get-ChildItem -LiteralPath $SessionsRoot -Recurse -File -Filter "*.jsonl" -ErrorAction SilentlyContinue |
+            Where-Object { $_.Name -notmatch "\.bak" }
+        foreach ($file in $files) {
+            $latest = [Math]::Max($latest, [int64]$file.LastWriteTimeUtc.Ticks)
+            $count++
+        }
     }
 
     return "$latest/$count"
