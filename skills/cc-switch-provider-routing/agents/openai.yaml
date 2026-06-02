@@ -1,0 +1,7 @@
+interface:
+  display_name: "CC Switch Provider Routing"
+  short_description: "Classify gateway keys and wire them into Codex or Claude in CC Switch."
+  default_prompt: "Use $cc-switch-provider-routing to inspect E:\\AI账号\\密码.txt, classify each key by model family, and add the right provider to CC Switch."
+
+policy:
+  allow_implicit_invocation: true
