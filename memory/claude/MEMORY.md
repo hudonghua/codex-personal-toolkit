@@ -17,6 +17,7 @@
 - [project_200a_screen_engineering.md](project_200a_screen_engineering.md) — 200A屏项目工程经验：MCU/屏端分工、代码风格、页面修改路径、首页画图规范
 - [project_drillplan_visualization.md](project_drillplan_visualization.md) — 炮孔图生成：XML/Excel数据源、坐标系转换、多视角PNG/3D HTML、驾驶室操作手视角
 - [project_csxjqr_lcd_display.md](project_csxjqr_lcd_display.md) — C除锈机器人发射机LCD界面：系统状态+6路压力监控+状态报警，BF变量控制刷新
+- [project_tt_emulsion_charging_logic.md](project_tt_emulsion_charging_logic.md) — 天腾乳化装药车(唐山V1.3)：装药计量+收管控制；**已大改→4联动模式(无/孔间/同孔/管速PI自适应)、速度改米每秒、分区阈值13~37**、重量来源、流量丢失报警、两份HTML
 
 ## Reference Materials
 - [reference_200a_interface_definition.md](reference_200a_interface_definition.md) — 200A屏接口定义：35芯/8芯插头针脚、DI/DO/PWM/CAN/模拟量分配
@@ -25,7 +26,7 @@
 - [reference_can_id_naming.md](reference_can_id_naming.md) — CAN ID命名规则：EA05→0x2EA.05，变量名与CAN帧的映射关系
 
 ## Feedback & Principles
-- [feedback_backup_discipline.md](feedback_backup_discipline.md) — **文件修改备份纪律：改前必备份（带时间戳），每文件 3 份轮转，改坏不私自回退，退档需用户确认**
+- [feedback_backup_discipline.md](feedback_backup_discipline.md) — **文件修改备份纪律：仅代码改前必备份（带时间戳），每文件 3 份轮转，改坏不私自回退，退档需用户确认；文档/HTML不备份**
 - [feedback_memory_sync_workflow.md](feedback_memory_sync_workflow.md) — **记忆同步流程：改 memory/claude/* 必须走联想电脑本地仓库 + sync-memory.ps1，不直接 gh api**
 - [feedback_gbk_file_modification.md](feedback_gbk_file_modification.md) — **GBK编码文件修改方法：只能用Python保持原编码，禁用sed/Edit工具**
 - [feedback_brace_problem_fix.md](feedback_brace_problem_fix.md) — **大括号问题修复方法：读程序分析逻辑，找真实配对关系，现场修复，绝不退档**
@@ -36,6 +37,7 @@
 - [feedback_mcp_file_analysis.md](feedback_mcp_file_analysis.md) — MCP文件分析方法：用Python提取Access数据库内容，不要直接放弃
 - [feedback_protocol_generation.md](feedback_protocol_generation.md) — 协议文档生成规范：必须基于实际代码，不能凭想象，先读代码再验证bin文件
 - [feedback_sincerity_principle.md](feedback_sincerity_principle.md) — 真诚工作原则：不玩套路，不确定就说不确定，建立真正的信任关系
+- [feedback_cost_economy.md](feedback_cost_economy.md) — **成本节制：用户对token花费敏感(20元事件)，启动记忆仪式与探索要克制，先读索引按需回读**
 - [feedback_hardware_project_rigor.md](feedback_hardware_project_rigor.md) — 硬件项目严谨性：不能有半点马虎，协议错了设备就不工作，只有对或错没有差不多
 - [feedback_file_encoding_disaster.md](feedback_file_encoding_disaster.md) — 文件编码处理底线：修改前必须备份，绝对不能把程序搞没了
 - [feedback_embedded_code_style.md](feedback_embedded_code_style.md) — 嵌入式代码风格：避免指针/数组/枚举/结构体，用简单变量方便Keil全局搜索追踪
