@@ -7,6 +7,7 @@
     "changed-files/App_usr.c",
     "changed-files/CanOpen.c",
     "changed-files/算法PCB通信说明.html",
+    "protocol-files/",
     "logs/codex_rebuild_all_can_timeslice.log",
     "firmware-src.zip"
   ],

@@ -17,6 +17,7 @@ This archive records the 2026-06-06 Algorithm PCB CAN protocol/code task.
 - `changed-files/App_usr.c`
 - `changed-files/CanOpen.c`
 - `changed-files/算法PCB通信说明.html`
+- `protocol-files/`: full snapshot of `F:\工作\实际进展与验证\模型确定\通讯协议`.
 - `logs/codex_rebuild_all_can_timeslice.log`
 - `firmware-src.zip`: snapshot of the firmware `Src` directory.
 
