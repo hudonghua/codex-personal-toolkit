@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>算法PCB通信说明</title>
+  <style>
+    :root {
+      --bg: #f5efe5;
+      --paper: #fffdfa;
+      --text: #243447;
+      --muted: #68788b;
+      --line: #ddd2c1;
+      --blue: #245a95;
+      --soft: #f7f1e7;
+      --shadow: rgba(42, 35, 22, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #f7f1e8 0%, #eee4d7 100%);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+    .wrap {
+      width: min(1600px, 98vw);
+      margin: 18px auto 28px;
+      padding: 20px;
+      background: rgba(255, 253, 249, 0.98);
+      border: 1px solid #e5dac9;
+      border-radius: 18px;
+      box-shadow: 0 18px 42px var(--shadow);
+    }
+    h1 {
+      margin: 0 0 8px;
+      color: #18456f;
+      font-size: 30px;
+    }
+    .lead {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+    .card {
+      margin-bottom: 18px;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--paper);
+    }
+    h2 {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: 22px;
+    }
+    p.note {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: var(--soft);
+      color: #214d79;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    td code {
+      color: #9a4d18;
+      font-weight: 700;
+    }
+    .table-wrap {
+      overflow: auto;
+      max-height: 70vh;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+    .foot {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>算法PCB通信说明</h1>
+    <p class="lead">
+      本页只整理算法PCB自身的通信边界，不混入 NET_TO_CAN 或整车控制PCB 的实现职责。
+      按模块视角，算法PCB负责接收编码器/姿态原始量以及标零操作指令，完成算法计算，再向 NET_TO_CAN 和整车控制PCB 输出结果。
+      其中标零操作的业务语义是：<code>收到标0指令 -> 读取当前编码器值 -> 铁电保存一次</code>。
+    </p>
+    <p class="note">
+      对应程序工程：<code>F:\工作\实际进展与验证\模型确定\MC_LCD - 7Control_V1.2\MC_LCD - 7Control_V1.2</code>
+    </p>
+
+    <section class="card">
+      <h2>1. 算法PCB接收：标零指令、编码器与姿态原始量</h2>
+      <p class="note">
+        该部分是算法PCB的输入。方向字段以原协议表为准，包含来自 NET_TO_CAN/HMI 的 <code>发送至算法PCB</code> 标零指令，
+        以及来自编码器链的 <code>编码器至算法PCB</code> 原始量输入。
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>物理CAN</th>
+              <th>作用域</th>
+              <th>CAN ID</th>
+              <th>方向</th>
+              <th>周期</th>
+              <th>分类</th>
+              <th>Byte</th>
+              <th>Bit</th>
+              <th>信号名</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>CAN1(电脑链)</td><td>左臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B0</td><td>b0</td><td>左臂root_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>左臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B0</td><td>b1</td><td>左臂base_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>左臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B0</td><td>b2</td><td>左臂boom_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>左臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B0</td><td>b3</td><td>左臂d1_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>左臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B0</td><td>b4</td><td>左臂e1_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>左臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B0</td><td>b5</td><td>左臂f_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>左臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B0</td><td>b6</td><td>左臂cd_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>左臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B0</td><td>b7</td><td>左臂gg1_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>左臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B1</td><td>b0</td><td>左臂深度</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>中臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B1</td><td>b1</td><td>中臂base_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>中臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B1</td><td>b2</td><td>中臂boom_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>中臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B1</td><td>b3</td><td>中臂d1_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>中臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B1</td><td>b4</td><td>中臂e1_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>中臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B1</td><td>b5</td><td>中臂f_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>中臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B1</td><td>b6</td><td>中臂cd_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>中臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B1</td><td>b7</td><td>中臂gg1_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>中臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B2</td><td>b0</td><td>中臂深度</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>右臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B2</td><td>b1</td><td>右臂root_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>右臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B2</td><td>b2</td><td>右臂base_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>右臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B2</td><td>b3</td><td>右臂boom_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>右臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B2</td><td>b4</td><td>右臂d1_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>右臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B2</td><td>b5</td><td>右臂e1_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>右臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B2</td><td>b6</td><td>右臂f_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>右臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B2</td><td>b7</td><td>右臂cd_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>右臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B3</td><td>b0</td><td>右臂gg1_raw</td><td>收到标0后，保存当前编码器值到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>右臂</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B3</td><td>b1</td><td>倾角x</td><td>收到标0后，保存当前姿态基准到铁电</td></tr>
+            <tr><td>CAN1(电脑链)</td><td>倾角</td><td><code>0x50</code></td><td>发送至算法PCB</td><td>逐帧发送</td><td>标零</td><td>B3</td><td>b2</td><td>倾角y</td><td>收到标0后，保存当前姿态基准到铁电</td></tr>
+            <tr><td>CAN2(编码器链)</td><td>左臂</td><td><code>0x181</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>左臂root_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>左臂</td><td><code>0x182</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>左臂base_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>左臂</td><td><code>0x183</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>左臂boom_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>左臂</td><td><code>0x184</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>左臂d1_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>左臂</td><td><code>0x185</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>左臂e1_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>左臂</td><td><code>0x186</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>左臂f_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>左臂</td><td><code>0x187</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>左臂cd_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>左臂</td><td><code>0x188</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>左臂gg1_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>左臂</td><td><code>0x189</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>左臂深度</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>中臂</td><td><code>0x192</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>中臂base_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>中臂</td><td><code>0x193</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>中臂boom_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>中臂</td><td><code>0x194</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>中臂d1_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>中臂</td><td><code>0x195</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>中臂e1_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>中臂</td><td><code>0x196</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>中臂f_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>中臂</td><td><code>0x197</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>中臂cd_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>中臂</td><td><code>0x198</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>中臂gg1_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>中臂</td><td><code>0x199</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>中臂深度</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>右臂</td><td><code>0x1A1</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>右臂root_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>右臂</td><td><code>0x1A2</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>右臂base_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>右臂</td><td><code>0x1A3</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>右臂boom_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>右臂</td><td><code>0x1A4</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>右臂d1_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>右臂</td><td><code>0x1A5</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>右臂e1_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>右臂</td><td><code>0x1A6</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>右臂f_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>右臂</td><td><code>0x1A7</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>右臂cd_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>右臂</td><td><code>0x1A8</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>右臂gg1_raw</td><td></td></tr>
+            <tr><td>CAN2(编码器链)</td><td>右臂</td><td><code>0x1A9</code></td><td>编码器至算法PCB</td><td>40ms</td><td>编码器/角度原始量</td><td>B0-B3</td><td></td><td>右臂深度</td><td></td></tr>
+            <tr><td>CAN1(编码器链)</td><td>共享姿态</td><td><code>0x28F</code></td><td>编码器至算法PCB</td><td>40ms</td><td>车体姿态</td><td>B0-B3</td><td></td><td>body_roll/body_pitch</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>2. 算法PCB发送：输出至NET_TO_CAN与整车控制PCB</h2>
+      <p class="note">
+        该部分是算法PCB的输出。其中一部分发给 NET_TO_CAN 用于显示/监控，一部分发给整车控制PCB用于控制协同。
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>物理CAN</th>
+              <th>作用域</th>
+              <th>CAN ID</th>
+              <th>方向</th>
+              <th>周期</th>
+              <th>分类</th>
+              <th>Byte</th>
+              <th>Bit</th>
+              <th>信号名</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>CAN1(算法PCB链)</td><td>共享姿态</td><td><code>0x150</code></td><td>发送至电脑</td><td>50ms</td><td>末端点坐标</td><td>B0-B3</td><td></td><td>末端点坐标x</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>共享姿态</td><td><code>0x150</code></td><td>发送至电脑</td><td>50ms</td><td>末端点坐标</td><td>B4-B7</td><td></td><td>末端点坐标y</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>共享姿态</td><td><code>0x151</code></td><td>发送至电脑</td><td>50ms</td><td>末端点坐标</td><td>B0-B3</td><td></td><td>末端点坐标z</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>共享姿态</td><td><code>0x152</code></td><td>发送至电脑</td><td>80ms</td><td>夹角坐标</td><td>B0-B3</td><td></td><td>推进梁和XZ面夹角</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>共享姿态</td><td><code>0x152</code></td><td>发送至电脑</td><td>80ms</td><td>夹角坐标</td><td>B4-B7</td><td></td><td>推进梁和XY面夹角</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>左臂</td><td><code>0x153</code></td><td>发送至电脑、整车控制器PCB</td><td>50ms</td><td>钻孔深度</td><td>B0-B1</td><td></td><td>左臂实时凿岩深度</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>中臂</td><td><code>0x153</code></td><td>发送至电脑、整车控制器PCB</td><td>50ms</td><td>钻孔深度</td><td>B2-B3</td><td></td><td>中臂实时凿岩深度</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>右臂</td><td><code>0x153</code></td><td>发送至电脑、整车控制器PCB</td><td>50ms</td><td>钻孔深度</td><td>B4-B5</td><td></td><td>右臂实时凿岩深度</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>左臂</td><td><code>0x153</code></td><td>发送至整车控制PCB</td><td>50ms</td><td></td><td>B6</td><td>b0</td><td>左臂自评行摆上</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>左臂</td><td><code>0x153</code></td><td>发送至整车控制PCB</td><td>50ms</td><td></td><td>B6</td><td>b1</td><td>左臂自评行摆下</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>左臂</td><td><code>0x153</code></td><td>发送至整车控制PCB</td><td>50ms</td><td></td><td>B6</td><td>b2</td><td>左臂自评行摆左</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>左臂</td><td><code>0x153</code></td><td>发送至整车控制PCB</td><td>50ms</td><td></td><td>B6</td><td>b3</td><td>左臂自评行摆右</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>中臂</td><td><code>0x153</code></td><td>发送至整车控制PCB</td><td>50ms</td><td></td><td>B6</td><td>b4</td><td>中臂自评行摆上</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>中臂</td><td><code>0x153</code></td><td>发送至整车控制PCB</td><td>50ms</td><td></td><td>B6</td><td>b5</td><td>中臂自评行摆下</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>中臂</td><td><code>0x153</code></td><td>发送至整车控制PCB</td><td>50ms</td><td></td><td>B6</td><td>b6</td><td>中臂自评行摆左</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>中臂</td><td><code>0x153</code></td><td>发送至整车控制PCB</td><td>50ms</td><td></td><td>B6</td><td>b7</td><td>中臂自评行摆右</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>右臂</td><td><code>0x153</code></td><td>发送至整车控制PCB</td><td>50ms</td><td></td><td>B7</td><td>b0</td><td>右臂自评行摆上</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>右臂</td><td><code>0x153</code></td><td>发送至整车控制PCB</td><td>50ms</td><td></td><td>B7</td><td>b1</td><td>右臂自评行摆下</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>右臂</td><td><code>0x153</code></td><td>发送至整车控制PCB</td><td>50ms</td><td></td><td>B7</td><td>b2</td><td>右臂自评行摆左</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>右臂</td><td><code>0x153</code></td><td>发送至整车控制PCB</td><td>50ms</td><td></td><td>B7</td><td>b3</td><td>右臂自评行摆右</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>左臂</td><td><code>0x154</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B0-B1</td><td></td><td>左臂root_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>左臂</td><td><code>0x154</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B2-B3</td><td></td><td>左臂base_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>左臂</td><td><code>0x154</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B4-B5</td><td></td><td>左臂boom_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>左臂</td><td><code>0x154</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B6-B7</td><td></td><td>左臂d1_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>左臂</td><td><code>0x155</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B0-B1</td><td></td><td>左臂e1_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>左臂</td><td><code>0x155</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B2-B3</td><td></td><td>左臂f_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>左臂</td><td><code>0x155</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B4-B5</td><td></td><td>左臂cd_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>左臂</td><td><code>0x155</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B6-B7</td><td></td><td>左臂gg1_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>中臂</td><td><code>0x156</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B0-B1</td><td></td><td>中臂base_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>中臂</td><td><code>0x156</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B2-B3</td><td></td><td>中臂boom_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>中臂</td><td><code>0x156</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B4-B5</td><td></td><td>中臂d1_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>中臂</td><td><code>0x156</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B6-B7</td><td></td><td>中臂e1_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>中臂</td><td><code>0x157</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B0-B1</td><td></td><td>中臂f_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>中臂</td><td><code>0x157</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B2-B3</td><td></td><td>中臂cd_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>中臂</td><td><code>0x157</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B4-B5</td><td></td><td>中臂gg1_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>右臂</td><td><code>0x157</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B6-B7</td><td></td><td>右臂root_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>右臂</td><td><code>0x158</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B0-B1</td><td></td><td>右臂base_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>右臂</td><td><code>0x158</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B2-B3</td><td></td><td>右臂boom_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>右臂</td><td><code>0x158</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B4-B5</td><td></td><td>右臂d1_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>右臂</td><td><code>0x158</code></td><td>发送至电脑</td><td>150ms</td><td>编码器实际角度*100</td><td>B6-B7</td><td></td><td>右臂e1_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>右臂</td><td><code>0x159</code></td><td>发送至电脑</td><td>50ms</td><td>编码器实际角度*100</td><td>B0-B1</td><td></td><td>右臂f_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>右臂</td><td><code>0x159</code></td><td>发送至电脑</td><td>50ms</td><td>编码器实际角度*100</td><td>B2-B3</td><td></td><td>右臂cd_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>右臂</td><td><code>0x159</code></td><td>发送至电脑</td><td>50ms</td><td>编码器实际角度*100</td><td>B4-B5</td><td></td><td>右臂gg1_raw</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B0</td><td>b0</td><td>左臂root_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B0</td><td>b1</td><td>左臂base_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B0</td><td>b2</td><td>左臂boom_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B0</td><td>b3</td><td>左臂d1_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B0</td><td>b4</td><td>左臂e1_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B0</td><td>b5</td><td>左臂f_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B0</td><td>b6</td><td>左臂cd_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B0</td><td>b7</td><td>左臂gg1_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B1</td><td>b0</td><td>左臂深度编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B1</td><td>b1</td><td>中臂base_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B1</td><td>b2</td><td>中臂boom_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B1</td><td>b3</td><td>中臂d1_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B1</td><td>b4</td><td>中臂e1_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B1</td><td>b5</td><td>中臂f_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B1</td><td>b6</td><td>中臂cd_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B1</td><td>b7</td><td>中臂gg1_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B2</td><td>b0</td><td>中臂深度编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B2</td><td>b1</td><td>右臂root_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B2</td><td>b2</td><td>右臂base_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B2</td><td>b3</td><td>右臂boom_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B2</td><td>b4</td><td>右臂d1_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B2</td><td>b5</td><td>右臂e1_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B2</td><td>b6</td><td>右臂f_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B2</td><td>b7</td><td>右臂cd_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B3</td><td>b0</td><td>右臂gg1_raw编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B3</td><td>b1</td><td>右臂深度编码器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B3</td><td>b2</td><td>算法PCB掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>整机共享</td><td><code>0x15A</code></td><td>发送至电脑</td><td>500ms</td><td>实时状态</td><td>B3</td><td>b3</td><td>倾角传感器掉线</td><td></td></tr>
+            <tr><td>CAN1(算法PCB链)</td><td>算法结果发送</td><td><code>0x15B~0x160</code></td><td>发送至整车控制PCB</td><td>100ms</td><td>全电脑算法结果臂架动作</td><td></td><td></td><td></td><td>ID范围已确认，字段待后续补充</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="foot">
+      依据文件：三臂CAN协议展开表_修正版_v3.csv
+    </div>
+  </div>
+</body>
+</html>
