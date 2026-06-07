@@ -1,0 +1,25 @@
+{
+  "topic": "algorithm-pcb-can-protocol",
+  "exported_at": "2026-06-06T18:15:45+08:00",
+  "source_workspace": "F:\\工作\\实际进展与验证\\模型确定\\MC_LCD - 7Control_V1.2\\MC_LCD - 7Control_V1.2",
+  "source_protocol_doc": "F:\\工作\\实际进展与验证\\模型确定\\通讯协议\\算法PCB通信说明.html",
+  "included": [
+    "changed-files/App_usr.c",
+    "changed-files/CanOpen.c",
+    "changed-files/算法PCB通信说明.html",
+    "protocol-files/",
+    "logs/codex_rebuild_all_can_timeslice.log",
+    "firmware-src.zip"
+  ],
+  "verification": {
+    "keil_rebuild": "0 Error(s), 52 Warning(s)",
+    "log": "logs/codex_rebuild_all_can_timeslice.log"
+  },
+  "can_summary": {
+    "can1_receive_ids": 28,
+    "can2_receive_ids": 5,
+    "can2_runtime_send_ids": 16,
+    "can2_source_possible_send_ids": 20
+  },
+  "raw_session_note": "Current 2026-06-06 Codex raw session was not found under C:\\Users\\DELL\\.codex\\sessions; archive uses task summary plus code/document snapshots."
+}

@@ -1,0 +1,4 @@
+--cpu Cortex-M3 ".\flash\startup_lpc17xx.o" ".\flash\system_lpc17xx.o" ".\flash\app_sys.o" ".\flash\timer.o" ".\flash\can.o" ".\flash\main.o" ".\flash\canopen.o" ".\flash\adc.o" ".\flash\gpio.o" ".\flash\i2c.o" ".\flash\uart.o" ".\flash\app_io.o" ".\flash\app_bus.o" ".\flash\task.o" ".\flash\pwm.o" ".\flash\app_dgus.o" ".\flash\app_uart.o" ".\flash\app_key.o" ".\flash\app_usr.o" ".\flash\app_lcd.o" --strict --scatter ".\FLASH\MC_LCD7_KX_V2.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\FLASH\MC_LCD7_KX_V2.map" -o ".\FLASH\MC_LCD7_KX_V2.axf"

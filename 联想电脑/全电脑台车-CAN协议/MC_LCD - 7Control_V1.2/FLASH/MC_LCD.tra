@@ -1,0 +1,39 @@
+*** Creating Trace Output File '.\FLASH\MC_LCD.tra' Ok.
+### Preparing for ADS-LD.
+### Creating ADS-LD Command Line
+### List of Objects: adding '".\flash\startup_lpc17xx.o"'
+### List of Objects: adding '".\flash\system_lpc17xx.o"'
+### List of Objects: adding '".\flash\timer.o"'
+### List of Objects: adding '".\flash\can.o"'
+### List of Objects: adding '".\flash\main.o"'
+### List of Objects: adding '".\flash\canopen.o"'
+### List of Objects: adding '".\flash\adc.o"'
+### List of Objects: adding '".\flash\gpio.o"'
+### List of Objects: adding '".\flash\i2c.o"'
+### List of Objects: adding '".\flash\uart.o"'
+### List of Objects: adding '".\flash\app_io.o"'
+### List of Objects: adding '".\flash\app_bus.o"'
+### List of Objects: adding '".\flash\task.o"'
+### List of Objects: adding '".\flash\app_usr.o"'
+### List of Objects: adding '".\flash\pwm.o"'
+### List of Objects: adding '".\flash\app_dgus.o"'
+### List of Objects: adding '".\flash\app_key.o"'
+### List of Objects: adding '".\flash\app_lcd.o"'
+### List of Objects: adding '".\flash\app_logic.o"'
+### List of Objects: adding '".\flash\my_io.o"'
+### List of Objects: adding '".\flash\my_lcd.o"'
+### ADS-LD Command completed:
+--cpu Cortex-M3 ".\flash\startup_lpc17xx.o" ".\flash\system_lpc17xx.o" ".\flash\timer.o" ".\flash\can.o" ".\flash\main.o" ".\flash\canopen.o" ".\flash\adc.o" ".\flash\gpio.o" ".\flash\i2c.o" ".\flash\uart.o" ".\flash\app_io.o" ".\flash\app_bus.o" ".\flash\task.o" ".\flash\app_usr.o" ".\flash\pwm.o" ".\flash\app_dgus.o" ".\flash\app_key.o" ".\flash\app_lcd.o" ".\flash\app_logic.o" ".\flash\my_io.o" ".\flash\my_lcd.o" --strict --scatter ".\FLASH\MC_LCD.sct" 
+--autoat --summary_stderr --info summarysizes --map --xref --callgraph --symbols 
+--info sizes --info totals --info unused --info veneers 
+ --list ".\FLASH\MC_LCD.map" -o ".\FLASH\MC_LCD.axf"### Preparing Environment (PrepEnvAds)
+### ADS-LD Output File: '.\FLASH\MC_LCD.axf'
+### ADS-LD Command File: '.\FLASH\MC_LCD.lnp'
+### Checking for dirty Components...
+### Creating CmdFile '.\FLASH\MC_LCD.lnp', Handle=0x00000524
+### Writing '.lnp' file
+### ADS-LD Command file '.\FLASH\MC_LCD.lnp' is ready.
+### ADS-LD: About to start ADS-LD Thread.
+### ADS-LD: executed with 0 errors
+### Updating obj list
+### LDADS_file() completed.

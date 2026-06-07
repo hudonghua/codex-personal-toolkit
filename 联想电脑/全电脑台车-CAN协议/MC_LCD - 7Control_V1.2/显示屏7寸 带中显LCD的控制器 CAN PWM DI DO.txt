@@ -1,0 +1,4 @@
+			
+////  2018 0709		MC 控制器，模板程序
+DI, DO, PWM, TON, TOF, TODH, TODL, SET_DOx(X), CAN收发 等封装
+带 LCD 接口函数

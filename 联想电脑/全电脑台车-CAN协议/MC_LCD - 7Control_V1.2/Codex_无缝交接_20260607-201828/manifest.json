@@ -1,0 +1,14 @@
+{
+  "updated_at": "2026-06-07T23:00:00",
+  "output_dir": "E:\\AI_划时代\\全电脑_算法PCB\\正确资料_算法PCB_CAN协议\\MC_LCD - 7Control_V1.2\\Codex_无缝交接_20260607-201828",
+  "source_session": "C:\\Users\\t250c\\.codex\\sessions\\2026\\06\\06\\rollout-2026-06-06T20-58-26-019e9d03-53bb-7170-8807-e6bb7a6184cb.jsonl",
+  "raw_copy": "E:\\AI_划时代\\全电脑_算法PCB\\正确资料_算法PCB_CAN协议\\MC_LCD - 7Control_V1.2\\Codex_无缝交接_20260607-201828\\03_聊天记录_原始.jsonl",
+  "latest_note": "Added CAN-NET layer: Qt upper computer via 192.168.0.105:500 TCP tentative, CAN-NET html generated, CAN business layer unchanged.",
+  "files": [
+    "00_接手必读.md",
+    "01_当前结论.md",
+    "02_聊天记录_可读版.md",
+    "03_聊天记录_原始.jsonl",
+    "04_关键源码定位.md"
+  ]
+}

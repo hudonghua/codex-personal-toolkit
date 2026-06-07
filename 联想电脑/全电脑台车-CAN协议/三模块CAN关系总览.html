@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>三模块 CAN 关系总览（电脑 · 整车PCB · 算法PCB）</title>
+<style>
+  :root{
+    --paper:#fffdfa; --text:#243447; --muted:#68788b; --line:#ddd2c1; --blue:#245a95; --blue-d:#18456f;
+    --soft:#f7f1e7; --pc:#245a95; --veh:#2f7d4f; --alg:#c2413b; --enc:#b66a1f;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:linear-gradient(180deg,#f7f1e8 0%,#eee4d7 100%);color:var(--text);
+       font-family:"Microsoft YaHei","PingFang SC",sans-serif;line-height:1.7;}
+  .wrap{width:min(1640px,98vw);margin:18px auto 40px;padding:22px;background:rgba(255,253,249,.98);
+        border:1px solid #e5dac9;border-radius:18px;box-shadow:0 18px 42px rgba(42,35,22,.08);}
+  h1{margin:0 0 6px;color:var(--blue-d);font-size:30px;}
+  .lead{margin:0 0 16px;color:var(--muted);font-size:15px;}
+  .tabs{display:flex;gap:8px;margin:14px 0 18px;flex-wrap:wrap;}
+  .tabs button{border:1px solid #b9c7d6;background:#fff;color:var(--blue);padding:8px 18px;border-radius:8px;font-weight:700;cursor:pointer;font-size:15px;}
+  .tabs button.active{background:var(--blue);color:#fff;}
+  .card{margin-bottom:18px;padding:16px 20px;border:1px solid var(--line);border-radius:16px;background:var(--paper);}
+  h2{margin:0 0 12px;color:var(--blue);font-size:21px;border-bottom:2px solid var(--line);padding-bottom:8px;}
+  h3{color:var(--blue-d);font-size:16px;margin:18px 0 6px;}
+  svg{width:100%;height:auto;display:block;background:#fbf8f2;border:1px solid var(--line);border-radius:14px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin:8px 0;}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:var(--soft);color:#214d79;white-space:nowrap;}
+  td code,.mono{color:#9a4d18;font-weight:700;font-family:Consolas,monospace;}
+  tr:nth-child(even) td{background:#faf6ee;}
+  .hidden{display:none;}
+  .pill{display:inline-block;padding:1px 9px;border-radius:999px;color:#fff;font-weight:700;font-size:12px;}
+  .b-pc{background:var(--pc);} .b-veh{background:var(--veh);} .b-alg{background:var(--alg);} .b-enc{background:var(--enc);}
+  .legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:12px;}
+  .legend div{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fbf8f2;font-size:13px;}
+  .legend b{display:block;color:var(--blue-d);margin-bottom:3px;}
+  .note{background:#fff8e8;border-left:5px solid #d98a00;border-radius:8px;padding:12px 16px;margin:14px 0;font-size:14px;}
+  .note b{color:#b66a1f;}
+  .dir{font-weight:700;color:var(--blue-d);}
+  .bus1{color:var(--veh);font-weight:700;} .bus2{color:var(--alg);font-weight:700;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:900px){.grid2{grid-template-columns:1fr;}}
+  .foot{margin-top:30px;color:var(--muted);font-size:12.5px;text-align:center;border-top:1px solid var(--line);padding-top:14px;}
+</style>
+</head>
+<body><div class="wrap">
+
+<h1>三模块 CAN 关系总览</h1>
+<p class="lead">依据同目录三份协议（<b>算法PCB通信说明</b> / <b>整车PCB通信说明</b> / <b>电脑端通信说明</b>）汇总，呈现 <b>电脑端 · 整车PCB · 算法PCB</b> 三者在两条物理 CAN 总线上的收发关系、共享 ID 仲裁与数据闭环。</p>
+
+<div class="tabs">
+  <button class="active" data-t="overview">① 关系总览图</button>
+  <button data-t="matrix">② 收发矩阵</button>
+  <button data-t="share">③ 共享ID与仲裁</button>
+  <button data-t="loop">④ 数据闭环</button>
+</div>
+
+<section id="overview" class="card">
+  <h2>三节点 · 两总线 · 关系拓扑</h2>
+  <svg viewBox="0 0 1500 900" role="img" aria-label="三模块CAN关系图">
+    <defs>
+      <marker id="aBlue" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#245a95"/></marker>
+      <marker id="aGreen" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f7d4f"/></marker>
+      <marker id="aRed" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c2413b"/></marker>
+      <marker id="aOrange" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b66a1f"/></marker>
+    </defs>
+    <rect x="60" y="250" width="1380" height="70" rx="14" fill="#eef5ec" stroke="#bcd6c4"/>
+    <text x="80" y="293" font-size="20" font-weight="700" fill="#2f7d4f">CAN1 · 执行器总线</text>
+    <rect x="60" y="600" width="1380" height="70" rx="14" fill="#fbeeec" stroke="#e3c4be"/>
+    <text x="80" y="643" font-size="20" font-weight="700" fill="#c2413b">CAN2 · NET_TO_CAN链 / 算法PCB对外链</text>
+    <rect x="600" y="40" width="300" height="110" rx="14" fill="#fff" stroke="#245a95" stroke-width="3"/>
+    <text x="750" y="85" font-size="24" font-weight="700" fill="#18456f" text-anchor="middle">电脑端</text>
+    <text x="750" y="115" font-size="13" fill="#68788b" text-anchor="middle">上位机 / 显示 / 参数下发 / 标零 / 应急</text>
+    <rect x="120" y="400" width="320" height="120" rx="14" fill="#fff" stroke="#2f7d4f" stroke-width="3"/>
+    <text x="280" y="447" font-size="24" font-weight="700" fill="#2f7d4f" text-anchor="middle">整车PCB</text>
+    <text x="280" y="475" font-size="13" fill="#68788b" text-anchor="middle">凿岩执行 / 臂架电流 / 阀控</text>
+    <text x="280" y="497" font-size="13" fill="#68788b" text-anchor="middle">状态·压力·液位采集</text>
+    <rect x="1060" y="400" width="320" height="120" rx="14" fill="#fff" stroke="#c2413b" stroke-width="3"/>
+    <text x="1220" y="447" font-size="24" font-weight="700" fill="#c2413b" text-anchor="middle">算法PCB</text>
+    <text x="1220" y="475" font-size="13" fill="#68788b" text-anchor="middle">运动学解算 / 坐标·角度·深度</text>
+    <text x="1220" y="497" font-size="13" fill="#68788b" text-anchor="middle">自平行方向 / 掉线监测</text>
+    <rect x="1060" y="720" width="320" height="110" rx="14" fill="#fff" stroke="#b66a1f" stroke-width="3"/>
+    <text x="1220" y="763" font-size="22" font-weight="700" fill="#b66a1f" text-anchor="middle">编码器链 / 倾角</text>
+    <text x="1220" y="790" font-size="13" fill="#68788b" text-anchor="middle">三臂关节角 + 深度 + 车体姿态</text>
+    <path d="M650,150 C470,230 360,320 300,400" fill="none" stroke="#245a95" stroke-width="4" marker-end="url(#aBlue)"/>
+    <rect x="338" y="232" width="232" height="46" rx="8" fill="#fff" stroke="#245a95"/>
+    <text x="454" y="251" font-size="13" font-weight="700" fill="#18456f" text-anchor="middle">电脑→整车 (CAN1)</text>
+    <text x="454" y="270" font-size="12.5" fill="#9a4d18" text-anchor="middle" font-family="Consolas">0x71 0x75 0x7A · 0x50(B7=51)</text>
+    <path d="M360,400 C430,330 560,240 700,150" fill="none" stroke="#2f7d4f" stroke-width="4" marker-end="url(#aGreen)"/>
+    <rect x="560" y="330" width="190" height="46" rx="8" fill="#fff" stroke="#2f7d4f"/>
+    <text x="655" y="349" font-size="13" font-weight="700" fill="#2f7d4f" text-anchor="middle">整车→电脑 (CAN1)</text>
+    <text x="655" y="368" font-size="12.5" fill="#9a4d18" text-anchor="middle" font-family="Consolas">0x170 0x176</text>
+    <path d="M880,150 C1080,260 1180,330 1220,400" fill="none" stroke="#245a95" stroke-width="4" marker-end="url(#aBlue)"/>
+    <rect x="940" y="222" width="250" height="46" rx="8" fill="#fff" stroke="#245a95"/>
+    <text x="1065" y="241" font-size="13" font-weight="700" fill="#18456f" text-anchor="middle">电脑→算法 (CAN2)</text>
+    <text x="1065" y="260" font-size="12.5" fill="#9a4d18" text-anchor="middle" font-family="Consolas">0x50(B7=00) 标零</text>
+    <path d="M1160,400 C1080,320 980,240 900,150" fill="none" stroke="#c2413b" stroke-width="4" marker-end="url(#aRed)"/>
+    <rect x="900" y="330" width="270" height="46" rx="8" fill="#fff" stroke="#c2413b"/>
+    <text x="1035" y="349" font-size="13" font-weight="700" fill="#c2413b" text-anchor="middle">算法→电脑 (CAN2)</text>
+    <text x="1035" y="368" font-size="12" fill="#9a4d18" text-anchor="middle" font-family="Consolas">0x150 0x152 0x153 0x154 0x15A</text>
+    <path d="M440,455 C700,455 820,455 1060,455" fill="none" stroke="#2f7d4f" stroke-width="4" marker-end="url(#aGreen)"/>
+    <rect x="610" y="432" width="280" height="44" rx="8" fill="#fff" stroke="#2f7d4f"/>
+    <text x="750" y="450" font-size="13" font-weight="700" fill="#2f7d4f" text-anchor="middle">整车→算法 (CAN1)</text>
+    <text x="750" y="468" font-size="12.5" fill="#9a4d18" text-anchor="middle" font-family="Consolas">0x17E 自平行初始化</text>
+    <path d="M1060,495 C820,495 700,495 440,495" fill="none" stroke="#c2413b" stroke-width="4" marker-end="url(#aRed)"/>
+    <rect x="585" y="498" width="330" height="44" rx="8" fill="#fff" stroke="#c2413b"/>
+    <text x="750" y="516" font-size="13" font-weight="700" fill="#c2413b" text-anchor="middle">算法→整车 (CAN1)</text>
+    <text x="750" y="534" font-size="12.5" fill="#9a4d18" text-anchor="middle" font-family="Consolas">0x153 深度 + 自平行方向位</text>
+    <path d="M1220,720 L1220,520" fill="none" stroke="#b66a1f" stroke-width="4" marker-end="url(#aOrange)"/>
+    <rect x="1235" y="585" width="205" height="64" rx="8" fill="#fff" stroke="#b66a1f"/>
+    <text x="1337" y="606" font-size="13" font-weight="700" fill="#b66a1f" text-anchor="middle">编码器→算法 (CAN1)</text>
+    <text x="1337" y="624" font-size="12" fill="#9a4d18" text-anchor="middle" font-family="Consolas">0x181~0x1A9</text>
+    <text x="1337" y="641" font-size="12" fill="#9a4d18" text-anchor="middle" font-family="Consolas">0x28F 车体姿态</text>
+  </svg>
+  <div class="legend">
+    <div><b><span class="pill b-pc">电脑端</span></b>发 0x50/0x71/0x75/0x7A；收 0x150/0x152/0x153/0x154/0x15A/0x170/0x176</div>
+    <div><b><span class="pill b-veh">整车PCB</span></b>发 0x170/0x176/0x17E；收 0x50(0x51)/0x71/0x75/0x7A/0x153</div>
+    <div><b><span class="pill b-alg">算法PCB</span></b>发 0x150/0x152/0x153/0x154/0x15A；收 0x50(0x00)/0x17E/编码器链</div>
+    <div><b><span class="pill b-enc">编码器/倾角</span></b>发 0x181~0x189·0x192~0x199·0x1A1~0x1A9·0x28F → 算法PCB</div>
+  </div>
+  <div class="note"><b>读图要点：</b>整车PCB 挂在 <span class="bus1">CAN1（执行器总线）</span>，算法PCB 对电脑的显示数据走 <span class="bus2">CAN2（算法PCB对外链）</span>；而 <span class="mono">0x153</span> 与 <span class="mono">0x17E</span> 让整车PCB↔算法PCB 在 CAN1 上直接互联。电脑与两块板各自构成一来一回的闭环。</div>
+</section>
+
+<section id="matrix" class="card hidden">
+  <h2>完整收发矩阵（按链路）</h2>
+  <table>
+    <thead><tr><th>方向</th><th>物理总线</th><th>CAN ID</th><th>分包/键</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td><span class="dir">电脑 → 整车PCB</span></td><td class="bus1">CAN1</td><td><code>0x71</code></td><td>0x10~0xC0</td><td>三臂凿岩参数（孔深、领孔、防卡钎、润滑、领孔/钻孔/大孔 压力与速度）</td></tr>
+      <tr><td><span class="dir">电脑 → 整车PCB</span></td><td class="bus1">CAN1</td><td><code>0x75</code></td><td>0x10~0xF1</td><td>臂架动作最大/最小电流（大三角、大臂、推进梁旋/仰俯）</td></tr>
+      <tr><td><span class="dir">电脑 → 整车PCB</span></td><td class="bus1">CAN1</td><td><code>0x7A</code></td><td>0x10~0xF0</td><td>臂架电流（推进梁摆/补偿、压力分段标定、自动推进缩）</td></tr>
+      <tr><td><span class="dir">电脑 → 整车PCB</span></td><td class="bus1">CAN1</td><td><code>0x50</code></td><td><b>B7=0x51</b></td><td>屏幕应急操作（液位/水流量/急停/动力/泵电机/水泵/空压机 强制）</td></tr>
+      <tr><td><span class="dir">整车PCB → 电脑</span></td><td class="bus1">CAN1</td><td><code>0x170</code></td><td>0x01,0x02</td><td>反馈/输出信号/报警/支腿阀/掉线状态（位图）</td></tr>
+      <tr><td><span class="dir">整车PCB → 电脑</span></td><td class="bus1">CAN1</td><td><code>0x176</code></td><td>0x01~0x20</td><td>电磁阀模拟量、压力/水流量/液位、操作权限、凿岩工作时间</td></tr>
+      <tr><td><span class="dir">电脑 → 算法PCB</span></td><td class="bus2">CAN2</td><td><code>0x50</code></td><td><b>B7=0x00</b></td><td>标零：三臂编码器/深度/倾角基准保存至铁电</td></tr>
+      <tr><td><span class="dir">算法PCB → 电脑</span></td><td class="bus2">CAN2</td><td><code>0x150</code></td><td>索引帧</td><td>三臂末端点坐标 x/y/z（signed32，×100）</td></tr>
+      <tr><td><span class="dir">算法PCB → 电脑</span></td><td class="bus2">CAN2</td><td><code>0x152</code></td><td>索引帧</td><td>三臂推进梁与 XZ/XY 面夹角（signed16，×100）</td></tr>
+      <tr><td><span class="dir">算法PCB → 电脑 / 整车PCB</span></td><td class="bus2">CAN2</td><td><code>0x153</code></td><td>B0-B5 / B6-B7</td><td>三臂实时凿岩深度（给电脑显示）+ 自平行方向位（给整车PCB执行）</td></tr>
+      <tr><td><span class="dir">算法PCB → 电脑</span></td><td class="bus2">CAN2</td><td><code>0x154</code></td><td>索引帧</td><td>三臂编码器实际角度 root/base/boom/d1/e1/f/cd/gg1（signed16，×100）</td></tr>
+      <tr><td><span class="dir">算法PCB → 电脑</span></td><td class="bus2">CAN2</td><td><code>0x15A</code></td><td>位图</td><td>各编码器掉线 + 算法PCB掉线 + 倾角传感器掉线</td></tr>
+      <tr><td><span class="dir">整车PCB → 算法PCB</span></td><td class="bus1">CAN1</td><td><code>0x17E</code></td><td>B7 b0-b2</td><td>三臂自平行初始化（上升沿触发，保存当前角度为自平行初值）</td></tr>
+      <tr><td><span class="dir">算法PCB → 整车PCB</span></td><td class="bus1">CAN1</td><td><code>0x153</code></td><td>B6-B7</td><td>三臂自平行方向（摆上/下/左/右）供整车PCB驱动臂架</td></tr>
+      <tr><td><span class="dir">编码器链 → 算法PCB</span></td><td class="bus1">CAN1</td><td><code>0x181~0x189</code></td><td>B0-B3</td><td>左臂各关节编码器/角度原始量 + 深度</td></tr>
+      <tr><td><span class="dir">编码器链 → 算法PCB</span></td><td class="bus1">CAN1</td><td><code>0x192~0x199</code></td><td>B0-B3</td><td>中臂各关节编码器/角度原始量 + 深度</td></tr>
+      <tr><td><span class="dir">编码器链 → 算法PCB</span></td><td class="bus1">CAN1</td><td><code>0x1A1~0x1A9</code></td><td>B0-B3</td><td>右臂各关节编码器/角度原始量 + 深度</td></tr>
+      <tr><td><span class="dir">传感器 → 算法PCB</span></td><td class="bus1">CAN1</td><td><code>0x28F</code></td><td>B0-B3</td><td>车体姿态 body_roll / body_pitch（三臂共享）</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>注：</b>各 HTML 对 <span class="mono">0x153</span> 的“物理CAN”标注口径不同——算法PCB 文档标 <span class="bus2">CAN2(对外链)</span>，整车PCB 文档接收侧标 <span class="bus1">CAN1(执行器)</span>。说明该帧是算法PCB 同时面向电脑与整车PCB 的多目的帧，落地时需按实际接线确认其所在物理总线。</div>
+</section>
+
+<section id="share" class="card hidden">
+  <h2>共享 ID 与分包仲裁</h2>
+  <h3>0x50 —— 一个 ID，两个目标，靠 B7 分流</h3>
+  <table>
+    <thead><tr><th>B7 值</th><th>处理方</th><th>忽略方</th><th>物理总线</th><th>用途</th></tr></thead>
+    <tbody>
+      <tr><td><code>0x00</code></td><td><span class="pill b-alg">算法PCB</span></td><td>整车PCB 忽略</td><td class="bus2">CAN2(NET_TO_CAN链)</td><td>三臂编码器/深度/倾角 标零</td></tr>
+      <tr><td><code>0x51</code></td><td><span class="pill b-veh">整车PCB</span></td><td>算法PCB 忽略</td><td class="bus1">CAN1(执行器)</td><td>屏幕应急操作（原老协议 0x51 已并入 0x50）</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>仲裁规则：</b>同一 <span class="mono">0x50</span> 由电脑发出，两块板都会收到，但各自只认自己的 <span class="mono">B7</span> 分包号，对方分包直接丢弃——以 B7 实现“一帧双投、各取所需”。</div>
+  <h3>0x153 —— 一帧两用，深度给电脑、方向给整车</h3>
+  <table>
+    <thead><tr><th>字节</th><th>消费方</th><th>内容</th></tr></thead>
+    <tbody>
+      <tr><td><code>B0-B5</code></td><td><span class="pill b-pc">电脑</span>（显示）</td><td>左/中/右臂实时凿岩深度 uint16（= max(原始-深度零位,0)）</td></tr>
+      <tr><td><code>B6-B7</code></td><td><span class="pill b-veh">整车PCB</span>（执行）</td><td>三臂自平行方向位：摆上/摆下/摆左/摆右</td></tr>
+    </tbody>
+  </table>
+  <h3>三节点 ID 归属一览</h3>
+  <div class="grid2">
+    <table>
+      <thead><tr><th>节点</th><th>发送 ID</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill b-pc">电脑</span></td><td class="mono">0x50, 0x71, 0x75, 0x7A</td></tr>
+        <tr><td><span class="pill b-veh">整车PCB</span></td><td class="mono">0x170, 0x176, 0x17E</td></tr>
+        <tr><td><span class="pill b-alg">算法PCB</span></td><td class="mono">0x150, 0x152, 0x153, 0x154, 0x15A</td></tr>
+      </tbody>
+    </table>
+    <table>
+      <thead><tr><th>节点</th><th>接收 ID</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill b-pc">电脑</span></td><td class="mono">0x150,0x152,0x153,0x154,0x15A,0x170,0x176</td></tr>
+        <tr><td><span class="pill b-veh">整车PCB</span></td><td class="mono">0x50, 0x71, 0x75, 0x7A, 0x153</td></tr>
+        <tr><td><span class="pill b-alg">算法PCB</span></td><td class="mono">0x50, 0x17E, 0x181~0x1A9, 0x28F</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="loop" class="card hidden">
+  <h2>两条核心数据闭环</h2>
+  <h3>闭环 A · 测量显示链（编码器 → 算法 → 电脑）</h3>
+  <svg viewBox="0 0 1500 220" role="img" aria-label="测量显示闭环">
+    <defs><marker id="a2" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#245a95"/></marker></defs>
+    <rect x="40" y="70" width="250" height="80" rx="12" fill="#fff" stroke="#b66a1f" stroke-width="3"/>
+    <text x="165" y="105" font-size="17" font-weight="700" fill="#b66a1f" text-anchor="middle">编码器/倾角</text>
+    <text x="165" y="128" font-size="12.5" fill="#68788b" text-anchor="middle">0x181~0x1A9 / 0x28F</text>
+    <rect x="450" y="70" width="250" height="80" rx="12" fill="#fff" stroke="#c2413b" stroke-width="3"/>
+    <text x="575" y="100" font-size="17" font-weight="700" fill="#c2413b" text-anchor="middle">算法PCB</text>
+    <text x="575" y="123" font-size="12.5" fill="#68788b" text-anchor="middle">正运动学解算</text>
+    <rect x="860" y="70" width="250" height="80" rx="12" fill="#fff" stroke="#245a95" stroke-width="3"/>
+    <text x="985" y="100" font-size="17" font-weight="700" fill="#18456f" text-anchor="middle">电脑端</text>
+    <text x="985" y="123" font-size="12.5" fill="#68788b" text-anchor="middle">坐标/角度/深度 显示</text>
+    <rect x="1240" y="70" width="220" height="80" rx="12" fill="#fff" stroke="#245a95" stroke-width="3" stroke-dasharray="6 5"/>
+    <text x="1350" y="100" font-size="15" font-weight="700" fill="#18456f" text-anchor="middle">操作员标零</text>
+    <text x="1350" y="123" font-size="12.5" fill="#9a4d18" text-anchor="middle">0x50(B7=00)</text>
+    <path d="M290,110 L450,110" stroke="#b66a1f" stroke-width="4" marker-end="url(#a2)"/>
+    <path d="M700,110 L860,110" stroke="#c2413b" stroke-width="4" marker-end="url(#a2)"/>
+    <text x="780" y="98" font-size="12" fill="#9a4d18" text-anchor="middle" font-family="Consolas">0x150/152/153/154</text>
+    <path d="M1240,140 C1000,200 700,200 575,155" fill="none" stroke="#245a95" stroke-width="3" stroke-dasharray="6 5" marker-end="url(#a2)"/>
+    <text x="900" y="195" font-size="12" fill="#68788b" text-anchor="middle">标零基准回灌算法PCB（铁电保存）</text>
+  </svg>
+  <p>编码器原始角度与车体姿态进入算法PCB → 解算出末端坐标/夹角/深度/掉线状态 → 经 <span class="mono">0x150/0x152/0x153/0x154/0x15A</span> 上送电脑显示。操作员在电脑端按 <span class="mono">0x50(B7=0x00)</span> 标零，算法PCB 把当前编码器/深度/倾角存为基准——构成“测量—显示—校准”闭环。</p>
+  <h3>闭环 B · 自平行控制链（整车 ⇄ 算法）</h3>
+  <svg viewBox="0 0 1500 200" role="img" aria-label="自平行闭环">
+    <defs><marker id="a3" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2f7d4f"/></marker>
+      <marker id="a4" markerWidth="12" markerHeight="12" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#c2413b"/></marker></defs>
+    <rect x="180" y="60" width="320" height="90" rx="12" fill="#fff" stroke="#2f7d4f" stroke-width="3"/>
+    <text x="340" y="98" font-size="18" font-weight="700" fill="#2f7d4f" text-anchor="middle">整车PCB</text>
+    <text x="340" y="122" font-size="12.5" fill="#68788b" text-anchor="middle">驱动臂架自平行动作</text>
+    <rect x="1000" y="60" width="320" height="90" rx="12" fill="#fff" stroke="#c2413b" stroke-width="3"/>
+    <text x="1160" y="98" font-size="18" font-weight="700" fill="#c2413b" text-anchor="middle">算法PCB</text>
+    <text x="1160" y="122" font-size="12.5" fill="#68788b" text-anchor="middle">计算自平行方向</text>
+    <path d="M500,90 L1000,90" stroke="#2f7d4f" stroke-width="4" marker-end="url(#a3)"/>
+    <text x="750" y="78" font-size="13" fill="#9a4d18" text-anchor="middle" font-family="Consolas">0x17E 自平行初始化（上升沿）</text>
+    <path d="M1000,125 L500,125" stroke="#c2413b" stroke-width="4" marker-end="url(#a4)"/>
+    <text x="750" y="148" font-size="13" fill="#9a4d18" text-anchor="middle" font-family="Consolas">0x153 B6-B7 自平行方向（摆上/下/左/右）</text>
+  </svg>
+  <p>整车PCB 发 <span class="mono">0x17E</span> 让算法PCB 锁定当前姿态为自平行初值；算法PCB 持续用实时角度算出应摆方向，经 <span class="mono">0x153 的 B6-B7</span> 回送整车PCB 驱动臂架——构成“初始化—计算—执行”的实时自平行闭环。两条链路均在 CAN1 上完成。</p>
+</section>
+
+<div class="foot">本页依据同目录三份 CAN 协议说明（算法PCB / 整车PCB / 电脑端）整理，供联调与培训参考。</div>
+
+</div>
+<script>
+  document.querySelectorAll('.tabs button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.querySelectorAll('.tabs button').forEach(function(b){b.classList.remove('active');});
+      btn.classList.add('active');
+      ['overview','matrix','share','loop'].forEach(function(id){
+        document.getElementById(id).classList.add('hidden');
+      });
+      document.getElementById(btn.dataset.t).classList.remove('hidden');
+    });
+  });
+</script>
+</body></html>

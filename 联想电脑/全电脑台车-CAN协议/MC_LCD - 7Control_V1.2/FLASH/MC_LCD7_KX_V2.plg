@@ -1,0 +1,335 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1.uvproj
+Project File Date:  07/22/2019
+
+<h2>Output:</h2>
+Build target 'FLASH'
+compiling system_LPC17xx.c...
+compiling App_sys.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\app_lcd.h: Src\App_sys.c: 1 warning, 0 errors
+compiling timer.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\app_lcd.h: Src\timer.c: 1 warning, 0 errors
+compiling can.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\app_lcd.h: Src\can.c: 1 warning, 0 errors
+compiling main.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\main.c(109): warning:  #223-D: function "ReadRetain_" declared implicitly
+Src\main.c:        ReadRetain_() ;
+Src\main.c:        ^
+Src\main.c(171): warning:  #223-D: function "SaveRetain_" declared implicitly
+Src\main.c:                              SaveRetain_();
+Src\main.c:                              ^
+Src\main.c(60): warning:  #177-D: variable "stX10ms" was declared but never referenced
+Src\main.c:     static unsigned char stX10ms = 0;
+Src\main.c:                          ^
+Src\main.c: Src\main.c: 4 warnings, 0 errors
+compiling CanOpen.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\app_lcd.h: Src\CanOpen.c: 1 warning, 0 errors
+compiling adc.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\adc.c(167): warning:  #550-D: variable "vAd0" was set but never used
+Src\adc.c:      uint32_t vAd0 = 0;
+Src\adc.c:               ^
+Src\adc.c: Src\adc.c: 2 warnings, 0 errors
+compiling GPIO.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\app_lcd.h: Src\GPIO.c: 1 warning, 0 errors
+compiling i2c.c...
+compiling uart.c...
+compiling App_IO.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\App_IO.c(518): warning:  #177-D: variable "pGPIO" was declared but never referenced
+Src\App_IO.c:           GPIO_TypeDef * pGPIO = NULL;
+Src\App_IO.c:                          ^
+Src\App_IO.c: Src\App_IO.c: 2 warnings, 0 errors
+compiling App_Bus.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\App_Bus.c(790): warning:  #177-D: variable "i" was declared but never referenced
+Src\App_Bus.c:          unsigned char i = 0;
+Src\App_Bus.c:                        ^
+Src\App_Bus.c: Src\App_Bus.c: 2 warnings, 0 errors
+compiling Task.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\app_lcd.h: Src\Task.c: 1 warning, 0 errors
+compiling pwm.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\pwm.c(320): warning:  #177-D: variable "vCh" was declared but never referenced
+Src\pwm.c:      unsigned char vCh = 0;
+Src\pwm.c:                    ^
+Src\pwm.c: Src\pwm.c: 2 warnings, 0 errors
+compiling App_DGUS.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\app_lcd.h: Src\App_DGUS.c: 1 warning, 0 errors
+compiling App_uart.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\app_lcd.h: Src\App_uart.c: 1 warning, 0 errors
+compiling App_KEY.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\app_lcd.h: Src\App_KEY.c: 1 warning, 0 errors
+compiling App_usr.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\App_usr.c(885): warning:  #1-D: last line of file ends without a newline
+Src\App_usr.c:                          
+Src\App_usr.c:                          ^
+Src\App_usr.c: Src\App_usr.c: 2 warnings, 0 errors
+compiling App_lcd.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\App_lcd.c(30): warning:  #1295-D: Deprecated declaration keyset - give arg types
+Src\App_lcd.c:   void keyset();
+Src\App_lcd.c:        ^
+Src\App_lcd.c(31): warning:  #1295-D: Deprecated declaration keyoldset - give arg types
+Src\App_lcd.c:   void keyoldset();
+Src\App_lcd.c:        ^
+Src\App_lcd.c(32): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\App_lcd.c:   void messageshow();
+Src\App_lcd.c:        ^
+Src\App_lcd.c(183): warning:  #520-D: initialization with "{...}" expected for aggregate object
+Src\App_lcd.c:   unsigned char  value[8][5] =0 ;//存储参数                        
+Src\App_lcd.c:                               ^
+Src\App_lcd.c(287): warning:  #175-D: subscript out of range
+Src\App_lcd.c:                                  if ( Row==8 ){  DATA_INPUT_value_8       = value[8][1]+value[8][2]*10+value[8][3]*100+value[8][4]*1000 ;}
+Src\App_lcd.c:                                                                                     ^
+Src\App_lcd.c(287): warning:  #175-D: subscript out of range
+Src\App_lcd.c:                                  if ( Row==8 ){  DATA_INPUT_value_8       = value[8][1]+value[8][2]*10+value[8][3]*100+value[8][4]*1000 ;}
+Src\App_lcd.c:                                                                                                 ^
+Src\App_lcd.c(287): warning:  #175-D: subscript out of range
+Src\App_lcd.c:                                  if ( Row==8 ){  DATA_INPUT_value_8       = value[8][1]+value[8][2]*10+value[8][3]*100+value[8][4]*1000 ;}
+Src\App_lcd.c:                                                                                                                ^
+Src\App_lcd.c(287): warning:  #175-D: subscript out of range
+Src\App_lcd.c:                                  if ( Row==8 ){  DATA_INPUT_value_8       = value[8][1]+value[8][2]*10+value[8][3]*100+value[8][4]*1000 ;}
+Src\App_lcd.c:                                                                                                                                ^
+Src\App_lcd.c(375): warning:  #175-D: subscript out of range
+Src\App_lcd.c:                                  value[8][1] = DATA_INPUT_value_8_old % 10 ;
+Src\App_lcd.c:                                          ^
+Src\App_lcd.c(377): warning:  #175-D: subscript out of range
+Src\App_lcd.c:                                  value[8][2] = DATA_INPUT_value_8_old % 100 / 10 ;
+Src\App_lcd.c:                                          ^
+Src\App_lcd.c(379): warning:  #175-D: subscript out of range
+Src\App_lcd.c:                                  value[8][3] = DATA_INPUT_value_8_old % 1000 / 100 ;
+Src\App_lcd.c:                                          ^
+Src\App_lcd.c(381): warning:  #175-D: subscript out of range
+Src\App_lcd.c:                                  value[8][4] = DATA_INPUT_value_8_old % 10000/ 1000  ;
+Src\App_lcd.c:                                          ^
+Src\App_lcd.c(383): warning:  #175-D: subscript out of range
+Src\App_lcd.c:                                  DATA_INPUT_value_8      = value[8][1] + value[8][2]*10 +value[8][3]*100 + value[8][4]*1000 ;                                                                                                                             
+Src\App_lcd.c:                                                                    ^
+Src\App_lcd.c(383): warning:  #175-D: subscript out of range
+Src\App_lcd.c:                                  DATA_INPUT_value_8      = value[8][1] + value[8][2]*10 +value[8][3]*100 + value[8][4]*1000 ;                                                                                                                             
+Src\App_lcd.c:                                                                                  ^
+Src\App_lcd.c(383): warning:  #175-D: subscript out of range
+Src\App_lcd.c:                                  DATA_INPUT_value_8      = value[8][1] + value[8][2]*10 +value[8][3]*100 + value[8][4]*1000 ;                                                                                                                             
+Src\App_lcd.c:                                                                                                  ^
+Src\App_lcd.c(383): warning:  #175-D: subscript out of range
+Src\App_lcd.c:                                  DATA_INPUT_value_8      = value[8][1] + value[8][2]*10 +value[8][3]*100 + value[8][4]*1000 ;                                                                                                                             
+Src\App_lcd.c:                                                                                                                    ^
+Src\App_lcd.c: Src\App_lcd.c: 17 warnings, 0 errors
+linking...
+Program Size: Code=54946 RO-data=1118 RW-data=1364 ZI-data=8052  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bincombined --bincombined_base=0x000 --bincombined_padding=1,0 --output="E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.bin" "E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.axf"
+".\FLASH\MC_LCD - 7Control_V.axf" - 0 Error(s), 40 Warning(s).
+Build target 'FLASH'
+compiling App_usr.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\App_usr.c(537): warning:  #1-D: last line of file ends without a newline
+Src\App_usr.c:                          
+Src\App_usr.c:                          ^
+Src\App_usr.c: Src\App_usr.c: 2 warnings, 0 errors
+linking...
+Program Size: Code=52462 RO-data=1118 RW-data=1364 ZI-data=8052  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bincombined --bincombined_base=0x000 --bincombined_padding=1,0 --output="E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.bin" "E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.axf"
+".\FLASH\MC_LCD - 7Control_V.axf" - 0 Error(s), 2 Warning(s).
+Build target 'FLASH'
+compiling CanOpen.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\app_lcd.h: Src\CanOpen.c: 1 warning, 0 errors
+linking...
+Program Size: Code=52286 RO-data=1118 RW-data=1364 ZI-data=8052  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bincombined --bincombined_base=0x000 --bincombined_padding=1,0 --output="E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.bin" "E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.axf"
+".\FLASH\MC_LCD - 7Control_V.axf" - 0 Error(s), 1 Warning(s).
+Build target 'FLASH'
+compiling App_usr.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\App_usr.c(394): error:  #20: identifier "RAD_Setup" is undefined
+Src\App_usr.c:                                            RAD_Setup = _BitV(CAN1_RBuf[0], 0) || bsnj_start_Led ;  
+Src\App_usr.c:                                            ^
+Src\App_usr.c(395): error:  #20: identifier "RAD_UP" is undefined
+Src\App_usr.c:                                            RAD_UP = _BitV(CAN1_RBuf[0], 2) || bsnj_up_Led    ;  
+Src\App_usr.c:                                            ^
+Src\App_usr.c(396): error:  #20: identifier "RAD_down" is undefined
+Src\App_usr.c:                                            RAD_down =  _BitV(CAN1_RBuf[0], 3) || bsnj_down_Led  ;  
+Src\App_usr.c:                                            ^
+Src\App_usr.c(397): error:  #20: identifier "RPump" is undefined
+Src\App_usr.c:                                            RPump= _BitV(CAN1_RBuf[0], 4) || bPump_Led  ;  
+Src\App_usr.c:                                            ^
+Src\App_usr.c(398): error:  #20: identifier "Rsuck" is undefined
+Src\App_usr.c:                                            Rsuck = _BitV(CAN1_RBuf[0], 5);  
+Src\App_usr.c:                                            ^
+Src\App_usr.c(399): error:  #20: identifier "Rflux_up" is undefined
+Src\App_usr.c:                                            Rflux_up = _BitV(CAN1_RBuf[0], 6) || bflux_up_Led ;  
+Src\App_usr.c:                                            ^
+Src\App_usr.c(400): error:  #20: identifier "Rflux_down" is undefined
+Src\App_usr.c:                                            Rflux_down =  _BitV(CAN1_RBuf[0], 7) || bflux_down_Led ; 
+Src\App_usr.c:                                            ^
+Src\App_usr.c(402): error:  #20: identifier "Rboom_on" is undefined
+Src\App_usr.c:                                            Rboom_on =  _BitV(CAN1_RBuf[1], 0) || boom_on_Led ;  
+Src\App_usr.c:                                            ^
+Src\App_usr.c(403): error:  #20: identifier "Rboom_close" is undefined
+Src\App_usr.c:                                            Rboom_close =  _BitV(CAN1_RBuf[1], 1); 
+Src\App_usr.c:                                            ^
+Src\App_usr.c(405): error:  #20: identifier "RHorn" is undefined
+Src\App_usr.c:                                            RHorn =  _BitV(CAN1_RBuf[1], 2);    
+Src\App_usr.c:                                            ^
+Src\App_usr.c(407): error:  #20: identifier "CAN_remote_outline" is undefined
+Src\App_usr.c:                                            CAN_remote_outline = ( CAN1_RBuf[7]==0x5A ) ;
+Src\App_usr.c:                                            ^
+Src\App_usr.c(419): error:  #20: identifier "R_brushBuf" is undefined
+Src\App_usr.c:                                          R_brushBuf = CAN1_RBuf[6] ;      
+Src\App_usr.c:                                          ^
+Src\App_usr.c(423): error:  #20: identifier "R_brushBuf" is undefined
+Src\App_usr.c:                                          R_brushBuf        =0 ;
+Src\App_usr.c:                                          ^
+Src\App_usr.c(572): warning:  #1-D: last line of file ends without a newline
+Src\App_usr.c:                          
+Src\App_usr.c:                          ^
+Src\App_usr.c: Src\App_usr.c: 2 warnings, 13 errors
+Target not created
+Build target 'FLASH'
+compiling App_usr.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\App_usr.c(182): error:  #148: variable "CAN_remote_stop" has already been initialized
+Src\App_usr.c:   unsigned char   CAN_remote_stop = 0;
+Src\App_usr.c:                   ^
+Src\App_usr.c(434): error:  #20: identifier "R_brushBuf" is undefined
+Src\App_usr.c:                                          R_brushBuf = CAN1_RBuf[6] ;      
+Src\App_usr.c:                                          ^
+Src\App_usr.c(438): error:  #20: identifier "R_brushBuf" is undefined
+Src\App_usr.c:                                          R_brushBuf        =0 ;
+Src\App_usr.c:                                          ^
+Src\App_usr.c(587): warning:  #1-D: last line of file ends without a newline
+Src\App_usr.c:                          
+Src\App_usr.c:                          ^
+Src\App_usr.c: Src\App_usr.c: 2 warnings, 3 errors
+Target not created
+Build target 'FLASH'
+compiling App_usr.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\App_usr.c(433): error:  #20: identifier "R_brushBuf" is undefined
+Src\App_usr.c:                                          R_brushBuf = CAN1_RBuf[6] ;      
+Src\App_usr.c:                                          ^
+Src\App_usr.c(437): error:  #20: identifier "R_brushBuf" is undefined
+Src\App_usr.c:                                          R_brushBuf        =0 ;
+Src\App_usr.c:                                          ^
+Src\App_usr.c(586): warning:  #1-D: last line of file ends without a newline
+Src\App_usr.c:                          
+Src\App_usr.c:                          ^
+Src\App_usr.c: Src\App_usr.c: 2 warnings, 2 errors
+Target not created
+Build target 'FLASH'
+compiling App_usr.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\App_usr.c(587): warning:  #1-D: last line of file ends without a newline
+Src\App_usr.c:                          
+Src\App_usr.c:                          ^
+Src\App_usr.c: Src\App_usr.c: 2 warnings, 0 errors
+linking...
+Program Size: Code=52702 RO-data=1118 RW-data=1376 ZI-data=8048  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bincombined --bincombined_base=0x000 --bincombined_padding=1,0 --output="E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.bin" "E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.axf"
+".\FLASH\MC_LCD - 7Control_V.axf" - 0 Error(s), 2 Warning(s).
+Build target 'FLASH'
+compiling App_usr.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\App_usr.c(588): warning:  #1-D: last line of file ends without a newline
+Src\App_usr.c:                          
+Src\App_usr.c:                          ^
+Src\App_usr.c: Src\App_usr.c: 2 warnings, 0 errors
+linking...
+Program Size: Code=52702 RO-data=1118 RW-data=1376 ZI-data=8048  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bincombined --bincombined_base=0x000 --bincombined_padding=1,0 --output="E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.bin" "E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.axf"
+".\FLASH\MC_LCD - 7Control_V.axf" - 0 Error(s), 2 Warning(s).
+Build target 'FLASH'
+compiling App_usr.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\App_usr.c(642): warning:  #1-D: last line of file ends without a newline
+Src\App_usr.c:                          
+Src\App_usr.c:                          ^
+Src\App_usr.c: Src\App_usr.c: 2 warnings, 0 errors
+linking...
+Program Size: Code=53094 RO-data=1118 RW-data=1404 ZI-data=8052  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bincombined --bincombined_base=0x000 --bincombined_padding=1,0 --output="E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.bin" "E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.axf"
+".\FLASH\MC_LCD - 7Control_V.axf" - 0 Error(s), 2 Warning(s).
+Build target 'FLASH'
+compiling App_usr.c...
+Src\app_lcd.h(64): warning:  #1295-D: Deprecated declaration messageshow - give arg types
+Src\app_lcd.h:    extern void messageshow();
+Src\app_lcd.h:                ^
+Src\App_usr.c(642): warning:  #1-D: last line of file ends without a newline
+Src\App_usr.c:                          
+Src\App_usr.c:                          ^
+Src\App_usr.c: Src\App_usr.c: 2 warnings, 0 errors
+linking...
+Program Size: Code=53094 RO-data=1118 RW-data=1404 ZI-data=8052  
+FromELF: creating hex file...
+User command #1: fromelf.exe --bincombined --bincombined_base=0x000 --bincombined_padding=1,0 --output="E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.bin" "E:\工作\J_经济版湿喷系统\MC_LCD - 7Control_V1.1\MC_LCD - 7Control_V1.1\FLASH\MC_LCD - 7Control_V.axf"
+".\FLASH\MC_LCD - 7Control_V.axf" - 0 Error(s), 2 Warning(s).
