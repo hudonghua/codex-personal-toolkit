@@ -45,3 +45,9 @@ Expand-Archive -Path .\work-states/2026/codex-skills-mcp-github-sync_20260610-09
 - `extra-current-files/推进梁XZ_YZ夹角函数_可复制.txt`: 推进梁 XZ/YZ 夹角可复制函数说明。
 - `extra-current-files/V1_参考点.html`: 当前 V1 参考点/Body-World 验证计算器。
 - `raw-session.jsonl` 和 `transcript.md` 已对 `sk-...` 形态误报字符串做脱敏替换。
+
+## Algorithm PCB Program Added
+
+- `algorithm-pcb_MC_LCD-7Control_V1.2_full.zip`: 完整算法PCB Keil工程目录 `MC_LCD - 7Control_V1.2`。
+- 文件数: 324; 源大小: 50718199 bytes; zip大小: 10302638 bytes.
+- SHA256: `82eb40b74ef0a953f0e9250cad380f1b5bc45ae41cfe3d7b71e2a7c4aabcf3c4`.

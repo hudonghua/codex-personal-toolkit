@@ -14,5 +14,15 @@
   "extra_current_files": [
     "extra-current-files/推进梁XZ_YZ夹角函数_可复制.txt",
     "extra-current-files/V1_参考点.html"
-  ]
+  ],
+  "algorithm_pcb_program_zip": {
+    "zip": "algorithm-pcb_MC_LCD-7Control_V1.2_full.zip",
+    "source": "E:\\AI_划时代\\全电脑_算法PCB\\正确资料_算法PCB_CAN协议\\MC_LCD - 7Control_V1.2",
+    "file_count": 324,
+    "source_bytes": 50718199,
+    "zip_bytes": 10302638,
+    "sha256": "82eb40b74ef0a953f0e9250cad380f1b5bc45ae41cfe3d7b71e2a7c4aabcf3c4",
+    "created_at": "2026-06-10T09:28:41",
+    "note": "Full algorithm PCB Keil project tree, excluding only git/cache internals."
+  }
 }
