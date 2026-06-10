@@ -1,0 +1,462 @@
+推进梁 XZ/YZ 夹角计算函数（可复制）
+====================================
+
+用途
+----
+只计算推进梁方向与 XZ、YZ 平面的夹角，不计算 H 点坐标，不依赖 O/B/A/C/D/E/F/G/H 的固定平移坐标。
+
+这个函数对应 V1_参考点.html 当前逻辑：
+1. 推进梁局部方向固定取 H1->H = (300, 0, 0)。
+2. 用关节旋转链把这个方向向量转到当前坐标系。
+3. 用方向向量计算与 XZ、YZ 平面的夹角。
+
+输入
+----
+arm_side:
+  0 = 左臂
+  1 = 中臂
+  2 = 右臂
+
+base_deg:
+  基座回转角，单位 degree。
+
+boom_deg:
+  大臂角，单位 degree。
+
+d1_deg:
+  D1 关节角，单位 degree。
+
+e1_deg:
+  E1 关节角，单位 degree。
+
+f_deg:
+  F 关节角，单位 degree。
+
+tilt_x_deg:
+  车体 X 轴倾角，单位 degree。
+  按 V1_参考点.html：实际使用 Rx(-tilt_x_deg)。
+
+tilt_y_deg:
+  车体 Y 轴倾角，单位 degree。
+  按 V1_参考点.html：实际使用 Ry(tilt_y_deg)。
+
+输出
+----
+out->vec_x / vec_y / vec_z:
+  推进梁方向向量 H1->H。
+
+out->angle_xz_deg:
+  推进梁与 XZ 平面的夹角，单位 degree。
+
+out->angle_yz_deg:
+  推进梁与 YZ 平面的夹角，单位 degree。
+
+注意
+----
+1. 这个函数只算方向角，不算 H 点坐标。
+2. 如果只关心推进梁角度，可以不需要完整 O-H 平移坐标链。
+3. 但必须保证编码器对应关系、旋转轴方向、正负号、零点定义基本一致。
+4. root_deg 在 V1_参考点.html 当前推进梁夹角链路里不参与 H1->H 方向计算；它主要影响侧臂 O0->O1 的位置链。
+5. 若要输出到现场 World 坐标，还应在本函数结果向量外面再乘 Body->World 的旋转矩阵 R；平移 T 不影响夹角。
+
+形参逐项说明
+------------
+int arm_side:
+  选择左/中/右臂，用来决定 E1 相关旋转轴的 Y 方向正负。
+  传 ARM_SIDE_LEFT  表示左臂。
+  传 ARM_SIDE_MID   表示中臂。
+  传 ARM_SIDE_RIGHT 表示右臂。
+  当前 V1 逻辑里左臂和中臂的 E1 轴方向一致，右臂 Y 方向取反。
+
+double base_deg:
+  基座回转角，单位 degree。
+  对应 V1 里的 base_deg。
+  作用是先绕当前 Z 轴旋转推进梁方向链。
+  简单理解：它主要影响推进梁方向向量的 X/Y 分量。
+
+double boom_deg:
+  大臂俯仰角，单位 degree。
+  对应 V1 里的 boom_deg。
+  在 base_deg 之后绕 Y 轴旋转。
+  简单理解：它主要影响推进梁方向向量的 X/Z 分量。
+
+double d1_deg:
+  D1 关节角，单位 degree。
+  对应 V1 里的 d1_deg。
+  在 base + boom 之后，绕当前局部 X 轴旋转。
+
+double e1_deg:
+  E1 关节角，单位 degree。
+  对应 V1 里的 e1_deg。
+  在 D1 之后绕 E->E1 方向轴旋转。
+  左/中臂轴向近似为 (0, 275, 0)，右臂轴向近似为 (0, -275, 0)。
+
+double f_deg:
+  F 关节角，单位 degree。
+  对应 V1 里的 f_deg。
+  在 E1 之后绕 F 关节轴旋转。
+  按 V1 当前参数，F 轴由 e1e2 - e1f 得到，等效为 (0, 0, 100)。
+
+double tilt_x_deg:
+  车体 X 轴倾角，单位 degree。
+  如果不做车体倾角补偿，传 0。
+  按 V1 当前逻辑，实际参与计算的是 Rx(-tilt_x_deg)。
+
+double tilt_y_deg:
+  车体 Y 轴倾角，单位 degree。
+  如果不做车体倾角补偿，传 0。
+  按 V1 当前逻辑，实际参与计算的是 Ry(tilt_y_deg)。
+
+ArmFeedAngleResult *out:
+  输出结果指针，不能传 0。
+  函数成功后会写入：
+    out->vec_x / vec_y / vec_z：推进梁方向向量 H1->H。
+    out->angle_xz_deg：推进梁与 XZ 平面的夹角。
+    out->angle_yz_deg：推进梁与 YZ 平面的夹角。
+
+函数返回值:
+  返回 1 表示计算成功。
+  返回 0 表示输入非法或方向向量长度异常。
+
+可复制 C 代码
+-------------
+
+#include <math.h>
+
+#ifndef ARM_PI
+#define ARM_PI 3.14159265358979323846
+#endif
+
+#define ARM_SIDE_LEFT   0
+#define ARM_SIDE_MID    1
+#define ARM_SIDE_RIGHT  2
+
+typedef struct
+{
+    double x;
+    double y;
+    double z;
+} ArmVec3;
+
+typedef struct
+{
+    double m[3][3];
+} ArmMat3;
+
+typedef struct
+{
+    double vec_x;
+    double vec_y;
+    double vec_z;
+    double angle_xz_deg;
+    double angle_yz_deg;
+} ArmFeedAngleResult;
+
+static double ArmDegToRad(double deg)
+{
+    return deg * ARM_PI / 180.0;
+}
+
+static double ArmVecLen(ArmVec3 a)
+{
+    return sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
+}
+
+static ArmVec3 ArmVecSub(ArmVec3 a, ArmVec3 b)
+{
+    ArmVec3 r;
+    r.x = a.x - b.x;
+    r.y = a.y - b.y;
+    r.z = a.z - b.z;
+    return r;
+}
+
+static ArmVec3 ArmVecNorm(ArmVec3 a)
+{
+    double l;
+    ArmVec3 r;
+
+    l = ArmVecLen(a);
+    if(l < 1.0e-12)
+    {
+        r.x = 0.0;
+        r.y = 0.0;
+        r.z = 0.0;
+        return r;
+    }
+
+    r.x = a.x / l;
+    r.y = a.y / l;
+    r.z = a.z / l;
+    return r;
+}
+
+static ArmMat3 ArmEye(void)
+{
+    ArmMat3 r;
+
+    r.m[0][0] = 1.0; r.m[0][1] = 0.0; r.m[0][2] = 0.0;
+    r.m[1][0] = 0.0; r.m[1][1] = 1.0; r.m[1][2] = 0.0;
+    r.m[2][0] = 0.0; r.m[2][1] = 0.0; r.m[2][2] = 1.0;
+
+    return r;
+}
+
+static ArmMat3 ArmRx(double deg)
+{
+    double r0;
+    double c;
+    double s;
+    ArmMat3 r;
+
+    r0 = ArmDegToRad(deg);
+    c = cos(r0);
+    s = sin(r0);
+
+    r.m[0][0] = 1.0; r.m[0][1] = 0.0; r.m[0][2] = 0.0;
+    r.m[1][0] = 0.0; r.m[1][1] = c;   r.m[1][2] = -s;
+    r.m[2][0] = 0.0; r.m[2][1] = s;   r.m[2][2] = c;
+
+    return r;
+}
+
+static ArmMat3 ArmRy(double deg)
+{
+    double r0;
+    double c;
+    double s;
+    ArmMat3 r;
+
+    r0 = ArmDegToRad(deg);
+    c = cos(r0);
+    s = sin(r0);
+
+    r.m[0][0] = c;   r.m[0][1] = 0.0; r.m[0][2] = s;
+    r.m[1][0] = 0.0; r.m[1][1] = 1.0; r.m[1][2] = 0.0;
+    r.m[2][0] = -s;  r.m[2][1] = 0.0; r.m[2][2] = c;
+
+    return r;
+}
+
+static ArmMat3 ArmRz(double deg)
+{
+    double r0;
+    double c;
+    double s;
+    ArmMat3 r;
+
+    r0 = ArmDegToRad(deg);
+    c = cos(r0);
+    s = sin(r0);
+
+    r.m[0][0] = c;   r.m[0][1] = -s;  r.m[0][2] = 0.0;
+    r.m[1][0] = s;   r.m[1][1] = c;   r.m[1][2] = 0.0;
+    r.m[2][0] = 0.0; r.m[2][1] = 0.0; r.m[2][2] = 1.0;
+
+    return r;
+}
+
+static ArmMat3 ArmMatMul(ArmMat3 a, ArmMat3 b)
+{
+    int i;
+    int j;
+    int k;
+    ArmMat3 r;
+
+    for(i = 0; i < 3; i++)
+    {
+        for(j = 0; j < 3; j++)
+        {
+            r.m[i][j] = 0.0;
+            for(k = 0; k < 3; k++)
+            {
+                r.m[i][j] += a.m[i][k] * b.m[k][j];
+            }
+        }
+    }
+
+    return r;
+}
+
+static ArmVec3 ArmMatVecMul(ArmMat3 m, ArmVec3 p)
+{
+    ArmVec3 r;
+
+    r.x = m.m[0][0] * p.x + m.m[0][1] * p.y + m.m[0][2] * p.z;
+    r.y = m.m[1][0] * p.x + m.m[1][1] * p.y + m.m[1][2] * p.z;
+    r.z = m.m[2][0] * p.x + m.m[2][1] * p.y + m.m[2][2] * p.z;
+
+    return r;
+}
+
+static ArmMat3 ArmAxisRotate(ArmVec3 axis, double deg)
+{
+    double l;
+    double r0;
+    double c;
+    double s;
+    double t;
+    ArmVec3 a;
+    ArmMat3 r;
+
+    l = ArmVecLen(axis);
+    if(l < 1.0e-12)
+    {
+        return ArmEye();
+    }
+
+    a = ArmVecNorm(axis);
+    r0 = ArmDegToRad(deg);
+    c = cos(r0);
+    s = sin(r0);
+    t = 1.0 - c;
+
+    r.m[0][0] = c + a.x * a.x * t;
+    r.m[0][1] = a.x * a.y * t - a.z * s;
+    r.m[0][2] = a.x * a.z * t + a.y * s;
+
+    r.m[1][0] = a.y * a.x * t + a.z * s;
+    r.m[1][1] = c + a.y * a.y * t;
+    r.m[1][2] = a.y * a.z * t - a.x * s;
+
+    r.m[2][0] = a.z * a.x * t - a.y * s;
+    r.m[2][1] = a.z * a.y * t + a.x * s;
+    r.m[2][2] = c + a.z * a.z * t;
+
+    return r;
+}
+
+int ArmCalcFeedAngleXZ_YZ(
+    int arm_side,              /* 0左臂 / 1中臂 / 2右臂，用来选择左右镜像轴向 */
+    double base_deg,           /* 基座回转角，单位degree，对应V1的base_deg */
+    double boom_deg,           /* 大臂俯仰角，单位degree，对应V1的boom_deg */
+    double d1_deg,             /* D1关节角，单位degree，对应V1的d1_deg */
+    double e1_deg,             /* E1关节角，单位degree，对应V1的e1_deg */
+    double f_deg,              /* F关节角，单位degree，对应V1的f_deg */
+    double tilt_x_deg,         /* 车体X轴倾角，单位degree；不用倾角补偿时传0 */
+    double tilt_y_deg,         /* 车体Y轴倾角，单位degree；不用倾角补偿时传0 */
+    ArmFeedAngleResult *out)   /* 输出推进梁向量、XZ夹角、YZ夹角；不能为0 */
+{
+    ArmVec3 ee1;
+    ArmVec3 e1f;
+    ArmVec3 e1e2;
+    ArmVec3 f_axis;
+    ArmVec3 d1_axis;
+    ArmVec3 local_vec;
+    ArmVec3 v;
+    double l;
+    double x_ratio;
+    double y_ratio;
+    ArmMat3 r_base;
+    ArmMat3 r_a;
+    ArmMat3 r_d1;
+    ArmMat3 r_e1;
+    ArmMat3 r_f;
+    ArmMat3 r_tilt;
+    ArmMat3 r_final;
+
+    if(out == 0)
+    {
+        return 0;
+    }
+
+    if(arm_side == ARM_SIDE_RIGHT)
+    {
+        ee1.x = 0.0;  ee1.y = -275.0; ee1.z = 0.0;
+        e1f.x = 80.0; e1f.y = -200.0; e1f.z = 0.0;
+        e1e2.x = 80.0; e1e2.y = -200.0; e1e2.z = 100.0;
+    }
+    else
+    {
+        ee1.x = 0.0;  ee1.y = 275.0; ee1.z = 0.0;
+        e1f.x = 80.0; e1f.y = 200.0; e1f.z = 0.0;
+        e1e2.x = 80.0; e1e2.y = 200.0; e1e2.z = 100.0;
+    }
+
+    f_axis = ArmVecSub(e1e2, e1f);
+    d1_axis.x = 1.0;
+    d1_axis.y = 0.0;
+    d1_axis.z = 0.0;
+
+    r_base = ArmRz(base_deg);
+    r_a = ArmMatMul(r_base, ArmRy(boom_deg));
+    r_d1 = ArmMatMul(r_a, ArmAxisRotate(d1_axis, d1_deg));
+    r_e1 = ArmMatMul(r_d1, ArmAxisRotate(ee1, e1_deg));
+    r_f = ArmMatMul(r_e1, ArmAxisRotate(f_axis, f_deg));
+
+    r_tilt = ArmMatMul(ArmRy(tilt_y_deg), ArmRx(-tilt_x_deg));
+    r_final = ArmMatMul(r_tilt, r_f);
+
+    local_vec.x = 300.0;
+    local_vec.y = 0.0;
+    local_vec.z = 0.0;
+
+    v = ArmMatVecMul(r_final, local_vec);
+    l = ArmVecLen(v);
+    if(l < 1.0e-12)
+    {
+        out->vec_x = 0.0;
+        out->vec_y = 0.0;
+        out->vec_z = 0.0;
+        out->angle_xz_deg = 0.0;
+        out->angle_yz_deg = 0.0;
+        return 0;
+    }
+
+    x_ratio = fabs(v.x) / l;
+    y_ratio = fabs(v.y) / l;
+
+    if(x_ratio > 1.0) x_ratio = 1.0;
+    if(y_ratio > 1.0) y_ratio = 1.0;
+
+    out->vec_x = v.x;
+    out->vec_y = v.y;
+    out->vec_z = v.z;
+    out->angle_xz_deg = asin(y_ratio) * 180.0 / ARM_PI;
+    out->angle_yz_deg = asin(x_ratio) * 180.0 / ARM_PI;
+
+    return 1;
+}
+
+使用例子
+--------
+
+ArmFeedAngleResult r;
+
+if(ArmCalcFeedAngleXZ_YZ(
+    ARM_SIDE_LEFT,
+    20.0,  /* base_deg */
+    20.0,  /* boom_deg */
+    20.0,  /* d1_deg */
+    20.0,  /* e1_deg */
+    20.0,  /* f_deg */
+    0.0,   /* tilt_x_deg */
+    0.0,   /* tilt_y_deg */
+    &r))
+{
+    /* V1 默认/截图这组结果约为：
+       r.vec_x = 171.822
+       r.vec_y = 200.238
+       r.vec_z = -142.766
+       r.angle_xz_deg = 41.87
+       r.angle_yz_deg = 34.94
+    */
+}
+
+简化验证例子
+------------
+
+输入：
+  arm_side = ARM_SIDE_LEFT
+  base_deg = 20
+  boom_deg = 0
+  d1_deg = 0
+  e1_deg = 0
+  f_deg = 0
+  tilt_x_deg = 0
+  tilt_y_deg = 0
+
+输出约为：
+  H1->H 向量 = (281.908, 102.606, 0.000)
+  与 XZ 平面夹角 = 20.00 degree
+  与 YZ 平面夹角 = 70.00 degree

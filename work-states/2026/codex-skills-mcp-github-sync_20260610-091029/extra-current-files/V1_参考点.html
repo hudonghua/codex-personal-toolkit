@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arm200A 参考点变动与Body-World补偿验证</title>
+  <style>
+    :root{--bg:#edf4fa;--card:#fff;--line:#d7cee8;--text:#1f2937;--muted:#667085;--accent:#0f766e;}
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#edf4fa 0%,#f8fbfd 100%);font:14px/1.55 "Segoe UI","Microsoft YaHei",sans-serif;color:var(--text);}
+    .wrap{max-width:1180px;margin:24px auto;padding:0 16px 40px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 28px rgba(15,23,42,.06);padding:18px;margin-bottom:16px;}
+    .grid{display:grid;grid-template-columns:390px 1fr;gap:16px}
+    h1{margin:0 0 8px;font-size:28px}
+    .sub{color:var(--muted)}
+    .section-title{margin:16px 0 10px;padding-top:12px;border-top:1px solid var(--line);font-weight:700;color:#334155}
+    .field{display:grid;grid-template-columns:140px 1fr;gap:10px;align-items:center;margin-bottom:10px}
+    label{color:var(--muted)}
+    input,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;background:#fff;}
+    button{border:0;border-radius:10px;padding:10px 14px;font:inherit;cursor:pointer;background:var(--accent);color:#fff;margin-right:10px;}
+    button.secondary{background:#475566}
+    table{width:100%;border-collapse:collapse;font:13px/1.4 Consolas,"Microsoft YaHei",sans-serif}
+    th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+    th{background:#fafcfd;color:var(--muted);font-weight:600}
+    .result{font-family:Consolas,monospace;font-size:18px;margin-bottom:10px;white-space:pre-wrap}
+    .result-block{margin-bottom:14px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:#f8fbfd;font-family:Consolas,monospace;font-size:18px;line-height:1.7;white-space:pre-wrap;}
+    .note{margin-top:12px;padding:12px 14px;border-left:4px solid #d97006;background:#fff8ed;border-radius:10px;color:#92400e}
+    .checkrow{display:flex;gap:10px;align-items:center;margin-bottom:10px;color:var(--muted)}
+    .checkrow input{width:auto}
+    .small{font-size:12px;color:var(--muted)}
+    .qedit{display:grid;grid-template-columns:44px repeat(3,1fr);gap:6px;align-items:center;margin-top:8px}
+    .qedit div{font-size:12px;color:var(--muted)}
+    .qedit input{padding:7px 8px;border-radius:8px;font-size:12px}
+    @media (max-width:920px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="card">
+    <h1>Arm200A 参考点变动与Body-World补偿验证</h1>
+    <p class="sub">默认保持 V1 原逻辑；打开 Body-&gt;World 模拟后，用默认 Q_body 和输入的绕 Z 角生成现场 Q_world，再验证算法补偿效果。</p>
+    <p class="sub">X+车头 | Y+左侧 | Z+向上 | Q4 作为统一 O 点；yaw_z_deg 表示现场车体相对出厂 Body 绕 Z 轴摆歪角度。</p>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <div class="field">
+        <label for="arm">臂选择</label>
+        <select id="arm">
+          <option value="left">左臂</option>
+          <option value="mid">中臂</option>
+          <option value="right">右臂</option>
+        </select>
+      </div>
+
+      <div class="section-title">参考点变动量</div>
+      <div class="field"><label for="ref_dx">ref_dx_mm</label><input id="ref_dx" type="number" step="0.001" value="0"></div>
+      <div class="field"><label for="ref_dy">ref_dy_mm</label><input id="ref_dy" type="number" step="0.001" value="0"></div>
+      <div class="field"><label for="ref_dz">ref_dz_mm</label><input id="ref_dz" type="number" step="0.001" value="0"></div>
+
+      <div class="section-title">Body-&gt;World 补偿验证</div>
+      <label class="checkrow"><input id="bodyworld_enable" type="checkbox">启用 Body-&gt;World 模拟补偿（yaw非0时自动启用）</label>
+      <div class="field"><label for="yaw_z_deg">yaw_z_deg</label><input id="yaw_z_deg" type="number" step="0.001" value="0"></div>
+      <div class="small">默认 Q_body 使用最初机械标准值；Q_world = Rz(yaw_z_deg) * (Q_body - Q4_body)。Q4_world 固定为 0,0,0。</div>
+      <div class="section-title">Q_body 机械位置默认值</div>
+      <div class="qedit">
+        <div>点</div><div>X</div><div>Y</div><div>Z</div>
+        <div>Q1</div><input id="q1_x" type="number" step="0.001" value="0"><input id="q1_y" type="number" step="0.001" value="1160"><input id="q1_z" type="number" step="0.001" value="380">
+        <div>Q2</div><input id="q2_x" type="number" step="0.001" value="0"><input id="q2_y" type="number" step="0.001" value="-1160"><input id="q2_z" type="number" step="0.001" value="380">
+        <div>Q3</div><input id="q3_x" type="number" step="0.001" value="-1000"><input id="q3_y" type="number" step="0.001" value="1010"><input id="q3_z" type="number" step="0.001" value="-220">
+        <div>Q4/O</div><input id="q4_x" type="number" step="0.001" value="-1000"><input id="q4_y" type="number" step="0.001" value="-1010"><input id="q4_z" type="number" step="0.001" value="-220">
+      </div>
+
+      <div class="section-title">正解输入</div>
+      <div class="field"><label for="root_deg">root_deg</label><input id="root_deg" type="number" step="0.001" value="0"></div>
+      <div class="field"><label for="base_deg">base_deg</label><input id="base_deg" type="number" step="0.001" value="0"></div>
+      <div class="field"><label for="boom_deg">boom_deg</label><input id="boom_deg" type="number" step="0.001" value="0"></div>
+      <div class="field"><label for="cd_mm">cd_mm</label><input id="cd_mm" type="number" step="0.001" value="3600"></div>
+      <div class="field"><label for="d1_deg">d1_deg</label><input id="d1_deg" type="number" step="0.001" value="0"></div>
+      <div class="field"><label for="e1_deg">e1_deg</label><input id="e1_deg" type="number" step="0.001" value="0"></div>
+      <div class="field"><label for="f_deg">f_deg</label><input id="f_deg" type="number" step="0.001" value="0"></div>
+      <div class="field"><label for="gg1_mm">gg1_mm</label><input id="gg1_mm" type="number" step="0.001" value="2480"></div>
+      <div class="field"><label for="tilt_x_deg">tilt_x_deg</label><input id="tilt_x_deg" type="number" step="0.001" value="0"></div>
+      <div class="field"><label for="tilt_y_deg">tilt_y_deg</label><input id="tilt_y_deg" type="number" step="0.001" value="0"></div>
+      <div style="margin-top:12px">
+        <button id="calc">计算</button>
+        <button id="reset" class="secondary">恢复默认</button>
+      </div>
+      <div class="note">
+        <div>✅ 参考点变动量只做整体平移，不改变关节姿态和 H1→H 向量。</div>
+        <div>✅ 当 ref_dx/ref_dy/ref_dz 改变时，所有点坐标同步加同一个偏移。</div>
+        <div>✅ yaw_z_deg 非 0 时自动套用 R/T；yaw 为 0 且开关关闭时保持原 V1 结果。</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div id="hResult" class="result"></div>
+      <div id="projResult" class="result-block"></div>
+      <div class="section-title">Q 点机械位置与转换值</div>
+      <table id="qTable">
+        <thead><tr><th>点</th><th>机械X</th><th>机械Y</th><th>机械Z</th><th>Q_body_local</th><th>Q_world_ref</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="section-title">正解点输出</div>
+      <table id="pointTable">
+        <thead><tr><th>点</th><th>X</th><th>Y</th><th>Z</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+</div>
+
+<script>
+const G = {
+  left: {
+    o0: {x:-1037, y:340, z:1040}, hasO0: true,
+    o0o1: {x:0, y:670.342, z:-1867.324}, o1o:{x:597,y:50,z:1005},
+    ob:{x:165,y:0,z:702.5}, ba:{x:200,y:0,z:0}, ac:{x:265,y:0,z:20},
+    d1e:{x:488,y:118,z:0}, ee1:{x:0,y:275,z:0}, e1f:{x:80,y:200,z:0},
+    fg:{x:-985,y:230,z:129.5}, g1h:{x:1831.5,y:0,z:447}, e1e2:{x:80,y:200,z:100}, dd1:275
+  },
+  mid: {
+    o0: {x:0,y:0,z:0}, hasO0:false, o0o1:{x:0,y:0,z:0}, o1o:{x:0,y:0,z:0},
+    ob:{x:165,y:0,z:702.5}, ba:{x:200,y:0,z:0}, ac:{x:265,y:0,z:20},
+    d1e:{x:488,y:118,z:0}, ee1:{x:0,y:275,z:0}, e1f:{x:80,y:200,z:0},
+    fg:{x:-985,y:230,z:129.5}, g1h:{x:1831.5,y:0,z:447}, e1e2:{x:80,y:200,z:100}, dd1:275
+  },
+  right: {
+    o0: {x:-1037,y:-340,z:1040}, hasO0:true, o0o1:{x:0,y:-670.342,z:-1867.324}, o1o:{x:597,y:-50,z:1005},
+    ob:{x:165,y:0,z:702.5}, ba:{x:200,y:0,z:0}, ac:{x:265,y:0,z:20},
+    d1e:{x:488,y:-118,z:0}, ee1:{x:0,y:-275,z:0}, e1f:{x:80,y:-200,z:0},
+    fg:{x:-985,y:-230,z:129.5}, g1h:{x:1831.5,y:0,z:447}, e1e2:{x:80,y:-200,z:100}, dd1:275
+  }
+};
+
+function add(a,b){ return {x:a.x+b.x, y:a.y+b.y, z:a.z+b.z}; }
+function sub(a,b){ return {x:a.x-b.x, y:a.y-b.y, z:a.z-b.z}; }
+function scale(a,s){ return {x:a.x*s, y:a.y*s, z:a.z*s}; }
+function dot(a,b){ return a.x*b.x + a.y*b.y + a.z*b.z; }
+function cross(a,b){ return {x:a.y*b.z-a.z*b.y, y:a.z*b.x-a.x*b.z, z:a.x*b.y-a.y*b.x}; }
+function len(a){ return Math.hypot(a.x,a.y,a.z); }
+function norm(a){ const n=len(a); return n<1e-12?{x:0,y:0,z:0}:scale(a,1/n); }
+function eye(){ return [[1,0,0],[0,1,0],[0,0,1]]; }
+function rx(deg){ const r=deg*Math.PI/180,c=Math.cos(r),s=Math.sin(r); return [[1,0,0],[0,c,-s],[0,s,c]]; }
+function ry(deg){ const r=deg*Math.PI/180,c=Math.cos(r),s=Math.sin(r); return [[c,0,s],[0,1,0],[-s,0,c]]; }
+function rz(deg){ const r=deg*Math.PI/180,c=Math.cos(r),s=Math.sin(r); return [[c,-s,0],[s,c,0],[0,0,1]]; }
+function mul(a,b){ const r=[[0,0,0],[0,0,0],[0,0,0]];for(let i=0;i<3;i++)for(let j=0;j<3;j++)for(let k=0;k<3;k++)r[i][j]+=a[i][k]*b[k][j];return r; }
+function mulP(m,p){ return {x:m[0][0]*p.x+m[0][1]*p.y+m[0][2]*p.z, y:m[1][0]*p.x+m[1][1]*p.y+m[1][2]*p.z, z:m[2][0]*p.x+m[2][1]*p.y+m[2][2]*p.z}; }
+function trans(m){ return [[m[0][0],m[1][0],m[2][0]],[m[0][1],m[1][1],m[2][1]],[m[0][2],m[1][2],m[2][2]]]; }
+function ra(axis,deg){ const a=norm(axis),r=deg*Math.PI/180,c=Math.cos(r),s=Math.sin(r),t=1-c;if(len(axis)<1e-12)return eye();return [[c+a.x*a.x*t,a.x*a.y*t-a.z*s,a.x*a.z*t+a.y*s],[a.y*a.x*t+a.z*s,c+a.y*a.y*t,a.y*a.z*t-a.x*s],[a.z*a.x*t-a.y*s,a.z*a.y*t+a.x*s,c+a.z*a.z*t]]; }
+function fp(p){ return `(${p.x.toFixed(3)}, ${p.y.toFixed(3)}, ${p.z.toFixed(3)})`; }
+function fmtDeg(v){ return `${v.toFixed(2)}°`; }
+
+function qLocalFromAbs(q){
+  return {
+    q1: sub(q.q1, q.q4),
+    q2: sub(q.q2, q.q4),
+    q3: sub(q.q3, q.q4),
+    q4: {x:0,y:0,z:0}
+  };
+}
+
+function basisFromQ(q){
+  const ex = norm(sub(q.q2, q.q1));
+  const temp = sub(q.q3, q.q1);
+  const ez = norm(cross(ex, temp));
+  const ey = cross(ez, ex);
+  return [[ex.x,ey.x,ez.x],[ex.y,ey.y,ez.y],[ex.z,ey.z,ez.z]];
+}
+
+function coordTransFromQ(qBody, qWorld){
+  const b = basisFromQ(qBody);
+  const w = basisFromQ(qWorld);
+  const r = mul(w, trans(b));
+  const rq1 = mulP(r, qBody.q1);
+  return {r, t: sub(qWorld.q1, rq1)};
+}
+
+function readQBodyAbs(){
+  return {
+    q1:{x:+document.getElementById('q1_x').value, y:+document.getElementById('q1_y').value, z:+document.getElementById('q1_z').value},
+    q2:{x:+document.getElementById('q2_x').value, y:+document.getElementById('q2_y').value, z:+document.getElementById('q2_z').value},
+    q3:{x:+document.getElementById('q3_x').value, y:+document.getElementById('q3_y').value, z:+document.getElementById('q3_z').value},
+    q4:{x:+document.getElementById('q4_x').value, y:+document.getElementById('q4_y').value, z:+document.getElementById('q4_z').value}
+  };
+}
+
+function makeYawCoordTrans(yawDeg, qAbs){
+  const qBody = qLocalFromAbs(qAbs);
+  const rzM = rz(yawDeg);
+  const qWorld = {
+    q1: mulP(rzM, qBody.q1),
+    q2: mulP(rzM, qBody.q2),
+    q3: mulP(rzM, qBody.q3),
+    q4: {x:0,y:0,z:0}
+  };
+  return {qAbs, qBody, qWorld, trans: coordTransFromQ(qBody, qWorld)};
+}
+
+function applyCoordTrans(p, ct){ return add(mulP(ct.r, p), ct.t); }
+function transformPoints(points, ct){
+  const r = {};
+  for(const k in points){
+    if(typeof points[k] === 'object' && 'x' in points[k]) r[k] = applyCoordTrans(points[k], ct);
+  }
+  return r;
+}
+
+function renderQTable(sim){
+  const tb = document.querySelector('#qTable tbody');
+  tb.innerHTML = '';
+  ['q1','q2','q3','q4'].forEach(k=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${k.toUpperCase()}${k==='q4'?'/O':''}</td>`+
+      `<td>${sim.qAbs[k].x.toFixed(3)}</td><td>${sim.qAbs[k].y.toFixed(3)}</td><td>${sim.qAbs[k].z.toFixed(3)}</td>`+
+      `<td>${fp(sim.qBody[k])}</td><td>${fp(sim.qWorld[k])}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function calc(arm, inp){
+  const g=G[arm];
+  let o0=g.o0;
+  let o1=g.hasO0?add(o0,mulP(rx(inp.root_deg),g.o0o1)):{x:0,y:0,z:0};
+  let o=g.hasO0?add(o1,g.o1o):{x:0,y:0,z:0};
+  const b=add(o,g.ob),rB=rz(inp.base_deg),a=add(b,mulP(rB,g.ba)),rA=mul(rB,ry(inp.boom_deg)),c=add(a,mulP(rA,g.ac));
+  const d=add(c,mulP(rA,{x:inp.cd_mm,y:0,z:0})),d1=add(d,mulP(rA,{x:g.dd1,y:0,z:0})),rD1=mul(rA,ra({x:1,y:0,z:0},inp.d1_deg));
+  const e=add(d1,mulP(rD1,g.d1e)),e1=add(e,mulP(rD1,g.ee1)),rE1=mul(rD1,ra(g.ee1,inp.e1_deg)),f=add(e1,mulP(rE1,g.e1f));
+  const rF=mul(rE1,ra(sub(g.e1e2,g.e1f),inp.f_deg));
+  const gp=add(f,mulP(rF,g.fg)),g1=add(gp,mulP(rF,{x:inp.gg1_mm,y:0,z:0})),h=add(g1,mulP(rF,g.g1h));
+  return { o0,o1,o,b,a,c,d,d1,e,e1,f,g:gp,g1,h, rot: rF };
+}
+
+function shiftPoints(points, delta){
+  const r = {};
+  for(const k in points){
+    if(typeof points[k] === 'object' && 'x' in points[k]) r[k] = add(points[k], delta);
+  }
+  return r;
+}
+
+function readInput(){
+  return {
+    ref_dx:+document.getElementById('ref_dx').value,
+    ref_dy:+document.getElementById('ref_dy').value,
+    ref_dz:+document.getElementById('ref_dz').value,
+    root_deg:+document.getElementById('root_deg').value,
+    base_deg:+document.getElementById('base_deg').value,
+    boom_deg:+document.getElementById('boom_deg').value,
+    cd_mm:+document.getElementById('cd_mm').value,
+    d1_deg:+document.getElementById('d1_deg').value,
+    e1_deg:+document.getElementById('e1_deg').value,
+    f_deg:+document.getElementById('f_deg').value,
+    gg1_mm:+document.getElementById('gg1_mm').value,
+    tilt_x_deg:+document.getElementById('tilt_x_deg').value,
+    tilt_y_deg:+document.getElementById('tilt_y_deg').value,
+    bodyworld_enable:document.getElementById('bodyworld_enable').checked,
+    yaw_z_deg:+document.getElementById('yaw_z_deg').value
+  };
+}
+
+function render(){
+  const arm=document.getElementById('arm').value;
+  const inp=readInput();
+  const raw = calc(arm, inp);
+
+  const rTilt = mul(ry(inp.tilt_y_deg), rx(-inp.tilt_x_deg));
+  const rotFinal = mul(rTilt, raw.rot);
+
+  const tilted = {};
+  for(let k in raw){
+    if(typeof raw[k]==='object' && 'x' in raw[k]) tilted[k] = mulP(rTilt, raw[k]);
+  }
+
+  const localVec = {x:300, y:0, z:0};
+  const worldVec = mulP(rotFinal, localVec);
+  const h1Base = sub(tilted.h, worldVec);
+
+  const refDelta = {x:inp.ref_dx, y:inp.ref_dy, z:inp.ref_dz};
+  const r = shiftPoints(tilted, refDelta);
+  const H1 = add(h1Base, refDelta);
+
+  let outPoints = r;
+  let outH1 = H1;
+  let outVec = worldVec;
+  const qAbs = readQBodyAbs();
+  const sim = makeYawCoordTrans(inp.yaw_z_deg, qAbs);
+  renderQTable(sim);
+  let bwText = 'Body->World：关闭，输出为 V1 原始 Body/Q4 局部结果';
+  const useBodyWorld = inp.bodyworld_enable || Math.abs(inp.yaw_z_deg) > 1e-12;
+  if(useBodyWorld){
+    outPoints = transformPoints(r, sim.trans);
+    outH1 = applyCoordTrans(H1, sim.trans);
+    outVec = mulP(sim.trans.r, worldVec);
+    bwText =
+`Body->World：开启
+yaw_z_deg = ${inp.yaw_z_deg.toFixed(3)}°
+Q_body_local: Q1=${fp(sim.qBody.q1)} Q2=${fp(sim.qBody.q2)} Q3=${fp(sim.qBody.q3)} Q4=${fp(sim.qBody.q4)}
+Q_world_ref:  Q1=${fp(sim.qWorld.q1)} Q2=${fp(sim.qWorld.q2)} Q3=${fp(sim.qWorld.q3)} Q4=${fp(sim.qWorld.q4)}`;
+  }
+
+  const v = outVec;
+  const L = len(v);
+
+  const angle_XY_plane = Math.asin(Math.abs(v.z) / L) * 180 / Math.PI;
+  const angle_XZ_plane = Math.asin(Math.abs(v.y) / L) * 180 / Math.PI;
+  const angle_YZ_plane = Math.asin(Math.abs(v.x) / L) * 180 / Math.PI;
+
+  document.getElementById('hResult').textContent =
+`${arm.toUpperCase()} H  = ${fp(outPoints.h)}
+${arm.toUpperCase()} H1 = ${fp(outH1)}
+参考点变动量：${fp(refDelta)}
+${bwText}
+H1→H 局部向量：(300, 0, 0)
+H1→H 输出向量：${fp(outVec)}`;
+
+  document.getElementById('projResult').textContent =
+`【H1→H 与三个坐标平面夹角】
+与 XY 平面夹角：${fmtDeg(angle_XY_plane)}
+与 XZ 平面夹角：${fmtDeg(angle_XZ_plane)}
+与 YZ 平面夹角：${fmtDeg(angle_YZ_plane)}
+
+【与三轴夹角】
+与 X 轴：${fmtDeg(Math.acos(v.x/L)*180/Math.PI)}
+与 Y 轴：${fmtDeg(Math.acos(v.y/L)*180/Math.PI)}
+与 Z 轴：${fmtDeg(Math.acos(v.z/L)*180/Math.PI)}
+
+【说明】
+参考点变动只影响点坐标整体平移，不影响 H1→H 向量和夹角。`;
+
+  const tb = document.querySelector('#pointTable tbody');
+  tb.innerHTML = '';
+  ['o0','o1','o','b','a','c','d','d1','e','e1','f','g','g1','h'].forEach(k=>{
+    const p = outPoints[k];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${k.toUpperCase()}</td><td>${p.x.toFixed(3)}</td><td>${p.y.toFixed(3)}</td><td>${p.z.toFixed(3)}</td>`;
+    tb.appendChild(tr);
+  });
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>H1</td><td>${outH1.x.toFixed(3)}</td><td>${outH1.y.toFixed(3)}</td><td>${outH1.z.toFixed(3)}</td>`;
+  tb.appendChild(tr);
+}
+
+document.getElementById('calc').onclick = render;
+const DEFAULT_INPUTS = {
+  cd_mm:3600, gg1_mm:2480,
+  q1_x:0, q1_y:1160, q1_z:380,
+  q2_x:0, q2_y:-1160, q2_z:380,
+  q3_x:-1000, q3_y:1010, q3_z:-220,
+  q4_x:-1000, q4_y:-1010, q4_z:-220
+};
+document.getElementById('reset').onclick = ()=>{
+  document.querySelectorAll('input').forEach(i=>{
+    if(i.type==='checkbox') i.checked = false;
+    if(Object.prototype.hasOwnProperty.call(DEFAULT_INPUTS, i.id)) i.value = DEFAULT_INPUTS[i.id];
+    else i.value = 0;
+  });
+  render();
+};
+
+document.querySelectorAll('input,select').forEach(el=>el.addEventListener('input', render));
+render();
+</script>
+</body>
+</html>
