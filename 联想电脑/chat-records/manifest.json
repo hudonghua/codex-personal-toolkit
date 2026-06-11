@@ -1,7 +1,7 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-06-11T16:55:41",
-  "exported_count": 46,
+  "exported_at": "2026-06-11T17:02:52",
+  "exported_count": 47,
   "missing_count": 0,
   "exports": [
     {
@@ -325,6 +325,13 @@
       "file": "联想电脑/chat-records/046_019ea676-ff2b-7663-be11-983cd5e0b33e_每周工作状态更新.md",
       "updated_at": "2026-06-08T09:01:16.972Z",
       "message_count": 9
+    },
+    {
+      "id": "019eb5e5-338c-76b0-b0bf-cad20db6d1a0",
+      "title": "E:\\AI_划时代\\o欧阳\\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\\MC_LCD70_Control_",
+      "file": "联想电脑/chat-records/047_019eb5e5-338c-76b0-b0bf-cad20db6d1a0_EAI_划时代o欧阳MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压--.md",
+      "updated_at": "2026-06-11T08:55:57.580Z",
+      "message_count": 13
     }
   ],
   "missing": []

@@ -1,14 +1,14 @@
-# 定位干喷显示屏7-200程序
+# E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_
 
-- Session id: `019ea4d1-607d-7953-afe6-64a4ebeacb7c`
-- Source cwd: `C:\Users\t250c\Documents\旭工`
+- Session id: `019eb5e5-338c-76b0-b0bf-cad20db6d1a0`
+- Source cwd: `C:\Users\t250c\Documents\Codex`
 - Model provider: `openai`
 - Exported at: `2026-06-11T17:02:52`
-- Local source: `C:\Users\t250c\.codex\sessions\2026\06\08\rollout-2026-06-08T09-20-46-019ea4d1-607d-7953-afe6-64a4ebeacb7c.jsonl`
+- Local source: `C:\Users\t250c\.codex\sessions\2026\06\11\rollout-2026-06-11T16-55-57-019eb5e5-338c-76b0-b0bf-cad20db6d1a0.jsonl`
 
 ## Transcript
 
-### developer 2026-06-08T01:20:52.966Z
+### developer 2026-06-11T08:56:09.750Z
 
 ```text
 <permissions instructions>
@@ -49,15 +49,6 @@ Approval policy is currently never. Do not provide the `sandbox_permissions` for
 ### Archiving
 - If a user specifically asks you to end a thread/conversation, you can return the archive directive ::archive{...} to archive the thread/conversation.
 - Example: ::archive{reason="User requested to end conversation"}
-
-### Git
-- Branch prefix: `codex/`. Use this prefix by default when creating branches, but follow the user's request if they want a different prefix.
-- After successfully staging files, emit `::git-stage{cwd="/absolute/path"}` on its own line in your final response.
-- After successfully creating a commit, emit `::git-commit{cwd="/absolute/path"}` on its own line in your final response.
-- After successfully creating or switching the thread onto a branch, emit `::git-create-branch{cwd="/absolute/path" branch="branch-name"}` on its own line in your final response.
-- After successfully pushing the current branch, emit `::git-push{cwd="/absolute/path" branch="branch-name"}` on its own line in your final response.
-- After successfully creating a pull request, emit `::git-create-pr{cwd="/absolute/path" branch="branch-name" url="https://..." isDraft=true}` on its own line in your final response. Include `isDraft=false` for ready PRs.
-- Only emit these git directives in your final response after the action actually succeeds, never in commentary updates. Keep attributes single-line.
 </app-context>
 <collaboration_mode># Collaboration Mode: Default
 
@@ -88,26 +79,26 @@ A skill is a set of local instructions to follow that is stored in a `SKILL.md` 
 - skill-creator: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Codex's capabilities with specialized knowledge, workflows, or tool integrations. (file: C:/Users/t250c/.codex/skills/.system/skill-creator/SKILL.md)
 - skill-installer: Install Codex skills into $CODEX_HOME/skills from a curated list or a GitHub repo path. Use when a user asks to list installable skills, install a curated skill, or install a skill from another repo (including private repos). (file: C:/Users/t250c/.codex/skills/.system/skill-installer/SKILL.md)
 - arm-cortex-expert: ARM Cortex-M embedded development guidance for startup, vector table, NVIC, SysTick, low power, DMA, cache coherency, MPU, fault diagnosis, GPIO/peripheral registers, STM32/nRF/SAMD/RP2040-style MCUs, and real-time firmware debugging. (file: C:/Users/t250c/.codex/skills/arm-cortex-expert/SKILL.md)
-- browser:control-in-app-browser: Control the in-app Browser. Use to open, navigate, inspect, test, click, type, screenshot, or verify local targets such as localhost, 127.0.0.1, ::1, file://, the current in-app browser tab, and websites shown side by side inside Codex. (file: C:/Users/t250c/.codex/plugins/cache/openai-bundled/browser/26.602.40724/skills/control-in-app-browser/SKILL.md)
+- browser:control-in-app-browser: Control the in-app Browser. Use to open, navigate, inspect, test, click, type, screenshot, or verify local targets such as localhost, 127.0.0.1, ::1, file://, the current in-app browser tab, and websites shown side by side inside Codex. (file: C:/Users/t250c/.codex/plugins/cache/openai-bundled/browser/26.608.12217/skills/control-in-app-browser/SKILL.md)
 - chat-transcript-uploader: Export local Codex chat/session records to timestamped documents and upload them to the user's GitHub toolkit repository. Use for explicit chat transcript/archive requests. For standalone "上传", prefer work-continuity-sync. (file: C:/Users/t250c/.codex/skills/chat-transcript-uploader/SKILL.md)
-- computer-use:computer-use: Control Windows apps from Codex (file: C:/Users/t250c/.codex/plugins/cache/openai-bundled/computer-use/26.602.40724/skills/computer-use/SKILL.md)
+- computer-use:computer-use: Control Windows apps from Codex (file: C:/Users/t250c/.codex/plugins/cache/openai-bundled/computer-use/26.608.12217/skills/computer-use/SKILL.md)
 - documents:documents: Create, edit, redline, and comment on `.docx`, Word, and Google Docs-targeted document artifacts inside the container, with a strict render-and-verify workflow. Use `render_docx.py` to generate page PNGs (and optional PDF) for visual QA, then iterate until layout is flawless before delivering the final document. (file: C:/Users/t250c/.codex/plugins/cache/openai-primary-runtime/documents/26.601.10930/skills/documents/SKILL.md)
 - embedded-systems: Use when developing firmware for microcontrollers, implementing RTOS applications, or optimizing power consumption. Invoke for STM32, ESP32, FreeRTOS, bare-metal, power optimization, real-time systems, configure peripherals, write interrupt handlers, implement DMA transfers, debug timing issues. (file: C:/Users/t250c/.codex/skills/embedded-systems/SKILL.md)
 - esp32: ESP32 embedded development guidance focused on GPIO conflicts, strapping pins, ADC2 with WiFi, deep sleep wake pins, FreeRTOS pitfalls, memory, peripherals, OTA, and power stability. (file: C:/Users/t250c/.codex/skills/esp32/SKILL.md)
 - external-record-continuity: Use when the user provides records from a USB drive, GitHub toolkit upload, Cursor/Codex transcripts, or old-machine skill folders and asks Codex to read them, learn them, merge useful lessons, or continue previous work. (file: C:/Users/t250c/.codex/skills/external-record-continuity/SKILL.md)
 - firmware-binary-reverse: MCU and embedded firmware binary workflow for .bin/.hex/.elf/.axf analysis, byte patching, version comparison, checksum/CRC repair, Keil/MDK firmware verification, fixed-address parameter edits, and safe documentation. Use for user-owned firmware images and pair with keil5-embedded-c for source-level work. (file: C:/Users/t250c/.codex/skills/firmware-binary-reverse/SKILL.md)
-- github:gh-address-comments: Address actionable GitHub pull request review feedback. Use when the user wants to inspect unresolved review threads, requested changes, or inline review comments on a PR, then implement selected fixes. Use the GitHub app for PR metadata and flat comment reads, and use the bundled GraphQL script via `gh` whenever thread-level state, resolution status, or inline review context matters. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/3f0def1b/skills/gh-address-comments/SKILL.md)
-- github:gh-fix-ci: Use when a user asks to debug or fix failing GitHub PR checks that run in GitHub Actions. Use the GitHub app from this plugin for PR metadata and patch context, and use `gh` for Actions check and log inspection before implementing any approved fix. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/3f0def1b/skills/gh-fix-ci/SKILL.md)
-- github:github: Triage and orient GitHub repository, pull request, and issue work through the connected GitHub app. Use when the user asks for general GitHub help, wants PR or issue summaries, or needs repository context before choosing a more specific GitHub workflow. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/3f0def1b/skills/github/SKILL.md)
-- github:yeet: Publish local changes to GitHub by confirming scope, committing intentionally, pushing the branch, and opening a draft PR through the GitHub app from this plugin, with `gh` used only as a fallback where connector coverage is insufficient. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/3f0def1b/skills/yeet/SKILL.md)
+- github:gh-address-comments: Address actionable GitHub pull request review feedback. Use when the user wants to inspect unresolved review threads, requested changes, or inline review comments on a PR, then implement selected fixes. Use the GitHub app for PR metadata and flat comment reads, and use the bundled GraphQL script via `gh` whenever thread-level state, resolution status, or inline review context matters. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/c6ea566d/skills/gh-address-comments/SKILL.md)
+- github:gh-fix-ci: Use when a user asks to debug or fix failing GitHub PR checks that run in GitHub Actions. Use the GitHub app from this plugin for PR metadata and patch context, and use `gh` for Actions check and log inspection before implementing any approved fix. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/c6ea566d/skills/gh-fix-ci/SKILL.md)
+- github:github: Triage and orient GitHub repository, pull request, and issue work through the connected GitHub app. Use when the user asks for general GitHub help, wants PR or issue summaries, or needs repository context before choosing a more specific GitHub workflow. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/c6ea566d/skills/github/SKILL.md)
+- github:yeet: Publish local changes to GitHub by confirming scope, committing intentionally, pushing the branch, and opening a draft PR through the GitHub app from this plugin, with `gh` used only as a fallback where connector coverage is insufficient. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/c6ea566d/skills/yeet/SKILL.md)
 - keil5-embedded-c: Keil5 and embedded C firmware workflow for hardware-related work. Use when Codex works on Keil/uVision projects, C51/ARM/MCU/单片机 code, GBK C files, timers/定时器, interrupts/中断, IO/ADC/PWM/CAN/UART/RS485 protocols/硬件协议, screen/屏端 integration, bin/hex verification, protocol documents/协议文档, or embedded C code changes where correctness depends on real code paths and device behavior. (file: C:/Users/t250c/.codex/skills/keil5-embedded-c/SKILL.md)
 - mcu-gpio-peripheral: MCU GPIO and peripheral bring-up workflow for embedded C/Keil/MDK projects. Covers input/output, pullup/pulldown, push-pull/open-drain, alternate functions, EXTI interrupts, debounce, ADC/PWM/UART/I2C/SPI pin conflicts, schematics, register/HAL checks, and Chinese embedded-code conventions. (file: C:/Users/t250c/.codex/skills/mcu-gpio-peripheral/SKILL.md)
 - multi-computer-toolkit-merge: Merge Codex toolkit uploads from multiple computers. Use when another computer has its own skills, MCP servers, work-states, memory/sqlite records, or task snapshots that need to be integrated without overwriting local work. (file: C:/Users/t250c/.codex/skills/multi-computer-toolkit-merge/SKILL.md)
-- openai-developers:agents-sdk: Build, run, deploy, and evaluate OpenAI Agents SDK apps from Codex. Use when the user asks to create or adapt an Agents SDK app, build from a prompt or Codex thread, prepare a runnable agent prototype, add a focused eval harness, or deploy locally through the Agents SDK Deployment Manager. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/3f0def1b/skills/agents-sdk/SKILL.md)
-- openai-developers:build-chatgpt-app: Build, scaffold, refactor, and troubleshoot ChatGPT Apps SDK applications that combine an MCP server and widget UI. Use when Codex needs to design tools, register UI resources, wire the MCP Apps bridge or ChatGPT compatibility APIs, apply Apps SDK metadata or CSP or domain settings, or produce a docs-aligned project scaffold. Prefer a docs-first workflow by invoking the openai-docs skill or OpenAI developer docs MCP tools before generating code. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/3f0def1b/skills/build-chatgpt-app/SKILL.md)
-- openai-developers:chatgpt-app-submission: Inspect a ChatGPT Apps MCP server codebase and generate chatgpt-app-submission.json with app info suggestions, tool hint justifications, test cases, and negative test cases, then report review-check findings and outputSchema warnings for submission review. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/3f0def1b/skills/chatgpt-app-submission/SKILL.md)
-- openai-developers:openai-api-troubleshooting: Use when an OpenAI API request fails and Codex needs to classify the likely cause, explain the next step, and route to the right follow-up. Covers common runtime failures such as blocked outbound network access, invalid credentials, exhausted API quota or credits, rate limits, and model, project, or organization access issues; delegate key provisioning to openai-platform-api-key and current documentation lookups to openai-docs. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/3f0def1b/skills/openai-api-troubleshooting/SKILL.md)
-- openai-developers:openai-platform-api-key=***REDACTED*** when Codex is asked to build, run, test, debug, or configure an OpenAI-backed or provider-unspecified AI app, UI, script, CLI, generator, or tool, especially requests phrased only as "using AI" or generators driven by forms/user input; also use for OPENAI_API_KEY or sk-proj setup. Treat this as the credential gate: inspect safely, ask reuse-vs-new before API work, and never expose plaintext. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/3f0def1b/skills/openai-platform-api-key/SKILL.md)
+- openai-developers:agents-sdk: Build, run, deploy, and evaluate OpenAI Agents SDK apps from Codex. Use when the user asks to create or adapt an Agents SDK app, build from a prompt or Codex thread, prepare a runnable agent prototype, add a focused eval harness, or deploy locally through the Agents SDK Deployment Manager. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/c6ea566d/skills/agents-sdk/SKILL.md)
+- openai-developers:build-chatgpt-app: Build, scaffold, refactor, and troubleshoot ChatGPT Apps SDK applications that combine an MCP server and widget UI. Use when Codex needs to design tools, register UI resources, wire the MCP Apps bridge or ChatGPT compatibility APIs, apply Apps SDK metadata or CSP or domain settings, or produce a docs-aligned project scaffold. Prefer a docs-first workflow by invoking the openai-docs skill or OpenAI developer docs MCP tools before generating code. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/c6ea566d/skills/build-chatgpt-app/SKILL.md)
+- openai-developers:chatgpt-app-submission: Inspect a ChatGPT Apps MCP server codebase and generate chatgpt-app-submission.json with app info suggestions, tool hint justifications, test cases, and negative test cases, then report review-check findings and outputSchema warnings for submission review. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/c6ea566d/skills/chatgpt-app-submission/SKILL.md)
+- openai-developers:openai-api-troubleshooting: Use when an OpenAI API request fails and Codex needs to classify the likely cause, explain the next step, and route to the right follow-up. Covers common runtime failures such as blocked outbound network access, invalid credentials, exhausted API quota or credits, rate limits, and model, project, or organization access issues; delegate key provisioning to openai-platform-api-key and current documentation lookups to openai-docs. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/c6ea566d/skills/openai-api-troubleshooting/SKILL.md)
+- openai-developers:openai-platform-api-key=***REDACTED*** when Codex is asked to build, run, test, debug, or configure an OpenAI-backed or provider-unspecified AI app, UI, script, CLI, generator, or tool, especially requests phrased only as "using AI" or generators driven by forms/user input; also use for OPENAI_API_KEY or sk-proj setup. Treat this as the credential gate: inspect safely, ask reuse-vs-new before API work, and never expose plaintext. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/c6ea566d/skills/openai-platform-api-key/SKILL.md)
 - opencv: OpenCV computer vision library. Use for image processing. (file: C:/Users/t250c/.codex/skills/opencv-g1joshi/SKILL.md)
 - opencv: You are an expert in OpenCV (Open Source Computer Vision Library), the most popular library for real-time computer vision. You help developers build image processing pipelines, object detection systems, video analysis tools, augmented reality, and document processing using OpenCV's 2,500+ algorithms for image manipulation, feature detection, camera calibration, 3D reconstruction, and DNN inference — in Python, C++, or JavaScript. (file: C:/Users/t250c/.codex/skills/opencv-terminalskills/SKILL.md)
 - pdf: Use when tasks involve reading, creating, or reviewing PDF files where rendering and layout matter; prefer visual checks by rendering pages (Poppler) and use Python tools such as `reportlab`, `pdfplumber`, and `pypdf` for generation and extraction. (file: C:/Users/t250c/.codex/skills/pdf/SKILL.md)
@@ -298,52 +289,48 @@ You can update the memories **only** when explicitly asked by the user. This mus
 v1
 
 ## User Profile
-The user works with Codex on Windows in a few stable lanes: embedded/Keil source diagnosis for industrial vehicle firmware, CAN/protocol-table restructuring and handoff packaging, practical repo acquisition and local app launch tasks, Qt/OpenCV and AprilTag tooling, Codex continuity or local-state repair, and occasional Windows install or packaging work. They expect the agent to recover prior context from local memory, rollout artifacts, or toolkit mirrors before asking them to restate it.
+The user works with Codex on Windows across a few recurring lanes: embedded/Keil source diagnosis for industrial controller firmware, CAN/protocol-table restructuring plus GitHub handoff packaging, practical repo acquisition or app launch tasks, Qt/OpenCV and AprilTag tooling, and Codex continuity or local-state repair. They expect prior context to be recovered from local memory, rollout artifacts, or toolkit mirrors before they have to restate it.
 
-They prefer concrete outcomes over discussion: exact code-path answers, verified counts, repaired local state, downloaded/placed project files, runnable fallbacks, and generated deliverables they can open immediately. For firmware analysis they care about branch-proof and live checkout accuracy, and they correct path drift or wrong-repo drift quickly.
+They prefer concrete, source-backed outcomes: exact code-path answers, exact counts, repaired local state, downloaded/placed project files, runnable fallbacks, and deliverables they can open immediately. For firmware questions they care about live checkout accuracy, branch proof, and read-only diagnosis unless they explicitly ask for edits.
 
-Stable constraints are practical: preserve encoding-sensitive files, back up before risky edits, do not infer success from terminal appearance alone, and turn repeated workflows into durable memory or skills. They also value output formats that reduce extra clicks, especially clickable file plus directory paths for generated assets. [ad-hoc note]
+Stable constraints are practical: preserve encoding-sensitive files, verify by real paths or Git state instead of terminal appearance, and persist reusable rules/workflows when asked. They also value output formats that reduce extra clicks, especially clickable file plus containing-directory paths for generated assets. [ad-hoc note]
 
 ## User preferences
 - When the user asks to recover memory or prior context, search local Codex memory and session artifacts first, then synced toolkit records, before answering from scratch.
 - When the user gives a path or named local target, inspect the real path and complete the task instead of turning it into a clarification loop.
-- For embedded source diagnosis, if the user asks for the cause only, stay read-only and prove the exact branch/path in code rather than proposing edits.
-- If the user corrects a checkout path or says the first repo/download is wrong, re-anchor to the exact directory or repo immediately before continuing.
-- When the user asks GitHub/account-specific discovery plus download, treat it as a concrete local placement task, preserve the requested folder names, and verify relevance before saying it is done.
-- When the user asks to open software from a repo path, optimize for the fastest runnable launch or fallback instead of starting with build-system theory.
-- When the user asks exact count/capacity questions like CAN ID totals, answer with the precise number and the code-backed derivation, not a rough estimate.
-- For previously working embedded behavior that now fails only in one mode, prioritize gating, switch/contact stability, and branch conditions before assuming the mapping is wrong.
+- For embedded source diagnosis, stay read-only and prove the exact branch/path in code unless the user explicitly asks for edits.
+- For firmware mode-specific regressions, prioritize gating, switch/contact stability, and branch conditions before assuming the mapping is wrong.
+- When the user asks exact count/capacity questions like CAN ID totals, answer with the precise number and code-backed derivation, not a rough estimate.
 - For protocol-table work, default to maintainable Excel or HTML deliverables the user can open immediately, not only raw CSV/text.
 - When protocol docs are requested, explain value source and UI/display behavior, not only CAN fields.
 - When the PC must reach CAN through Ethernet, separate CAN-NET transport from CAN business semantics.
-- When the user is preparing an external engineering handoff, compress the answer to the minimum actionable datum and state axis/sign conventions explicitly.
+- When the user asks to read a manual first and send a screenshot later, index the document first, then interpret the screenshot from manual anchors and page references.
+- When the user is preparing an external engineering handoff, compress the reply to the minimum actionable datum and keep axis/sign conventions explicit.
 - When the user wants something reusable or says it should be remembered globally, persist the rule, workflow, or skill instead of leaving it only in chat.
+- For recurring weekly status updates, default to concise sendable wording with completed work, current in-progress items, blockers or risks, and suggested next steps; explicitly say when the week was inactive.
 - When providing generated or edited file paths, include both a clickable file link and a containing-directory link/path so the user can open the folder quickly, especially for PSD/image outputs and generated deliverables. [ad-hoc note]
 - For PSD/image-based industrial HMI work, route to the reusable `ps` skill workflow and produce a real PSD rather than only preview PNGs. [ad-hoc note]
-- For app-level UI complaints like tiny Photoshop text with unchanged resolution, prefer per-app compatibility fixes before recommending system-wide display changes.
 
 ## General Tips
 - This environment is Windows with PowerShell; many useful fixes depend on real local paths under `C:\Users\t250c\.codex`, not just the current workspace.
 - If Chinese text looks garbled, retry with UTF-8 or byte-level verification before concluding the file is corrupted.
 - The bundled Codex runtime Python under `C:\Users\t250c\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe` is the reliable fallback when system `python` or `py` is missing.
+- For PDF/manual work on this machine, normal PDF CLI tools may be absent; use the runtime Python path, `pypdf`, UTF-8 stdout, and a PowerShell here-string instead of shell heredoc syntax.
 - For Codex history, sidebar, or workspace issues, inspect `state_5.sqlite`, `session_index.jsonl`, `.codex-global-state.json`, and relevant `rollout-*.jsonl` sources together.
-- In embedded diagnosis, do not infer automatic behavior from manual behavior or output from input alone; trace the full branch or DI -> enable -> PWM chain and look for later gates like `speed_14_set` or mode flags.
-- For repo/account discovery, private repos or toolkit mirrors can hold the real payload even when public repos look sparse.
+- In embedded diagnosis, trace the full branch or DI -> enable -> PWM chain and look for later gates like `speed_14_set`, mode flags, or threshold checks.
 - For GitHub upload confirmation on Windows paths with Chinese names, verify by Git path listing such as `git ls-tree`, not by terminal rendering alone.
-- In CAN/protocol work, preserve the distinction between transport framing…1666 tokens truncated… a folder alone was not enough; the working direction was link-based `Documents\Codex\cursor` plus synchronized global-state workspace roots and thread `cwd` / workspace hints.
+- In CAN/protocol work, keep transport framing separate from business-frame semantics and update the handoff/docs at the right layer.
+- If a local automation or memory path is derived from `$env:CODEX_HOME`, be ready to fall back to `C:\Users\t250c\.codex` because that environment variable may be unset in this shell.
+- For Windows installs or repairs, check elevation early, verify the landing state, and remember that PowerShell may block `npm.ps1`; use `npm.cmd` for validation when needed.
+-…1499 tokens truncated…mory or archives surfaced in Codex App as a real left-sidebar workspace without duplicating source data; cwd=C:\Users\t250c and local Codex state paths.
 
 - Photoshop CS6 repair, admin launch, and Node.js LTS upgrade: Photoshop CS6, QuickSetup.exe i, Error 16, DPIUNAWARE, RUNASADMIN, Photoshop CS6 管理员启动.lnk, OpenJS.NodeJS.LTS, npm.cmd
-  - desc: Search this first for this machine's Adobe CS6 green-package repair flow, one-click admin-launch setup, or Node.js LTS upgrades verified through `winget`.
-  - learnings: the reliable Photoshop path was elevated `QuickSetup.exe i` plus compatibility-layer follow-up; the reliable Node verification path was `node -v` plus `npm.cmd -v`, not bare `npm -v` in PowerShell.
-
-### Older Memory Topics
-
-#### C:\Users\t250c and local Codex/tooling
-
-- Local Codex app/history recovery, skills, and MCP continuity: state_5.sqlite, session_index.jsonl, .codex-global-state.json, codex-app-proxy.cmd, programming_handbook_and_discipline.md, restore memory
-  - desc: Use this for restore-memory flow, local discipline rules, skill setup, MCP wiring, proxy-based app connectivity, and missing sidebar history or old tasks disappearing after provider/account changes; cwd=C:\Users\t250c and nearby Codex state paths.
+  - desc: Use this for this machine's Adobe CS6 repair flow, one-click admin-launch setup, or Node.js LTS upgrades verified through `winget`; cwd=C:\Users\t250c and nearby app-repair workspaces.
 
 #### C:\Users\t250c\Documents\Codex and toolkit mirror
+
+- CodeWhale offline package for colleague install: CodeWhale-offline-0.8.49-win64.zip, codewhale.exe, codewhale-tui.exe, install.ps1, uninstall.ps1, hashes.sha256
+  - desc: Use this when the user wants a redistributable Windows CodeWhale package for another machine, with portable binaries and secrets excluded; cwd=C:\Users\t250c\Documents\Codex.
 
 - Windows driver installation and device-readiness verification: pnputil, oem137.inf, GC-Tech, USBCANWDM.INF, GCUSBCAN_A64, VID_0C66&PID_000C
   - desc: Use this for local INF-based driver installs where the user wants the package handled directly and then wants proof that the driver actually landed; cwd=C:\Users\t250c\Documents\Codex and nearby Windows-install workspaces.
@@ -362,12 +349,9 @@ Stable constraints are practical: preserve encoding-sensitive files, back up bef
 - Qt/OpenCV environment setup and template scaffolding: QtOpenCVTemplate, aqtinstall, Qt 6.8.3, QtSmokeTest, cv::imdecode, Unicode path
   - desc: Use this for the working Qt toolchain paths, unattended install route, and the Qt Widgets plus OpenCV starter project in `E:\工作`; the proven install path here is `aqtinstall`.
 
-- Weekly automation and workspace status reporting: automation_update, weekly status update, QtSmokeTest, QtOpenCVTemplate, completed work, blockers, next steps
-  - desc: Use this for the existing recurring status automation and the preferred concise report format for `E:\工作`; cwd=E:\工作 and the remembered default cadence is Monday 9:00 AM Asia/Shanghai unless changed.
-
 #### C:\Users\t250c and mixed vision context
 
-- Fixed-camera AprilTag calibration memory and prompt design: AprilTag, total station, TagCenter_world_calc, ID->TagSize, 150mm, 300mm, Q1 Q2 Q3, solvePnP
+- Fixed-camera AprilTag calibration memory and prompt design: AprilTag, total station, TagCenter_world_calc, ID->TagSize, 150mm, 300mm, Q1, Q2, Q3, solvePnP
   - desc: Use this for the user's fixed-camera industrial vision context, mixed tag sizes, reusable prompt wording, and world-coordinate validation method; cwd=C:\Users\t250c and related vision discussion in `E:\工作`.
 
 #### C:\Users\t250c\Documents\Codex\2026-05-23\new-chat and external drives
@@ -378,365 +362,126 @@ Stable constraints are practical: preserve encoding-sensitive files, back up bef
 #### E:\AI_划时代\T天腾\C采矿装药车
 
 - `work_logic` process verification: App_usr.c, work_logic, cube_speed_logic, AI_logic_study, PWM_ZONE, Paramet_Set7, Paramet_Set8, remaining-height
-  - desc: Use this for source-level verification of whether the charging and withdrawal process in `App_usr.c` matches the user's intended behavior; cwd=E:\AI_划时代\T天腾\C采矿装药车\贵州后续版本\唐山\MC_LCD - 7Control_V1.3 -20250405.
+  - desc: Use this for source-level verification of whether the charging and withdrawal process in `App_usr.c` matches the user's intended behavior; cwd=E:\AI_划时代\T天腾\C采矿装药车\贵州后续版本\唐山\MC_LCD - 7Control_V1.3 -20250405.
+
+#### E:\...\MC_LCD embedded checkouts
+
+- Automatic drilling direction diagnosis in `MC_LCD - 7Control_V1.2`: Src\App_usr.c, Auto_work_logic, Drill_Push_PWM, Drill_Back_PWM, PWM3A, PWM3B, Roll_Press_Mpa, DI_L1
+  - desc: Use this when automatic drilling direction seems reversed but manual direction still works in the LPC17xx/Keil 7-control firmware; cwd=E:\AI_划时代\全电脑_算法PCB\正确资料_算法PCB_CAN协议\MC_LCD - 7Control_V1.2.
+
+- `送管` output blocked by `speed_14_set` in `华矿`: 华矿, 送管, App_usr.c, ifm_0020_DI_18, ifm_0020_PWM_44, Drug_Tube_Open_PWM_OUT, speed_14_set
+  - desc: Use this when the Huakuang tube-feed input is present but the PWM output stays zero; cwd=E:\AI_划时代\全电脑_算法PCB\华矿相关 checkout family.
 ========= MEMORY_SUMMARY ENDS =========
 
 When memory is likely relevant, start with the quick memory pass above before
 deep repo exploration.
 ```
 
-### user 2026-06-08T01:20:52.966Z
+### user 2026-06-11T08:56:09.750Z
 
 ```text
 <environment_context>
-  <cwd>C:\Users\t250c\Documents\旭工</cwd>
+  <cwd>C:\Users\t250c\Documents\Codex</cwd>
   <shell>powershell</shell>
-  <current_date>2026-06-08</current_date>
+  <current_date>2026-06-11</current_date>
   <timezone>Asia/Shanghai</timezone>
-  <filesystem><workspace_roots><root>C:\Users\t250c\Documents\旭工</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+  <filesystem><workspace_roots><root>C:\Users\t250c\Documents\Codex</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
 </environment_context>
 ```
 
-### user 2026-06-08T01:20:52.973Z
+### user 2026-06-11T08:56:09.775Z
 
 ```text
-干喷 E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2
+E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本 这个里面的铁电区是不是撞区了？
 ```
 
-### assistant 2026-06-08T01:21:04.594Z
+### assistant 2026-06-11T08:56:22.385Z
 
 ```text
-我先切到你给的干喷显示屏工程路径，确认实际文件结构和工程入口，避免沿用之前别的项目路径。
+我会按嵌入式/Keil 源码诊断流程来查，先定位项目里的铁电存储地址规划和读写入口，再判断是否有地址范围重叠。
 ```
 
-### assistant 2026-06-08T01:21:18.226Z
+### assistant 2026-06-11T08:56:39.217Z
 
 ```text
-已定位到干喷工程：
-
-[E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2>)
-
-确认里面是 Keil/LPC17xx 显示屏控制工程，入口和核心文件在：
-
-- [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c>)
-- [App_Bus.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_Bus.c>)
-- [App_IO.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_IO.c>)
-- [can.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\can.c>)
-- [MC_LCD - 7Control_V1.1.uvproj](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\MC_LCD - 7Control_V1.1.uvproj>)
-
-后面我会以这个目录为准，不再沿用其他项目路径。
+这次记忆里没有找到和这个项目铁电区直接相关的旧结论，所以我会以当前目录源码为准。接下来先扫项目文件和“铁电/FRAM/EEPROM/地址”相关符号。
 ```
 
-### user 2026-06-08T01:29:04.829Z
+### assistant 2026-06-11T08:57:00.718Z
 
 ```text
-你分析下程序。
+项目里铁电看起来是通过 I2C/24C04 这类接口走的，不是 MCU 内部 flash scatter 区。我现在缩小到 `Src` 下的保存/读取函数和地址宏，避免被工程日志和 CMSIS 文件干扰。
 ```
 
-### assistant 2026-06-08T01:29:30.100Z
+### assistant 2026-06-11T08:57:32.194Z
 
 ```text
-我会按 Keil/嵌入式 C 工程来读，先抓主循环、任务调度、CAN、IO 和屏幕变量这几条线，再给你一份结构化分析。
+已经定位到地址规划主要在 `Src\App_Bus.h`。我需要把 GBK 注释按正确编码读出来，然后把每个起始地址和实际写入长度列出来做区间交叉判断。
 ```
 
-### assistant 2026-06-08T01:30:05.613Z
+### assistant 2026-06-11T08:58:07.347Z
 
 ```text
-我查到记忆里只有同名 MC_LCD 系列和自动打钻诊断，不能直接当作当前干喷版本结论；这次会重新读你这个 `E:\AI_划时代\旭工\干喷...` 的实时源码。
+目前看到一个明显的硬编码地址 `0x1024`，它要和 `EX_OVER_INFO_STADDR=0x200`、`EX_OV_H_INFO_STADDR=0x1200` 之间的日志区一起算。我继续把所有 AT24 读写调用、结构体大小和循环上限抽出来。
 ```
 
-### assistant 2026-06-08T01:30:42.175Z
+### assistant 2026-06-11T08:58:26.600Z
 
 ```text
-现在能看出这是裸机轮询加定时中断的屏控程序：`timer` 做 DI 扫描和软件 PWM，主循环里跑系统任务、CAN 接收、DGUS 屏串口。接下来我把业务变量和输出映射串起来。
+关键点出来了：`BDInfo1` 注释写 64 Byte，但实际 `gBDParam[0]` 的结构体远不止 64 字节；而 `BDInfo2` 起始只比 `BDInfo1` 晚 `0x60`。我正在精确算结构体 `sizeof`，这会直接决定是否撞区。
 ```
 
-### assistant 2026-06-08T01:31:20.660Z
+### assistant 2026-06-11T08:59:53.106Z
 
 ```text
-业务代码集中在 `Src\App_usr.c`，头文件里能看到干喷/钻臂/行走/支腿/药管/空压/水泵等变量都堆在这一层。我要重点看它每 1ms、10ms 调哪些函数，以及 CAN1/CAN2 数据怎样进出。
+结论已经比较明确：当前表不是单纯“注释错”，实际写入长度也按 `sizeof(gBDParam[0])` 走，所以会真实覆盖后面的地址。最后我补一下 `0x1024` 那块硬编码保存点，确认它本身有没有参与这次重叠。
 ```
 
-### assistant 2026-06-08T01:33:32.687Z
+### assistant 2026-06-11T09:00:23.162Z
 
 ```text
-有一个值得注意的点：CAN2 数据不是通过 `CAN2RxDone` 分支专门处理，而是中断直接写 `MsgBuf_RX2[]`，10ms 业务里再用 `CAN2_Get_Data()`按 ID 读缓存；所以分析 CAN2 时要看注册表索引和 `vEmpty` 超时，不要只看 `CAN2RxDone`。
-```
+是，铁电/外部 EEPROM 地址规划已经撞区了。
 
-### assistant 2026-06-08T01:34:51.210Z
+主要撞在 `BDInfo1`：
 
-```text
-我按只读方式分析了这个工程。结论：这是一个 LPC17xx 的 7 寸屏控制器程序，主业务集中在 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c>)，它不是完整液压主控，而更像“屏控/中转控制器”：采本地 DI/AI，收 CAN2 遥控和 119 模块数据，再把 DO/PWM 指令通过本机 IO 和 CAN2 发出去。
+- [App_Bus.h](<E:/AI_划时代/o欧阳/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/Src/App_Bus.h:33>) 里 `EX_BDINFO_STADDR = 0x80`
+- [App_Bus.c](<E:/AI_划时代/o欧阳/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/Src/App_Bus.c:810>) 实际写入长度是 `sizeof(gBDParam[0])`
+- [App_sys.h](<E:/AI_划时代/o欧阳/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/Src/App_sys.h:73>) 这个 `mBDParam` 现在不是 64 字节，按当前字段算是 `408` 字节，也就是 `0x198`
 
-**主流程**
-启动入口在 [main.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\main.c:39>)：初始化系统、IO、PWM、I2C 参数、CAN1/CAN2、定时器、串口、ADC，然后进 `while(1)`。
-
-运行节拍是：
-
-- `TIMER0_IRQHandler()` 每 1ms 进一次，置 `gT0Flg`，每 10ms 置 `gTimeFlg_10mS`，同时扫描 DI 和按键，见 [timer.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\timer.c:153>)。
-- 主循环里 `Sys_Prog_While()` 处理 1ms 后台、ADC 换算、CAN 接收缓存、LCD 刷新，见 [App_sys.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_sys.c:163>)。
-- 真正业务每 10ms 调 `MyLogic_10ms()`，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2453>)。
-- `MyLogic_1ms()` 现在是空的，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2498>)。
-
-**10ms 业务链**
-`MyLogic_10ms()` 的执行顺序很关键：
-
-1. `CAN_Send_data()`：周期性发压力状态，当前大约 60ms 发一次 `0x15D`。
-2. `CAN_receive_data()`：读 CAN2 的 `0x318/0x319/0x31A`。
-3. `Remote_PWM_receive_data()`：读 CAN2 的 `0x31B` 到 `0x322`，更新遥控 PWM 标定上下限。
-4. `DI_Byte_DO()`：把本地 DI/AI 映射成内部变量，同时把 `DO_Pinxx` 输出到物理 DO。
-5. `PIN_Binding()`：把传感器、电流、开关、PWM 输出绑定到业务变量。
-6. `index_com()`：把参数 `Paramet_Set1/2/3` 转成主泵、供料泵、空压 PWM。
-7. `YKQ_CAN1_CAN2()`：把遥控器按键映射为工作/停止/空压/震动/水泵/喇叭/速凝剂等标志。
-8. `Public_Logic_()`：做遥控/本地逻辑、急停、输出 CAN2 指令。
-
-对应代码在 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2453>)。
-
-**CAN 结构**
-CAN 接收注册在 [CanOpen.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\CanOpen.c:285>)：
-
-- CAN1 当前只注册 2 个接收 ID：`0x7e8`、`0xfa`。
-- CAN2 注册 13 个接收 ID：`0x7e8`、`0x318`、`0x319`、`0x31A`、`0x0CF00400`、`0x31B` 到 `0x322`。
-- 每路最大接收 ID 容量是 `ID_RCV_NUM = 32`，见 [CanOpen.h](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\CanOpen.h:22>)。
-
-CAN2 主要输入：
-
-- `0x318`：遥控按键/功能键，生成 `AK1_up/down`、`A_R_F1~F4`、`A_L_F4` 等。
-- `0x319`：三组摇杆值和三个电位器值。
-- `0x31A`：119 模块 DI 状态。
-- `0x31B~0x322`：A/B/C/D 各通道 PWM 最大最小标定。
-
-CAN2 主要输出：
-
-- `0x15A`：DO/PWM 字节指令。
-- `0x15B`、`0x1AC`、`0x15C`：多路 119 PWM 输出。
-- `0x17A`：扩展 DO 位。
-- `0x15D`：压力状态上报。
-
-**控制逻辑**
-`Local_Control_Mode == 0` 时按代码注释是遥控模式。遥控模式下：
-
-- `AK1_up` 变成 `Work_setup_flags`，`AK1_down` 变成 `Work_stop_flags`。
-- 工作启动后先开主泵 `Main_Pump_motor_Setup_EN=1`，再通过 `Supply_Pump_setup_EN_dly=400` 延时打开供料泵，逻辑在 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2130>)。
-- 空压、震动、水泵、速凝剂是按键边沿翻转开关，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2167>)。
-- 电位器 `Potentiometer_BUF1/2/3` 分别控制刷盘、水泵、速凝剂 PWM，比例换算到约 0~600，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2191>)。
-
-本地模式下：
-
-- 本地 DI 直接控制空压、震动、水泵、速凝剂、主泵、供料泵启停。
-- 本地按键边沿调整 `Water_Pump_PWM_Out`、`Snj_PWM_Out`、`Paramet_Set1`、`Paramet_Set2`。
-
-急停逻辑比较直接：`E_STOP = E_STOP_DI || R_stop_CAN2`，然后在 10ms 末尾如果 `Clear_Flags || E_STOP || 模式切换`，调用 `clear_zy()` 清输出，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2488>)。
-
-**输出映射**
-本机 PWM 绑定在 `PIN_Binding()`：
-
-- PWM1A：`Brush_PWM_Out`
-- PWM2A：`Water_Pump_PWM_Out * Water_setup_EN`
-- PWM3A：`Main_Pump_PWM_Out * Main_Pump_motor_Setup_EN`
-- PWM4A：`Supply_Pump_PWM_Out * Supply_Pump_setup_EN`
-- PWM5A：`Air_Pump_PWM_Out`
-- PWM6A：`Snj_PWM_Out * Snj_setup_EN`
-
-代码位置：[App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:1868>)。
-
-**明显风险点**
-我看到几个可能需要后续重点核对的点：
-
-- `Task.c` 有任务调度器，但主流程没有调用 `dispatch_tasks()`，当前实际靠定时标志和主循环跑。
-- `MyLogic_1ms()` 是空函数，业务几乎全压在 10ms。
-- [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2276>) 这里 `Snj_PWM_Out += 5` 后，限幅判断写的是 `if(Water_Pump_PWM_Out>700) Snj_PWM_Out=700;`，看起来像笔误，应该重点确认是不是应判断 `Snj_PWM_Out > 700`。
-- CAN2 的 `R_weak_line_flags` 会把所有遥控摇杆清中位，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:1616>)，如果现场出现“遥控有包但动作没输出”，这条是第一优先级排查条件。
-- `clear_zy()` 会清泵使能、CAN2 PWM、遥控使能和 DO 输出，任何急停、清除标志、模式切换都会触发，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:1187>)。
-
-总体看，这版程序的核心不是复杂闭环，而是“遥控/CAN2 输入 + 本地 DI 输入 + 参数 PWM + 119 输出模块”的组合逻辑。后续如果你要查某个动作，比如主泵不转、水泵没电流、速凝剂没输出、遥控摇杆无动作，我建议直接沿着这条链查：`CAN2_Get_Data/DI_Scan -> YKQ_CAN1_CAN2/PIN_Binding -> Public_Logic_ -> PWM_logic_OUT/CAN2_IO_pinding/PWMx_OutPut`。
-```
-
-### assistant 2026-06-08T01:34:51.216Z
+所以 `BDInfo1` 实际占用：
 
 ```text
-我按只读方式分析了这个工程。结论：这是一个 LPC17xx 的 7 寸屏控制器程序，主业务集中在 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c>)，它不是完整液压主控，而更像“屏控/中转控制器”：采本地 DI/AI，收 CAN2 遥控和 119 模块数据，再把 DO/PWM 指令通过本机 IO 和 CAN2 发出去。
-
-**主流程**
-启动入口在 [main.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\main.c:39>)：初始化系统、IO、PWM、I2C 参数、CAN1/CAN2、定时器、串口、ADC，然后进 `while(1)`。
-
-运行节拍是：
-
-- `TIMER0_IRQHandler()` 每 1ms 进一次，置 `gT0Flg`，每 10ms 置 `gTimeFlg_10mS`，同时扫描 DI 和按键，见 [timer.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\timer.c:153>)。
-- 主循环里 `Sys_Prog_While()` 处理 1ms 后台、ADC 换算、CAN 接收缓存、LCD 刷新，见 [App_sys.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_sys.c:163>)。
-- 真正业务每 10ms 调 `MyLogic_10ms()`，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2453>)。
-- `MyLogic_1ms()` 现在是空的，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2498>)。
-
-**10ms 业务链**
-`MyLogic_10ms()` 的执行顺序很关键：
-
-1. `CAN_Send_data()`：周期性发压力状态，当前大约 60ms 发一次 `0x15D`。
-2. `CAN_receive_data()`：读 CAN2 的 `0x318/0x319/0x31A`。
-3. `Remote_PWM_receive_data()`：读 CAN2 的 `0x31B` 到 `0x322`，更新遥控 PWM 标定上下限。
-4. `DI_Byte_DO()`：把本地 DI/AI 映射成内部变量，同时把 `DO_Pinxx` 输出到物理 DO。
-5. `PIN_Binding()`：把传感器、电流、开关、PWM 输出绑定到业务变量。
-6. `index_com()`：把参数 `Paramet_Set1/2/3` 转成主泵、供料泵、空压 PWM。
-7. `YKQ_CAN1_CAN2()`：把遥控器按键映射为工作/停止/空压/震动/水泵/喇叭/速凝剂等标志。
-8. `Public_Logic_()`：做遥控/本地逻辑、急停、输出 CAN2 指令。
-
-对应代码在 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2453>)。
-
-**CAN 结构**
-CAN 接收注册在 [CanOpen.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\CanOpen.c:285>)：
-
-- CAN1 当前只注册 2 个接收 ID：`0x7e8`、`0xfa`。
-- CAN2 注册 13 个接收 ID：`0x7e8`、`0x318`、`0x319`、`0x31A`、`0x0CF00400`、`0x31B` 到 `0x322`。
-- 每路最大接收 ID 容量是 `ID_RCV_NUM = 32`，见 [CanOpen.h](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\CanOpen.h:22>)。
-
-CAN2 主要输入：
-
-- `0x318`：遥控按键/功能键，生成 `AK1_up/down`、`A_R_F1~F4`、`A_L_F4` 等。
-- `0x319`：三组摇杆值和三个电位器值。
-- `0x31A`：119 模块 DI 状态。
-- `0x31B~0x322`：A/B/C/D 各通道 PWM 最大最小标定。
-
-CAN2 主要输出：
-
-- `0x15A`：DO/PWM 字节指令。
-- `0x15B`、`0x1AC`、`0x15C`：多路 119 PWM 输出。
-- `0x17A`：扩展 DO 位。
-- `0x15D`：压力状态上报。
-
-**控制逻辑**
-`Local_Control_Mode == 0` 时按代码注释是遥控模式。遥控模式下：
-
-- `AK1_up` 变成 `Work_setup_flags`，`AK1_down` 变成 `Work_stop_flags`。
-- 工作启动后先开主泵 `Main_Pump_motor_Setup_EN=1`，再通过 `Supply_Pump_setup_EN_dly=400` 延时打开供料泵，逻辑在 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2130>)。
-- 空压、震动、水泵、速凝剂是按键边沿翻转开关，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2167>)。
-- 电位器 `Potentiometer_BUF1/2/3` 分别控制刷盘、水泵、速凝剂 PWM，比例换算到约 0~600，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2191>)。
-
-本地模式下：
-
-- 本地 DI 直接控制空压、震动、水泵、速凝剂、主泵、供料泵启停。
-- 本地按键边沿调整 `Water_Pump_PWM_Out`、`Snj_PWM_Out`、`Paramet_Set1`、`Paramet_Set2`。
-
-急停逻辑比较直接：`E_STOP = E_STOP_DI || R_stop_CAN2`，然后在 10ms 末尾如果 `Clear_Flags || E_STOP || 模式切换`，调用 `clear_zy()` 清输出，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2488>)。
-
-**输出映射**
-本机 PWM 绑定在 `PIN_Binding()`：
-
-- PWM1A：`Brush_PWM_Out`
-- PWM2A：`Water_Pump_PWM_Out * Water_setup_EN`
-- PWM3A：`Main_Pump_PWM_Out * Main_Pump_motor_Setup_EN`
-- PWM4A：`Supply_Pump_PWM_Out * Supply_Pump_setup_EN`
-- PWM5A：`Air_Pump_PWM_Out`
-- PWM6A：`Snj_PWM_Out * Snj_setup_EN`
-
-代码位置：[App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:1868>)。
-
-**明显风险点**
-我看到几个可能需要后续重点核对的点：
-
-- `Task.c` 有任务调度器，但主流程没有调用 `dispatch_tasks()`，当前实际靠定时标志和主循环跑。
-- `MyLogic_1ms()` 是空函数，业务几乎全压在 10ms。
-- [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2276>) 这里 `Snj_PWM_Out += 5` 后，限幅判断写的是 `if(Water_Pump_PWM_Out>700) Snj_PWM_Out=700;`，看起来像笔误，应该重点确认是不是应判断 `Snj_PWM_Out > 700`。
-- CAN2 的 `R_weak_line_flags` 会把所有遥控摇杆清中位，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:1616>)，如果现场出现“遥控有包但动作没输出”，这条是第一优先级排查条件。
-- `clear_zy()` 会清泵使能、CAN2 PWM、遥控使能和 DO 输出，任何急停、清除标志、模式切换都会触发，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:1187>)。
-
-总体看，这版程序的核心不是复杂闭环，而是“遥控/CAN2 输入 + 本地 DI 输入 + 参数 PWM + 119 输出模块”的组合逻辑。后续如果你要查某个动作，比如主泵不转、水泵没电流、速凝剂没输出、遥控摇杆无动作，我建议直接沿着这条链查：`CAN2_Get_Data/DI_Scan -> YKQ_CAN1_CAN2/PIN_Binding -> Public_Logic_ -> PWM_logic_OUT/CAN2_IO_pinding/PWMx_OutPut`。
-
-<oai-mem-citation>
-<citation_entries>
-MEMORY.md:254-272|note=[used prior MC_LCD caution to re-anchor analysis to live source path]
-</citation_entries>
-<rollout_ids>
-019e9097-3c21-7ab1-a1e0-a0e3dc81810b
-</rollout_ids>
-</oai-mem-citation>
+0x0080 - 0x0217
 ```
 
-### user 2026-06-08T01:35:13.197Z
+它撞了两块：
 
 ```text
-水泵的输出 近控可以，遥控说不行。
+BDInfo2:   0x00E0 - 0x00FB   完全落在 BDInfo1 里面
+OverInfo:  0x0200 - 0x097F   前 0x18 字节被 BDInfo1 覆盖
 ```
 
-### assistant 2026-06-08T01:35:28.998Z
+`BDInfo2` 的起始地址现在还是 [App_Bus.h](<E:/AI_划时代/o欧阳/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/Src/App_Bus.h:35>) 里的 `EX_BDINFO_STADDR + 0x60 = 0xE0`，这是按老的 64/96 字节规划留的，已经跟当前 `gBDParam` 大小不匹配。
+
+另外 [App_usr.c](<E:/AI_划时代/o欧阳/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/Src/App_usr.c:1255>) 里的硬编码 `0x1024` 写 8 字节：
 
 ```text
-我按“近控水泵正常、遥控水泵无输出”只追水泵链路，不改代码。重点看遥控按键怎么置 `Water_setup_EN`，以及电位器值怎样生成 `Water_Pump_PWM_Out`。
+0x1024 - 0x102B
 ```
 
-### assistant 2026-06-08T01:35:47.317Z
+这块本身没有撞 `BDInfo1/BDInfo2/OverInfo/OvHand`，它在 `OverInfo` 结束 `0x097F` 后、`OvHand` 起始 `0x1200` 前。
+
+结论：当前项目地址表确实撞区，核心问题是 `EX_BDINFO_STADDR2` 和 `EX_OVER_INFO_STADDR` 没有随着 `mBDParam` 变大而后移。建议至少把 `BDInfo2` 移到 `0x0220` 之后，把 `OverInfo` 再顺延到后面；如果现场已有铁电数据，要同时考虑旧数据迁移或重新初始化。
+```
+
+### user 2026-06-11T09:01:31.147Z
 
 ```text
-水泵链路已经很清楚：近控和遥控共用最后一个 PWM2A 输出，但打开条件和 PWM 来源不同。遥控失败大概率不是 PWM 硬件问题，而是遥控模式下 `Water_setup_EN` 没被置位，或 `Potentiometer_BUF2` 被清零/太小。
+gBDParam 你把这个区 搞大点。
 ```
 
-### assistant 2026-06-08T01:36:17.376Z
+### assistant 2026-06-11T09:01:46.275Z
 
 ```text
-近控可以，说明水泵硬件输出通道基本没问题：最后都是走 `PWM_SetXAB(2, Water_Pump_PWM_Out * Water_setup_EN)`，也就是 PWM2A。
-
-遥控水泵要同时满足两个条件：
-
-1. `Water_setup_EN = 1`
-   遥控模式下它不是直接跟随按键，而是由 `A_R_F3` 的上升沿翻转：
-   [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2178>)
-
-2. `Water_Pump_PWM_Out > 0`
-   遥控模式下它来自 `Potentiometer_BUF2`，而且必须大于 10：
-   [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2196>)
-
-所以遥控不出水泵，最可能是这几个原因：
-
-- 遥控器 `A_R_F3` 没进来。它来自 CAN2 `0x318` 的 `CAN2_RBuf[2] bit6`，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:1543>)。
-- `Potentiometer_BUF2` 没进来或小于等于 10。它来自 CAN2 `0x319` 的第 6 字节，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:1593>)。
-- `R_weak_line_flags` 被置位，会把 `Potentiometer_BUF2` 清 0，导致水泵 PWM 直接为 0，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:1616>)。
-- `E_STOP` 或模式切换触发 `clear_zy()`，会清掉 `Water_setup_EN`，见 [App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:1187>)。
-
-现场最好看屏上的几个诊断值：
-
-- `0x152`：是否真处于遥控模式，值应为 1。
-- `0xA23`：遥控水泵按键 `A_R_F3` 是否动作。
-- `0xA50`：遥控水泵电位器 `Potentiometer_BUF2` 是否大于 10。
-- `0x13`：最终水泵输出 `Water_Pump_PWM_Out * Water_setup_EN`。
-
-如果 `0xA23` 有动作但 `0xA50` 是 0 或很小，那就是遥控器水泵旋钮/电位器值没发出来。  
-如果 `0xA50` 正常但 `0x13` 还是 0，那就是 `Water_setup_EN` 没翻转成功，重点查 `A_R_F3` 边沿或 `clear_zy()` 被触发。
-```
-
-### user 2026-06-08T01:36:43.392Z
-
-```text
-近控没有大于10的条件吗？
-```
-
-### assistant 2026-06-08T01:36:57.253Z
-
-```text
-没有。
-
-代码里“大于 10”这个条件只在遥控分支里：
-
-[App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2167>)
-
-```c
-if (Local_Control_Mode==0)
-{
-    ...
-    if(Potentiometer_BUF2>10) //水泵
-    {
-        Water_Pump_PWM_Out = (Potentiometer_BUF2/100.0 ) *600;
-    }
-    else 
-        Water_Pump_PWM_Out = 0;
-}
-```
-
-近控分支是下面这个 `else`，水泵启动只看 `Water_Pump_setup_DI`，PWM 大小靠 `Water_Pump_Current_up_DI / Water_Pump_Current_down_DI` 加减，不看 `Potentiometer_BUF2 > 10`：
-
-[App_usr.c](<E:\AI_划时代\旭工\干喷\程序\显示屏7-200\MC_LCD - 7Control_V1.2\Src\App_usr.c:2226>)
-
-```c
-if (Water_Pump_setup_DI==1) Water_setup_EN = 1;
-if (Water_Pump_setup_DI==0) Water_setup_EN = 0;
-```
-
-所以现象上就会出现：近控能出，因为 `Water_Pump_PWM_Out` 初始值是 300，近控只要 `Water_setup_EN=1` 就有输出；遥控如果 `Potentiometer_BUF2 <= 10`，会把 `Water_Pump_PWM_Out` 直接清成 0，即使 `Water_setup_EN=1` 也没有水泵输出。
+我会按当前实际 `sizeof(gBDParam[0])` 来改地址规划：给 `gBDParam` 留出独立的大区，再把后面的 `BDParam2/OverInfo` 顺延，避免后续继续覆盖。先做备份并保留 GBK 编码。
 ```
