@@ -1,0 +1,24 @@
+{
+  "archive": "C:\\Users\\t250c\\Documents\\Keil监控项目\\codex-personal-toolkit\\work-states\\2026\\can-variable-monitor-ui-adaptation_20260613-030939",
+  "workspace": "C:\\Users\\t250c\\Documents\\Keil监控项目\\CanVariableMonitor",
+  "workspace_zip": "C:\\Users\\t250c\\Documents\\Keil监控项目\\codex-personal-toolkit\\work-states\\2026\\can-variable-monitor-ui-adaptation_20260613-030939\\workspace.zip",
+  "workspace_zip_files": 51,
+  "workspace_zip_source_bytes": 1694759,
+  "release_zip": "C:\\Users\\t250c\\Documents\\Keil监控项目\\CanVariableMonitor\\release\\上位机监控_V1.20_20260613_030555.zip",
+  "release_zip_copied": "C:\\Users\\t250c\\Documents\\Keil监控项目\\codex-personal-toolkit\\work-states\\2026\\can-variable-monitor-ui-adaptation_20260613-030939\\release\\上位机监控_V1.20_20260613_030555.zip",
+  "screenshot": "C:\\Users\\t250c\\Documents\\Keil监控项目\\codex-personal-toolkit\\work-states\\2026\\can-variable-monitor-ui-adaptation_20260613-030939\\ui-v120-final-maximized.png",
+  "source_session": "C:\\Users\\t250c\\.codex\\sessions\\2026\\06\\13\\rollout-2026-06-13T01-53-12-019ebcf7-54ad-7101-9184-774f509d736b.jsonl",
+  "exported_at": "2026-06-13T03:09:39",
+  "privacy_note": "raw-session sk-* scanner hit was inspected and is a false positive inside encoded tool data, not an API key",
+  "verification": {
+    "dotnet_build": "0 errors, 65 existing nullable warnings",
+    "publish_script": "PublishUnified.ps1 succeeded",
+    "runtime_dpi": 144,
+    "default_window_maximized": true,
+    "layout_profile_after_fix": {
+      "LeftPanelWidth": 483,
+      "MonitorPanelWidth": 780,
+      "UiDpi": 144
+    }
+  }
+}
