@@ -1,0 +1,16 @@
+﻿{
+    "workspace":  "C:\\Users\\DELL\\Documents\\遥控器的杂碎事情\\CanVariableMonitor",
+    "session_file":  "C:\\Users\\DELL\\AppData\\Local\\Temp\\codex_session_sanitized_20260612_181359.jsonl",
+    "raw_session_note":  "raw-session.jsonl is sanitized; encrypted_content fields were redacted before upload.",
+    "handoff_file":  "CAN_VARIABLE_MONITOR_HANDOFF.md",
+    "exported_at":  "2026-06-12T19:12:13",
+    "topic":  "codex-skills-mcp-github-sync",
+    "workspace_zip_files":  52,
+    "workspace_zip_source_bytes":  2644140,
+    "mcp_data_files":  [
+
+                       ],
+    "latest_upper_computer_version":  "V1.20",
+    "latest_release_zip":  "C:\\Users\\DELL\\Documents\\遥控器的杂碎事情\\CanVariableMonitor\\release\\上位机监控_V1.20_20260612_183305.zip",
+    "latest_update_file":  "V1.20_UPDATE.md"
+}

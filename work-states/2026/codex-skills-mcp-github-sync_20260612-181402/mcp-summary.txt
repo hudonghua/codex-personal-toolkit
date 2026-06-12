@@ -1,0 +1,7 @@
+# MCP Summary
+
+[mcp_servers.node_repl]
+[mcp_servers.node_repl.env]
+
+# Local MCP server scripts
+
