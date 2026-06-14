@@ -1,4 +1,5 @@
 [mcp_servers.codex_memory]
+type = "stdio"
 command = 'C:\Users\__USER__\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
 args = ['C:\Users\__USER__\.codex\mcp_servers\codex_memory_mcp.py']
 startup_timeout_sec = 30
@@ -7,7 +8,20 @@ startup_timeout_sec = 30
 CODEX_HOME = 'C:\Users\__USER__\.codex'
 CODEX_MEMORY_DB = 'C:\Users\__USER__\.codex\mcp_data\memory.sqlite'
 
+[mcp_servers.codex_memory.tools.memory_add]
+approval_policy = "never"
+
+[mcp_servers.codex_memory.tools.memory_search]
+approval_policy = "never"
+
+[mcp_servers.codex_memory.tools.memory_list]
+approval_policy = "never"
+
+[mcp_servers.codex_memory.tools.memory_delete]
+approval_policy = "on-request"
+
 [mcp_servers.codex_sqlite]
+type = "stdio"
 command = 'C:\Users\__USER__\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe'
 args = ['C:\Users\__USER__\.codex\mcp_servers\codex_sqlite_mcp.py']
 startup_timeout_sec = 30
@@ -15,3 +29,12 @@ startup_timeout_sec = 30
 [mcp_servers.codex_sqlite.env]
 CODEX_HOME = 'C:\Users\__USER__\.codex'
 CODEX_SQLITE_DB = 'C:\Users\__USER__\.codex\mcp_data\records.sqlite'
+
+[mcp_servers.codex_sqlite.tools.sqlite_query]
+approval_policy = "never"
+
+[mcp_servers.codex_sqlite.tools.sqlite_add_record]
+approval_policy = "never"
+
+[mcp_servers.codex_sqlite.tools.sqlite_schema]
+approval_policy = "never"
