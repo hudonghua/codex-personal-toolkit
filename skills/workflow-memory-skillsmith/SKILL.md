@@ -164,6 +164,15 @@ Use these categories for `sqlite_add_record` when the SQLite MCP is available:
 - `photoshop-image-record`
 - `general-workflow-record`
 
+## Field Notes
+
+### 2026-06-15 - Codex toolkit installers must repair MCP config idempotently
+
+- Symptom: sharing a Codex personal toolkit across computers can make another machine fail to start or log in when `install.ps1` appends duplicate `[mcp_servers.*]` TOML tables to `~/.codex/config.toml`.
+- Cause: regex-based block deletion is too fragile for nested MCP tables such as `[mcp_servers.codex_memory.env]` and `[mcp_servers.codex_memory.tools.*]`; repeated installs can leave stale subtables and create duplicate TOML tables.
+- Fix pattern: installer scripts should remove owned MCP server blocks with a line-by-line table-header state machine, write `config.toml` as UTF-8 without BOM, validate a temp config with Python `tomllib`, and rollback from a timestamped backup if validation fails. Snippets should include explicit `type = "stdio"` and complete `.tools.*` approval tables so remove-and-readd is lossless.
+- Verification: test against a temporary `USERPROFILE` containing intentionally duplicated MCP tables; run install twice; verify `tomllib` parses, each owned MCP root appears once, unrelated MCP blocks remain, and `codex doctor` reports `config loaded`. Do not overwrite unrelated local skill or script changes while committing the fix.
+
 ## Response Style
 
 When a reusable lesson is saved, briefly tell the user:
