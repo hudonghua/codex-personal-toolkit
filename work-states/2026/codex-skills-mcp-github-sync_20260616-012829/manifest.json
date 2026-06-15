@@ -1,0 +1,12 @@
+{
+  "workspace": "C:\\Users\\t250c\\Documents\\Keil监控项目\\can-variable-monitor-export-v142",
+  "session_file": "C:\\Users\\t250c\\AppData\\Local\\Temp\\codex-v142-sanitized-session.jsonl",
+  "exported_at": "2026-06-16T01:28:31",
+  "topic": "codex-skills-mcp-github-sync",
+  "workspace_zip_files": 48,
+  "workspace_zip_source_bytes": 1477935,
+  "mcp_data_files": [
+    "C:\\Users\\t250c\\Documents\\Keil监控项目\\codex-personal-toolkit-upload-v142\\work-states\\2026\\codex-skills-mcp-github-sync_20260616-012829\\mcp-data\\memory.sqlite",
+    "C:\\Users\\t250c\\Documents\\Keil监控项目\\codex-personal-toolkit-upload-v142\\work-states\\2026\\codex-skills-mcp-github-sync_20260616-012829\\mcp-data\\records.sqlite"
+  ]
+}
