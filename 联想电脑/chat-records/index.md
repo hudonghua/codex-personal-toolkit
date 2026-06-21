@@ -1,7 +1,7 @@
 # 联想电脑 Codex 聊天记录
 
-- Exported at: `2026-06-11T17:02:52`
-- Exported chats: `47`
+- Exported at: `2026-06-21T13:20:15`
+- Exported chats: `52`
 - Missing source files: `0`
 - Content policy: raw Codex `.jsonl` files are not uploaded; Markdown exports are redacted.
 
@@ -10,7 +10,7 @@
 - [你好](001_019e4605-8951-7492-99a6-93dd6e605f83_你好.md) `019e4605-8951-7492-99a6-93dd6e605f83` messages: `27`
 - [你好](002_019e4ba3-3a1f-7dc1-828f-519c1ded6f84_你好.md) `019e4ba3-3a1f-7dc1-828f-519c1ded6f84` messages: `33`
 - [现在打开codex app 进不了主界面。](003_019e52c1-87ec-7b90-b34d-960b8192997b_现在打开codex-app-进不了主界面。.md) `019e52c1-87ec-7b90-b34d-960b8192997b` messages: `78`
-- [有没有电磁阀得电，就能吸住铁丝网的装置？](004_019e52c3-9b34-7aa1-bfa6-c5b59064d0f8_有没有电磁阀得电，就能吸住铁丝网的装置？.md) `019e52c3-9b34-7aa1-bfa6-c5b59064d0f8` messages: `79`
+- [有没有电磁阀得电，就能吸住铁丝网的装置？](004_019e52c3-9b34-7aa1-bfa6-c5b59064d0f8_有没有电磁阀得电，就能吸住铁丝网的装置？.md) `019e52c3-9b34-7aa1-bfa6-c5b59064d0f8` messages: `99`
 - [读下u盘的记录。](005_019e5557-3947-7a13-9966-302a1436f635_读下u盘的记录。.md) `019e5557-3947-7a13-9966-302a1436f635` messages: `36`
 - [ssh 服务 与codex app 能链接吗？](006_019e5593-cc9b-7281-9754-fb3df0c97b1f_ssh-服务-与codex-app-能链接吗？.md) `019e5593-cc9b-7281-9754-fb3df0c97b1f` messages: `169`
 - [[@openai-developers](plugin://openai-developers@openai-curat](007_019e5aa0-ebfe-7770-8ab9-2b1096e256a1_[@openai-developers](pluginopenai-developers@ope.md) `019e5aa0-ebfe-7770-8ab9-2b1096e256a1` messages: `33`
@@ -48,9 +48,14 @@
 - [rollout-2026-06-06T20-58-26-019e9d03-53bb-7170-8807-e6bb7a61](039_019e9d03-53bb-7170-8807-e6bb7a6184cb_rollout-2026-06-06T20-58-26-019e9d03-53bb-7170-8.md) `019e9d03-53bb-7170-8807-e6bb7a6184cb` messages: `541`
 - [rollout-2026-06-06T23-19-15-019e9d84-3f61-7b62-a91d-060b4a19](040_019e9d84-3f61-7b62-a91d-060b4a19dd5a_rollout-2026-06-06T23-19-15-019e9d84-3f61-7b62-a.md) `019e9d84-3f61-7b62-a91d-060b4a19dd5a` messages: `27`
 - [你好](041_019ea18d-4000-7ed1-95b8-d066e99df22a_你好.md) `019ea18d-4000-7ed1-95b8-d066e99df22a` messages: `6`
-- [相关的skill 你学习了吗？](042_019ea20a-edb7-7210-93af-c3b6e25b993f_相关的skill-你学习了吗？.md) `019ea20a-edb7-7210-93af-c3b6e25b993f` messages: `930`
+- [相关的skill 你学习了吗？](042_019ea20a-edb7-7210-93af-c3b6e25b993f_相关的skill-你学习了吗？.md) `019ea20a-edb7-7210-93af-c3b6e25b993f` messages: `943`
 - [每周工作状态更新](043_019ea4cb-3836-78f0-bedf-81fe8ffdff0c_每周工作状态更新.md) `019ea4cb-3836-78f0-bedf-81fe8ffdff0c` messages: `12`
 - [定位干喷显示屏7-200程序](044_019ea4d1-607d-7953-afe6-64a4ebeacb7c_定位干喷显示屏7-200程序.md) `019ea4d1-607d-7953-afe6-64a4ebeacb7c` messages: `19`
 - [7391027_ZHCN编程手册CR0020.pdf 读下桌面的文档。然后看下截图，我一会发](045_019ea621-a1a3-7c71-830b-f74eb271ce21_7391027_ZHCN编程手册CR0020.pdf-读下桌面的文档。然后看下截图，我一会发.md) `019ea621-a1a3-7c71-830b-f74eb271ce21` messages: `14`
 - [每周工作状态更新](046_019ea676-ff2b-7663-be11-983cd5e0b33e_每周工作状态更新.md) `019ea676-ff2b-7663-be11-983cd5e0b33e` messages: `9`
-- [E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_](047_019eb5e5-338c-76b0-b0bf-cad20db6d1a0_EAI_划时代o欧阳MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压--.md) `019eb5e5-338c-76b0-b0bf-cad20db6d1a0` messages: `13`
+- [E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_](047_019eb5e5-338c-76b0-b0bf-cad20db6d1a0_EAI_划时代o欧阳MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压--.md) `019eb5e5-338c-76b0-b0bf-cad20db6d1a0` messages: `99`
+- [查找目录丢失文件](048_019eb5f3-49a5-7e12-9882-3aa1a1007803_查找目录丢失文件.md) `019eb5f3-49a5-7e12-9882-3aa1a1007803` messages: `2929`
+- [继续开发 V1.20 下载修复](049_019ebcf7-54ad-7101-9184-774f509d736b_继续开发-V1.20-下载修复.md) `019ebcf7-54ad-7101-9184-774f509d736b` messages: `2118`
+- [排查向日葵登录失败](050_019ebf3d-ae09-7580-bb47-820755dc55d1_排查向日葵登录失败.md) `019ebf3d-ae09-7580-bb47-820755dc55d1` messages: `71`
+- [每周工作状态更新](051_019ecaab-355a-75d2-81ec-5883b09b4e46_每周工作状态更新.md) `019ecaab-355a-75d2-81ec-5883b09b4e46` messages: `10`
+- [E:\AI_划时代\全电脑_算法PCB\上位机（siton）\Z16EA-1.2.5 这个是上位机的源代码吗？](052_019ed629-1720-7f13-aa70-526a27dee106_EAI_划时代全电脑_算法PCB上位机（siton）Z16EA-1.2.5-这个是上位机的源代码.md) `019ed629-1720-7f13-aa70-526a27dee106` messages: `51`

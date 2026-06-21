@@ -3,7 +3,7 @@
 - Session id: `019eb5e5-338c-76b0-b0bf-cad20db6d1a0`
 - Source cwd: `C:\Users\t250c\Documents\Codex`
 - Model provider: `openai`
-- Exported at: `2026-06-11T17:02:52`
+- Exported at: `2026-06-21T13:20:14`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\11\rollout-2026-06-11T16-55-57-019eb5e5-338c-76b0-b0bf-cad20db6d1a0.jsonl`
 
 ## Transcript
@@ -484,4 +484,746 @@ gBDParam 你把这个区 搞大点。
 
 ```text
 我会按当前实际 `sizeof(gBDParam[0])` 来改地址规划：给 `gBDParam` 留出独立的大区，再把后面的 `BDParam2/OverInfo` 顺延，避免后续继续覆盖。先做备份并保留 GBK 编码。
+```
+
+### assistant 2026-06-11T09:03:03.413Z
+
+```text
+我会把 `BDInfo1` 从原来隐含的 0x60/0x80 小间隔改成显式预留 `0x300` 字节，并给 `BDInfo2` 再留 `0x80`，这样 `OverInfo` 会自动顺到 `0x400`。这比只贴着当前 0x198 大小放更稳。
+```
+
+### assistant 2026-06-11T09:03:47.522Z
+
+```text
+已改大。修改在 [App_Bus.h](<E:/AI_划时代/o欧阳/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/Src/App_Bus.h:33>)：
+
+`gBDParam` 区现在从 `0x80` 开始，显式预留 `0x300` 字节；`gBDParam2` 顺到 `0x380`，再预留 `0x80`；`OverInfo` 顺到 `0x400`。
+
+现在区间是：
+
+```text
+gBDParam 实际占用: 0x0080 - 0x0217
+gBDParam 预留区:   0x0080 - 0x037F
+gBDParam2:         0x0380 - 0x039B
+OverInfo:          0x0400 - 0x0B7F
+0x1024 硬编码区:   0x1024 - 0x102B
+OvHand:            0x1200 - 0x15BF
+```
+
+我重新算了一遍，当前实际占用已经不撞区。原文件已备份为 `App_Bus.h.bak_codex_20260611_170220`。没有跑 Keil 编译，只做了源码和地址区间静态验证。
+
+注意：`OverInfo` 起始从旧的 `0x200` 挪到了 `0x400`，如果现场铁电里已有旧超载记录，这部分旧记录不会按新地址读到，需要重新初始化或做迁移。
+```
+
+### user 2026-06-11T09:04:08.625Z
+
+```text
+你改了代码了吗？
+```
+
+### assistant 2026-06-11T09:04:17.312Z
+
+```text
+改了，只改了一个文件：
+
+[App_Bus.h](<E:/AI_划时代/o欧阳/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/Src/App_Bus.h:33>)
+
+改动内容是把 `gBDParam` 的铁电区显式放大：
+
+```c
+#define  EX_BDINFO_STADDR        0x80
+#define  EX_BDINFO_RESERVE_SIZE  0x300
+#define  EX_BDINFO2_RESERVE_SIZE 0x80
+#define  EX_BDINFO_STADDR2       (EX_BDINFO_STADDR+EX_BDINFO_RESERVE_SIZE)
+
+#define  EX_OVER_INFO_STADDR     (EX_BDINFO_STADDR2+EX_BDINFO2_RESERVE_SIZE)
+```
+
+备份文件也生成了：
+
+`E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\Src\App_Bus.h.bak_codex_20260611_170220`
+```
+
+### user 2026-06-11T09:04:43.306Z
+
+```text
+你确定改了？但是是我发现没改哦。
+```
+
+### assistant 2026-06-11T09:05:01.782Z
+
+```text
+我先不争这个结论，直接重新查磁盘上的真实文件和同名文件。重点确认两件事：我改到的 `App_Bus.h` 是不是你打开的那个工程文件，以及当前文件内容到底是什么。
+```
+
+### assistant 2026-06-11T09:05:24.283Z
+
+```text
+我查到磁盘上的这个 `Src\App_Bus.h` 现在确实是改后的内容。不过你说没看到，很可能是因为我改的是头文件地址宏，不是 `App_Bus.c`，或者你打开的是工程里另一个视图/未刷新内容。我再把路径、时间和差异打出来。
+```
+
+### assistant 2026-06-11T09:05:38.858Z
+
+```text
+我刚重新查了磁盘，确实改了，但只改的是 `Src\App_Bus.h`，不是 `App_Bus.c`。
+
+文件是这个：
+[App_Bus.h](<E:/AI_划时代/o欧阳/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/Src/App_Bus.h:33>)
+
+当前磁盘内容第 33-40 行是：
+
+```c
+#define  EX_BDINFO_STADDR        0x80        // BDInfo1 start
+//#define  EX_BDINFO_STADDR2      (EX_BDINFO_STADDR+0x40)
+#define  EX_BDINFO_RESERVE_SIZE  0x300       // reserve for gBDParam, current sizeof is about 0x198
+#define  EX_BDINFO2_RESERVE_SIZE 0x80        // reserve for gBDParam2
+#define  EX_BDINFO_STADDR2       (EX_BDINFO_STADDR+EX_BDINFO_RESERVE_SIZE)
+#define  EX_WT_STADDR            (0x60)      // worktime ---- 12Byte
+
+#define  EX_OVER_INFO_STADDR     (EX_BDINFO_STADDR2+EX_BDINFO2_RESERVE_SIZE)
+```
+
+我也对比了备份，旧文件原来是 `EX_BDINFO_STADDR2 (EX_BDINFO_STADDR+0x60)`、`EX_OVER_INFO_STADDR 0x200`。当前文件最后修改时间是 `2026-06-11 17:03:09`。
+
+你看到没改，大概率是打开了 `App_Bus.c`，或者 Keil/编辑器还没刷新这个 `App_Bus.h`。
+```
+
+### user 2026-06-11T09:06:17.909Z
+
+```text
+我只要把app_bus.h 发给同事，同事直接可以替换掉就行了吗？
+```
+
+### assistant 2026-06-11T09:06:38.328Z
+
+```text
+可以，针对这次改动，只发 `App_Bus.h` 给同事替换就行。
+
+前提是同事那边是同一版工程，路径对应到：
+
+`Src\App_Bus.h`
+
+替换后让他重新编译、下载程序。最好做一次 clean/rebuild，避免 Keil 没重新编译引用这个头文件的 `.c`。
+
+注意一点：这次把 `OverInfo` 起始地址从旧的 `0x200` 顺到了新地址 `0x400`。所以如果设备铁电里原来已经有旧超载记录，换程序后不会自动读旧记录；参数区 `gBDParam` 会按新规划不再撞区。新机或允许重新保存参数的现场，直接替换没问题。
+```
+
+### user 2026-06-11T09:33:41.987Z
+
+```text
+还是不行啊
+```
+
+### assistant 2026-06-11T09:34:05.258Z
+
+```text
+我先按“替换后仍然撞/参数仍丢”的方向继续查。这里不能只看宏表，还要确认所有实际 `AT24_Write_Page` 写入点有没有硬编码地址、有没有编译进工程、有没有新地址跟旧数据初始化流程冲突。
+```
+
+### user 2026-06-11T09:34:06.251Z
+
+```text
+DataTime_Lock_active 就是这个变量 重启后，就为0了。呀。
+```
+
+### assistant 2026-06-11T09:34:22.987Z
+
+```text
+明白了，问题不是单纯地址撞区，而是 `DataTime_Lock_active` 这个运行变量重启后没有从 `gBDParam[0].DataTime_Lock_active_retain` 正确恢复，或者保存前没写进 retain。我要沿着 `DataTime_Lock_active` 的赋值、保存、上电读取三条路径查。
+```
+
+### assistant 2026-06-11T09:34:39.486Z
+
+```text
+已经找到关键线索：`SaveRetain_()` 里确实把 `DataTime_Lock_active` 写到 `gBDParam[0].DataTime_Lock_active_retain`，`ReadRetain_()` 也会读回来。但现在要确认设置这个变量时有没有调用 `SaveRetain_()` 和 `Sys_Write_BD()`，否则重启肯定还是旧值。
+```
+
+### assistant 2026-06-11T09:34:56.140Z
+
+```text
+保存通路确认了：只有 `gLCDPage.vSave == 1` 时，主循环才会 `SaveRetain_(); Sys_Write_BD();`。现在我看 `DataTime_Lock_active` 被置 1 的地方；如果置 1 时没有拉 `gLCDPage.vSave`，或者后面立刻有逻辑把它清 0 并保存，重启就会回 0。
+```
+
+### assistant 2026-06-11T09:35:14.442Z
+
+```text
+现在看到一个更直接的原因：即使铁电里读出 `DataTime_Lock_active=1`，运行逻辑里还有 `if((time_999==1) && (DataTime_Lock_active==1)) { DataTime_Lock_active=0; gLCDPage.vSave=1; }`，这会把它清零并再次保存。我要确认 `time_999` 的来源。
+```
+
+### assistant 2026-06-11T09:35:41.668Z
+
+```text
+`DataTime_Lock_active` 的按钮保存本身没问题：`App_lcd.c` 里 key[5] 翻转后有 `gLCDPage.vSave=1`。真正把它变回 0 的是 `App_usr.c` 里 `time_999==1` 的分支，而且这个分支还会保存铁电。接下来我把这个分支改成不清 `DataTime_Lock_active`，只清临时解锁量。
+```
+
+### assistant 2026-06-11T09:36:12.383Z
+
+```text
+我会改 `App_usr.c` 这一处清零逻辑：`999` 解锁不再把 `DataTime_Lock_active` 置 0。这样重启后从铁电恢复出来的激活位不会被后台逻辑立刻清掉。
+```
+
+### assistant 2026-06-11T09:36:35.213Z
+
+```text
+第一次替换没命中，是缩进/换行和显示出来的不完全一致。我改成按精确代码行匹配，只移除这一条赋值。
+```
+
+### assistant 2026-06-11T09:36:58.540Z
+
+```text
+这个文件里有三处运行时清零，两处在已经整体注释掉的旧逻辑里，只有第 4727 行是当前有效逻辑。我只删当前有效的这行。
+```
+
+### assistant 2026-06-11T09:38:06.865Z
+
+```text
+现在有效分支已经不再清 `DataTime_Lock_active`。搜索里还剩两处 `DataTime_Lock_active=0`，但它们在 `/* ... */` 注释掉的旧逻辑里，不参与编译。我再确认能不能本机调用 Keil 做一次编译；如果没有 Keil，就只做文件级验证。
+```
+
+### assistant 2026-06-11T09:38:30.868Z
+
+```text
+本机有 `C:\Keil_v5\UV4\UV4.exe`，我会跑一次命令行编译验证。这个会更新工程的编译输出文件，但不改源码。
+```
+
+### assistant 2026-06-11T09:39:05.752Z
+
+```text
+Keil 命令没有给出正常日志，像是启动后没有按命令行方式生成输出。我会直接查日志文件和工程输出时间，确认有没有真正执行；如果没有，就不把它算作已验证编译。
+```
+
+### assistant 2026-06-11T09:39:42.527Z
+
+```text
+你说得对，`App_Bus.h` 只解决撞区，不解决这个变量重启变 0。
+
+我重新查了 `DataTime_Lock_active`，真正原因在 [App_usr.c](<E:/AI_划时代/o欧阳/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/Src/App_usr.c:4718>)：`time_999==1` 时会把 `DataTime_Lock_active=0`，然后 `gLCDPage.vSave=1`，主循环又会保存铁电，所以重启后就读到 0。
+
+我已经把这一句有效代码删掉了：
+
+```c
+DataTime_Lock_active=0;
+```
+
+现在 `time_999` 分支不会再把激活位清零并保存。保留了其它清临时解锁变量和保存逻辑。
+
+这次同事要替换两个文件：
+
+- [App_Bus.h](<E:/AI_划时代/o欧阳/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/Src/App_Bus.h:33>)
+- [App_usr.c](<E:/AI_划时代/o欧阳/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/Src/App_usr.c:4718>)
+
+我也跑了 Keil 编译：`0 Error(s), 12 Warning(s)`，这些 warning 是原有风格/未使用变量/无换行，不是这次改动引入的错误。备份文件是 `App_usr.c.bak_codex_20260611_173542`。
+```
+
+### user 2026-06-11T09:40:54.218Z
+
+```text
+bus 不需要再改了吧。
+```
+
+### assistant 2026-06-11T09:41:08.098Z
+
+```text
+对，`App_Bus.h` 不需要再改了。
+
+这次 `DataTime_Lock_active` 重启变 0 的直接原因在 `App_usr.c`：`time_999` 分支把它清零后又保存铁电。现在只需要用我改后的 `App_usr.c` 替换即可。
+
+如果同事那边已经换过新的 `App_Bus.h`，这次只发 `App_usr.c`。如果还没换过，为了避免之前的 `gBDParam` 撞区问题，仍然建议一起换。
+```
+
+### user 2026-06-11T09:41:08.258Z
+
+```text
+usr 改了哪里？告诉我。
+```
+
+### assistant 2026-06-11T09:41:17.544Z
+
+```text
+`App_usr.c` 只改了一处：删掉了 `time_999` 解锁分支里清激活标志的这一行。
+
+位置在 [App_usr.c](<E:/AI_划时代/o欧阳/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本/Src/App_usr.c:4718>) 附近。
+
+原来是：
+
+```c
+if((time_999==1) && (DataTime_Lock_active==1))
+{
+    DataTime_Lock_disable=0;
+    DataTime_Lock_disable_sethour=0;
+    DataTime_Lock_disable_hour=0;
+    DataTime_Lock_disable_min=0;
+
+    Lock_Month_index=12;//3.24
+
+    DataTime_Lock_active=0;
+    gLCDPage.vSave =1 ;  // 保存铁电 ；
+}
+```
+
+现在是：
+
+```c
+if((time_999==1) && (DataTime_Lock_active==1))
+{
+    DataTime_Lock_disable=0;
+    DataTime_Lock_disable_sethour=0;
+    DataTime_Lock_disable_hour=0;
+    DataTime_Lock_disable_min=0;
+
+    Lock_Month_index=12;//3.24
+
+    gLCDPage.vSave =1 ;  // 保存铁电 ；
+}
+```
+
+也就是：`999` 解锁不再把 `DataTime_Lock_active` 清成 `0`，所以后面保存铁电时不会把激活状态覆盖成 0。
+```
+
+### user 2026-06-11T11:22:46.772Z
+
+```text
+还是不行。估计不是铁电保存失败的原因。
+```
+
+### assistant 2026-06-11T11:23:08.856Z
+
+```text
+我同意，继续按“不是铁电写不进去，而是启动后被初始化/逻辑覆盖/读取校验失败”的方向查。下一步重点看 `Sys_Read_BD()` 是否把 `gBDParam` 判坏后重初始化，以及 `ReadRetain_()` 之后有没有其它路径把状态展示成 0。
+```
+
+### assistant 2026-06-11T11:23:32.068Z
+
+```text
+我再追了一层，启动流程里 `BD_Patam_Init()` 会先把 RAM 里的 `gBDParam` 清零，随后 `Sys_Read_BD()` 必须成功把铁电读回来；只要校验失败，就会重新初始化并写 0。这不一定是“写失败”，也可能是大结构一次读写方式有问题，我继续看底层 `I2C_Write_N/Read_N` 是否能支持 408 字节。
+```
+
+### assistant 2026-06-11T11:23:55.463Z
+
+```text
+找到一个更硬的根因：`gBDParam` 现在约 408 字节，写函数会按 64 字节分页写，但读函数 `I2C_Read_N()` 仍然一次读 `num` 字节到 128 字节的 `I2CSlaveBuffer`，而且循环还是 `i<=num` 多拷贝 1 字节。也就是说上电读 `gBDParam` 时会越界，校验失败后就会走初始化，变量自然回 0。我要修这个读函数。
+```
+
+### user 2026-06-11T11:23:57.815Z
+
+```text
+发现 控制器一上电。gLCDPage.vSave 变为1.
+```
+
+### assistant 2026-06-11T11:24:16.706Z
+
+```text
+这个现象很关键：如果上电后 `gLCDPage.vSave` 自己变成 1，主循环马上会 `SaveRetain_(); Sys_Write_BD();`，把刚读出来或还没读稳的值重新写回去。我要查 `gLCDPage.vSave` 的定义、初始化和所有置 1 点，定位是哪条启动路径触发。
+```
+
+### assistant 2026-06-11T11:24:37.414Z
+
+```text
+`gLCDPage` 是全局 BSS，按 C 启动流程上电初值应为 0，所以“上电变 1”一定是某条逻辑置位，不是随机值。现在我缩小到启动后主循环前几轮会跑的保存置位点，尤其是 `MyLogic_1ms/10ms`、LCD 按键页和时间锁逻辑。
+```
+
+### assistant 2026-06-11T11:24:53.140Z
+
+```text
+这个上电置 1 的来源大概率是时间锁逻辑里的“月份/日期第一次同步”分支：`Current_Time_Month_old==0 && Current_Time_Month>0`、`Current_Time_Date_old==0 && Current_Time_Date>0` 会置保存标志。单独看它不一定错，真正危险是前面 `Sys_Read_BD()` 如果没把铁电读回来，RAM 里就是 0，然后这个保存标志会把 0 写回铁电。底层读函数现在确实有这个风险，我要修 `App_Bus.c` 的长数据读取。
+```
+
+### assistant 2026-06-11T11:25:13.155Z
+
+```text
+我会改的是 `App_Bus.c` 的 `I2C_Read_N()`，不是 `App_Bus.h`。当前 128 字节缓冲区一次读 408 字节，会越界并导致 `gBDParam` 校验失败；修法是像写函数一样分块读，每块 64 字节，同时把原来的 `<=num` 多拷贝 1 字节改掉。
+```
+
+### assistant 2026-06-11T11:26:04.993Z
+
+```text
+我继续从刚才的断点查。现在重点不是铁电地址撞区，而是上电阶段谁把 `vSave` 拉起来，以及它是不是把“读失败后的默认 0”重新写回铁电。
+```
+
+### assistant 2026-06-11T11:26:16.311Z
+
+```text
+我按 Keil/嵌入式 C 的流程处理，先不猜。接下来我会直接看 `App_Bus.c` 的读函数和 `vSave` 上电路径，再做最小修改并重新编译验证。
+```
+
+### assistant 2026-06-11T11:26:34.254Z
+
+```text
+已经确认这个项目还是 GBK 风格文件，要用编码保持的方法动。上电 `vSave=1` 本身有几个正常触发点，但如果前面读铁电已经失败并把 RAM 初始化成 0，它就会变成“把 0 写回去”的触发器。
+```
+
+### assistant 2026-06-11T11:26:50.577Z
+
+```text
+这里已经看到一个硬问题：`IICBUFSIZE` 只有 `0x80`，但现在 `Sys_Read_BD()` 会一次读 `sizeof(gBDParam[0])`，大约 408 字节。原来的 `I2C_Read_N()` 一次性读 408，还 `<=num` 多拷 1 字节，必然越界。
+```
+
+### assistant 2026-06-11T11:27:25.750Z
+
+```text
+我现在改的是 `Src\\App_Bus.c` 里的 `I2C_Read_N()`，不是再改地址表。修改点很窄：把一次长读拆成 64 字节一段，并把原来的 `<=num` 改成每段 `<vRNum`，避免读缓冲区越界和多拷 1 字节。
+```
+
+### assistant 2026-06-11T11:27:50.396Z
+
+```text
+第一次替换没写进去，原因是我用的函数头匹配太严格。文件还没变；我改用函数名位置加花括号边界来定位，先把边界再确认一遍。
+```
+
+### assistant 2026-06-11T11:28:01.064Z
+
+```text
+边界确认到了：函数现在就是 `App_Bus.c:133-154`，仍是旧代码。下面按这个函数边界替换。
+```
+
+### assistant 2026-06-11T11:28:24.387Z
+
+```text
+定位失败的原因找到了，是我脚本里的分行参数在 PowerShell 下没有按预期分开行，不是代码内容变了。改成普通分行后继续。
+```
+
+### assistant 2026-06-11T11:28:52.364Z
+
+```text
+`I2C_Read_N()` 已经写入。接下来我先看函数边界和下一段 `I2C_Write_N()` 有没有被误伤，再跑 Keil 编译。
+```
+
+### assistant 2026-06-11T11:29:06.640Z
+
+```text
+函数边界检查正常，下一段 `I2C_Write_N()` 没被吃掉。为了减少 Keil 的类型转换告警，我再把两个窄化赋值加显式强转，然后编译。
+```
+
+### assistant 2026-06-11T11:29:18.498Z
+
+```text
+类型强转也已补上。现在跑 Keil 重新构建，确认这次 `App_Bus.c` 修改没有引入编译错误。
+```
+
+### assistant 2026-06-11T11:29:26.359Z
+
+```text
+项目文件确认是 `MC_LCD - 7Control_V1.1.uvprojx`。我现在用 Keil 命令行构建并把日志落在项目根目录，等结果。
+```
+
+### assistant 2026-06-11T11:29:44.470Z
+
+```text
+这次 Keil 命令没有吐出日志内容，可能是 UV4 对中文路径或正在运行实例的命令行返回异常。我先检查日志文件和生成物时间，再决定是不是需要换调用方式。
+```
+
+### assistant 2026-06-11T11:30:01.163Z
+
+```text
+虽然 PowerShell 那条命令返回码不好看，但 `FLASH` 目录里的 `app_bus.o/.axf/.bin/.hex` 已经在 19:29:31 重新生成了。现在读 Keil 的构建日志确认错误/告警数。
+```
+
+### assistant 2026-06-11T11:30:21.639Z
+
+```text
+编译通过：`App_Bus.c` 重新编译后是 `0 Error(s), 2 Warning(s)`，两个告警不是这次长读逻辑导致的错误。接下来我再核对启动顺序，确认 `Sys_Read_BD()` 和 `ReadRetain_()` 在 `vSave` 触发之前。
+```
+
+### assistant 2026-06-11T11:30:38.097Z
+
+```text
+刚才我把 `main.c` 路径少带了 `Src`，所以那一步只是读文件失败，没有影响代码和编译产物。我改用实际文件路径继续核对启动保存顺序。
+```
+
+### assistant 2026-06-11T11:30:59.688Z
+
+```text
+启动顺序已经核对：`Sys_Read_BD()` 在 `main.c:79`，`ReadRetain_()` 在 `main.c:109`，主循环里 `vSave` 保存是在 `main.c:168-172`。所以真正危险的是前面的 `Sys_Read_BD()` 长读失败，之后 `vSave` 再把默认值写回。
+```
+
+### assistant 2026-06-11T11:31:17.535Z
+
+```text
+我还注意到 `Sys_Read_BD()` 里 `Flg2` 是在循环外初始化的；这会让第 1 份校验成功后，第 2 份的头校验状态沿用。这个不是你现在看到的长读越界主因，但属于同一条保存链路的隐患，我再确认其它读函数是否同样写法。
+```
+
+### assistant 2026-06-11T11:31:27.329Z
+
+```text
+我会顺手补上这个读取校验隐患：在 `Sys_Read_Info()`、`Sys_Read_BD()`、`Sys_Read_BD2()` 每次读双备份的循环开头清 `Flg2`。这不改变保存地址和数据结构，只避免上一份备份的头校验结果带到下一份。
+```
+
+### assistant 2026-06-11T11:31:43.927Z
+
+```text
+`Flg2` 循环内清零已经补了 3 处。现在再检查改动位置并重新编译一次。
+```
+
+### assistant 2026-06-11T11:31:50.049Z
+
+```text
+代码检查正常，`I2C_Read_N()` 和 3 个读备份函数的改动都在预期位置。开始最终编译验证。
+```
+
+### assistant 2026-06-11T11:32:02.169Z
+
+```text
+最终编译通过，`0 Error(s), 2 Warning(s)`。我再确认 `.bin/.hex` 产物时间，确保你烧录的是刚生成的版本。
+```
+
+### assistant 2026-06-11T11:32:33.662Z
+
+```text
+对，你发现的 `gLCDPage.vSave` 上电变 1 是关键触发点。它本身会在上电后因为月份/日期初始化被置 1，但真正危险的是：前面 `Sys_Read_BD()` 读铁电长数据时越界，读失败后把 `DataTime_Lock_active` 读成默认 0，随后 `vSave=1` 又把这个 0 写回铁电。
+
+我已经改了代码，重点在：
+
+[App_Bus.c](<E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\Src\App_Bus.c:133>)  
+`I2C_Read_N()` 改成 64 字节分段读，避免原来一次读 408 字节冲爆 `I2CSlaveBuffer[0x80]`，也去掉了原来的 `<=num` 多拷 1 字节问题。
+
+另外在 [App_Bus.c](<E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\Src\App_Bus.c:866>) 补了 `Flg2 = 0;`，防止双备份读取时上一份校验结果串到下一份。
+
+编译已过：`0 Error(s), 2 Warning(s)`。新产物在：
+
+[MC_LCD - 7Control_V.bin](<E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\FLASH\MC_LCD - 7Control_V.bin>)
+
+注意：如果之前已经把 0 写进铁电了，刷完这个版本后要重新把 `DataTime_Lock_active` 设成 1 并保存一次，再断电重启测。现在同事不能只替换 `App_Bus.h` 了，至少要带 `App_Bus.c`，再加上之前改过的 `App_usr.c`。
+```
+
+### user 2026-06-11T11:33:58.953Z
+
+```text
+铁电确定不撞区了？ 或者没有溢出？
+```
+
+### assistant 2026-06-11T11:34:21.738Z
+
+```text
+我重新按“地址区间 + 实际读写长度 + I2C 缓冲长度”三件事核一遍，不按印象回答。这里要分清：铁电地址撞区是一类问题，I2C 一次读写缓冲溢出是另一类问题。
+```
+
+### assistant 2026-06-11T11:34:38.123Z
+
+```text
+目前从 map 文件拿到实际结构大小：`gBDParam[2]` 总 816 字节，所以单份 `gBDParam[0] = 408 = 0x198`；`gBDParam2[0] = 28 = 0x1C`；I2C 收发缓冲都是 `128 = 0x80`。我再把所有铁电固定区间列出来比对。
+```
+
+### assistant 2026-06-11T11:35:31.735Z
+
+```text
+结论要稍微分层：按“当前实际会执行的 AT24 读写调用”看，是不撞；但按 `App_Bus.h` 里 `OverInfo` 注释的“100 条预留区”看，还有一个预留区风险点，我正在把这个点单独核出来。
+```
+
+### assistant 2026-06-11T11:35:59.108Z
+
+```text
+不敢说“所有预留区都绝对不撞”。准确结论是：
+
+当前实际运行的 AT24 读写区，不撞，也不越界：
+
+- `gBDParam`：`0x0080-0x0217`，预留到 `0x037F`
+- `gBDParam2`：`0x0380-0x039B`，预留到 `0x03FF`
+- `WorkTime`：`0x0060-0x006B`
+- `gBoom` 硬编码：`0x1024-0x102B`
+- 双备份区整体再加 `0x4000`，也都在 `0x8000` 铁电范围内
+
+I2C 溢出这块现在也修掉了：`IICBUFSIZE = 0x80`，现在 `I2C_Read_N()` 每次最多读 64 字节，不再一次读 `gBDParam` 的 408 字节，也没有原来 `<=num` 多拷 1 字节的问题。
+
+但有一个预留区风险：  
+`App_Bus.h` 里 `EX_OVER_INFO_STADDR = 0x0400`，`EX_OVER_INFO_SIZE = 32`，注释写 100 条。如果按 100 条算，就是 `0x0400-0x107F`，会覆盖 `gBoom` 的 `0x1024-0x102B`。
+
+我查了当前源码，`EX_OVER_INFO_STADDR` 现在没有实际读写调用，所以当前运行时不撞；但如果以后启用“超载信息 100 条”保存，就会撞 `gBoom`。所以严格说：实际运行不撞，预留规划还没完全干净。
+```
+
+### user 2026-06-11T11:57:52.675Z
+
+```text
+如果铁电没问题，那就是应用层覆盖了这个值。
+```
+
+### assistant 2026-06-11T11:58:11.939Z
+
+```text
+对，这个判断方向是对的：如果铁电读写链路现在不撞区、不溢出，那就要查应用层哪里把 `DataTime_Lock_active` 改成 0 后又触发保存。我现在只查赋值点和保存点，不再动代码。
+```
+
+### user 2026-06-11T11:58:15.665Z
+
+```text
+现在还有没有可能？
+```
+
+### assistant 2026-06-11T11:58:33.156Z
+
+```text
+我按“现在这个源码版本”回答：先确认所有能改 `DataTime_Lock_active` 的活代码。重点看是不是还有自动流程直接置 0，还是只剩屏幕按键翻转和读铁电赋值。
+```
+
+### assistant 2026-06-11T11:58:55.100Z
+
+```text
+有可能，但现在范围已经很小了。
+
+我刚查了当前源码，活代码里没有自动流程直接 `DataTime_Lock_active = 0;`。`App_usr.c:4209`、`4405` 那两个置 0 都在 `/* ... */` 注释块里，不执行；之前 live 的 `time_999` 置 0 也已经删掉了。
+
+现在还可能覆盖成 0 的路径主要是这两个：
+
+1. 屏幕按键翻转  
+   [App_lcd.c](<E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\Src\App_lcd.c:2024>) 和 [App_lcd.c](<E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\Src\App_lcd.c:2219>)：  
+   `DataTime_Lock_active = !DataTime_Lock_active;`  
+   如果上电时屏幕 `key[5]` 被误判成按下，就会从 1 翻成 0，然后 `gLCDPage.vSave=1` 保存。
+
+2. RAM 里已经是 0 时，任何 `vSave=1` 都会把 0 写回铁电  
+   [App_usr.c](<E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\Src\App_usr.c:5864>)：  
+   `gBDParam[0].DataTime_Lock_active_retain = DataTime_Lock_active;`  
+   所以哪怕是保存月份、日期、GPS 标志，也会顺带保存这个变量。
+
+关键判断方法：上电后在 `ReadRetain_()` 后面看一次 `DataTime_Lock_active`。  
+如果这里已经是 0，问题还是读出来/铁电里就是 0。  
+如果这里是 1，后面才变 0，那最可疑就是 `App_lcd.c` 的 `key[5]` 翻转路径。
+```
+
+### user 2026-06-11T12:03:53.007Z
+
+```text
+现在可以了。
+```
+
+### assistant 2026-06-11T12:04:02.612Z
+
+```text
+可以，那目前判断就是：铁电地址/长读溢出修掉后，`DataTime_Lock_active` 能正常保持了。
+
+这次有效改动核心是 `App_Bus.c` 的 `I2C_Read_N()` 分段读，避免 `gBDParam` 长度超过 `I2CSlaveBuffer[0x80]` 造成读坏；另外 `App_usr.c` 里之前那个 `time_999` 自动清 `DataTime_Lock_active` 也已经去掉。
+```
+
+### user 2026-06-11T12:04:07.848Z
+
+```text
+if((time_999==1) && (DataTime_Lock_active==1))
+{
+    DataTime_Lock_disable=0;
+    DataTime_Lock_disable_sethour=0;
+    DataTime_Lock_disable_hour=0;
+    DataTime_Lock_disable_min=0;
+
+    Lock_Month_index=12;//3.24
+
+    DataTime_Lock_active=0;
+    gLCDPage.vSave =1 ;  // 保存铁电 ；
+}  这个解锁。
+```
+
+### assistant 2026-06-11T12:04:23.304Z
+
+```text
+明白，这段不是普通自动清零，是“999 解锁”逻辑。那之前把 `DataTime_Lock_active=0` 直接删掉会让解锁后不持久；正确做法不是完全删，而是让它只在明确收到 999 解锁动作时执行，避免上电误触发。
+```
+
+### assistant 2026-06-11T12:04:32.907Z
+
+```text
+我先查 `time_999` 是怎么来的，是持续状态还是一次性触发。如果它可能上电保持 1，就不能直接恢复原样；如果它是明确的解锁指令脉冲，就恢复 `DataTime_Lock_active=0` 没问题。
+```
+
+### assistant 2026-06-11T12:04:50.695Z
+
+```text
+查到了：`time_999` 是屏端密码匹配后置 1，不是上电默认值；但它有没有被用完清掉，还要看后面的保存逻辑。若不清，它会一直保持 1，恢复原样就会持续保存解锁状态。
+```
+
+### assistant 2026-06-11T12:05:10.602Z
+
+```text
+结论：这段应该保留 `DataTime_Lock_active=0`，因为 `time_999` 是输入 999 解锁码后置位，不是上电默认置位。之前真正问题更像是长读溢出；这段删掉会导致 999 解锁不能把“日期锁激活标志”持久清掉。现在我把这一行恢复回去，然后重新编译。
+```
+
+### assistant 2026-06-11T12:05:32.701Z
+
+```text
+第一次替换没命中，只是因为空白格式不完全一样，文件还没改坏。我改用行号/函数块定位插入。
+```
+
+### assistant 2026-06-11T12:05:54.156Z
+
+```text
+实际查看发现当前文件里这一行已经在了：`App_usr.c:4726 DataTime_Lock_active=0;`。也就是现在源码已经保留了 999 解锁清标志逻辑；我再跑一次编译确认产物。
+```
+
+### assistant 2026-06-11T12:06:09.696Z
+
+```text
+Keil 这次没有生成我指定的 `codex_build_unlock.log`，但可能仍然完成了构建。我检查 Keil 默认构建日志和产物时间。
+```
+
+### assistant 2026-06-11T12:06:20.436Z
+
+```text
+默认构建日志显示 `0 Error(s), 0 Warning(s)`。我再单独列一下 `.bin/.hex` 时间，确认产物更新。
+```
+
+### user 2026-06-11T12:06:24.645Z
+
+```text
+那刚才这个改了什么地方，就可以了呢？
+```
+
+### assistant 2026-06-11T12:06:54.390Z
+
+```text
+真正让它“重启后不再掉成 0”的，是 `App_Bus.c` 这处：
+
+[App_Bus.c](<E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\Src\App_Bus.c:133>)
+
+原来 `I2C_Read_N()` 一次读 `gBDParam` 的 408 字节，但 `I2CSlaveBuffer` 只有 `0x80 = 128` 字节，还用了 `i<=num` 多拷 1 字节。这样 `Sys_Read_BD()` 读出来会坏，`DataTime_Lock_active_retain` 就容易变 0 或校验失败。
+
+现在改成每次最多读 64 字节：
+
+```c
+I2CReadLength = vRNum;
+...
+for(i=0; i<vRNum; i++)
+    *pRdDat++ = I2CSlaveBuffer[i];
+```
+
+所以铁电里 `gBDParam[0].DataTime_Lock_active_retain` 能被正确读回来。
+
+另外还有两个辅助点：
+
+- [App_Bus.h](<E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\Src\App_Bus.h:33>) 把 `gBDParam` 区域扩到了 `0x300`，避免和 `gBDParam2/OverInfo` 实际区撞。
+- [App_Bus.c](<E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\Src\App_Bus.c:866>) 双备份读取时每轮清 `Flg2=0`，避免上一份校验状态串到下一份。
+
+你刚说的 `DataTime_Lock_active=0;` 那段是 999 解锁逻辑，应该保留。它不是这次重启丢值的根因。
+```
+
+### user 2026-06-11T12:09:58.674Z
+
+```text
+控制器上电的时候，是不是读得太多了，没读到吗？
+```
+
+### assistant 2026-06-11T12:10:10.106Z
+
+```text
+是的，就是这个问题。
+
+上电流程是：
+
+`main.c:79` 调 `Sys_Read_BD()`  
+`Sys_Read_BD()` 里读：
+
+```c
+gLenE = sizeof(gBDParam[0]);
+AT24_Read_Str(..., pL, gLenE);
+```
+
+而现在 `sizeof(gBDParam[0]) = 408 字节 = 0x198`。
+
+原来的 `I2C_Read_N()` 是一次性读 408 字节：
+
+```c
+I2CReadLength = num;
+...
+for(i=0; i<=num; i++)
+    *pRdDat++ = I2CSlaveBuffer[i];
+```
+
+但 `I2CSlaveBuffer` 只有 `0x80 = 128` 字节，所以控制器上电读 `gBDParam` 时，确实读太多了。结果就是后面的数据没可靠读到，还会越界拷贝，导致 `DataTime_Lock_active_retain` 读错或校验失败。
+
+现在改成分段读，每次最多 64 字节，所以 408 字节会分多次读完，不再冲掉缓冲区。
 ```
