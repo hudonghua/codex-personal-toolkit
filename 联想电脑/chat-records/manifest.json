@@ -1,7 +1,7 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-06-21T13:20:15",
-  "exported_count": 52,
+  "exported_at": "2026-06-21T13:35:15",
+  "exported_count": 53,
   "missing_count": 0,
   "exports": [
     {
@@ -338,7 +338,7 @@
       "title": "查找目录丢失文件",
       "file": "联想电脑/chat-records/048_019eb5f3-49a5-7e12-9882-3aa1a1007803_查找目录丢失文件.md",
       "updated_at": "2026-06-11T09:11:25.759Z",
-      "message_count": 2929
+      "message_count": 2937
     },
     {
       "id": "019ebcf7-54ad-7101-9184-774f509d736b",
@@ -367,6 +367,13 @@
       "file": "联想电脑/chat-records/052_019ed629-1720-7f13-aa70-526a27dee106_EAI_划时代全电脑_算法PCB上位机（siton）Z16EA-1.2.5-这个是上位机的源代码.md",
       "updated_at": "2026-06-17T15:18:02.684Z",
       "message_count": 51
+    },
+    {
+      "id": "019ee8a1-961d-7c51-95d9-2bb054e3c775",
+      "title": "我这个目录里面的记忆和对话到哪里去了？",
+      "file": "联想电脑/chat-records/053_019ee8a1-961d-7c51-95d9-2bb054e3c775_我这个目录里面的记忆和对话到哪里去了？.md",
+      "updated_at": "2026-06-21T05:22:52.018Z",
+      "message_count": 18
     }
   ],
   "missing": []
