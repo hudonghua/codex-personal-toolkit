@@ -1,0 +1,17 @@
+{
+  "exported_at": "2026-06-24T15:00:01",
+  "workspace": "C:\\Users\\t250c\\Documents\\全电脑台车-CAN协议\\qt-upper-computer-ui",
+  "source_repo": "https://github.com/hudonghua/qt-upper-computer-ui.git",
+  "source_branch": "main",
+  "source_commit": "cdc72dbe2f442ed98a899cd2647f94515c7859c9",
+  "github_source_url": "https://github.com/hudonghua/qt-upper-computer-ui",
+  "raw_session": "omitted: exporter detected sensitive-looking sk-* content in the local raw session",
+  "contains": [
+    "workspace.zip from git archive HEAD",
+    "TASK_MEMORY_20260624.md",
+    "transcript.md sanitized summary",
+    "skill-list.txt",
+    "mcp-summary.txt",
+    "README.md"
+  ]
+}

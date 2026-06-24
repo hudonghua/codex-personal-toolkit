@@ -1,0 +1,16 @@
+# MCP Summary
+
+[mcp_servers.codex_memory]
+[mcp_servers.codex_memory.env]
+[mcp_servers.codex_memory.tools.memory_add]
+[mcp_servers.codex_sqlite]
+[mcp_servers.codex_sqlite.env]
+[mcp_servers.codex_sqlite.tools.sqlite_add_record]
+[mcp_servers.codex_sqlite.tools.sqlite_schema]
+[mcp_servers.node_repl]
+[mcp_servers.node_repl.env]
+
+# Local MCP server scripts
+
+C:\Users\t250c\.codex\mcp_servers\codex_memory_mcp.py
+C:\Users\t250c\.codex\mcp_servers\codex_sqlite_mcp.py
