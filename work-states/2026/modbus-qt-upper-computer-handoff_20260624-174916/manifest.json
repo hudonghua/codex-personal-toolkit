@@ -1,0 +1,38 @@
+{
+  "exported_at": "2026-06-24T17:50:04",
+  "source_workspace": "C:\\Users\\DELL\\Documents\\遥控器的杂碎事情",
+  "source_session": "C:\\Users\\DELL\\.codex\\sessions\\2026\\06\\18\\rollout-2026-06-18T12-33-58-019ed901-c8af-73a3-82ee-03e1211ebbb8.jsonl",
+  "raw_session_uploaded": "redacted",
+  "qt_source": "C:\\Users\\DELL\\Documents\\遥控器的杂碎事情\\.tmp_qt_upper_review\\src\\hudonghua-qt-upper-computer-ui-cdc72dbe2f442ed98a899cd2647f94515c7859c9",
+  "modbus_source": "C:\\Users\\DELL\\Documents\\遥控器的杂碎事情\\McgsModbusTool",
+  "protocol_root": "F:\\工作\\实际进展与验证\\模型确定\\全电脑_算法PCB\\正确资料_算法PCB_CAN协议",
+  "artifacts": [
+    {
+      "source": "C:\\Users\\DELL\\Documents\\遥控器的杂碎事情\\.tmp_qt_upper_review\\src\\hudonghua-qt-upper-computer-ui-cdc72dbe2f442ed98a899cd2647f94515c7859c9",
+      "zip": "C:\\Users\\DELL\\Documents\\Codex\\codex-personal-toolkit\\work-states\\2026\\modbus-qt-upper-computer-handoff_20260624-174916\\qt-upper-computer-ui-source.zip",
+      "files": 37,
+      "bytes": 1864406
+    },
+    {
+      "source": "C:\\Users\\DELL\\Documents\\遥控器的杂碎事情\\McgsModbusTool",
+      "zip": "C:\\Users\\DELL\\Documents\\Codex\\codex-personal-toolkit\\work-states\\2026\\modbus-qt-upper-computer-handoff_20260624-174916\\mcgs-modbus-tool-source.zip",
+      "files": 5,
+      "bytes": 58113
+    },
+    {
+      "source": "F:\\工作\\实际进展与验证\\模型确定\\全电脑_算法PCB\\正确资料_算法PCB_CAN协议",
+      "zip": "C:\\Users\\DELL\\Documents\\Codex\\codex-personal-toolkit\\work-states\\2026\\modbus-qt-upper-computer-handoff_20260624-174916\\modbus-can-protocol-docs.zip",
+      "files": 30,
+      "bytes": 909236
+    }
+  ],
+  "release_exe_path_in_use": "F:\\??\\???????\\????\\???_??PCB\\????_??PCB_CAN??\\QdnUpperComputerUi_V2026.06.24-CAN-LIVE-TEST\\QdnUpperComputerUi.exe",
+  "notes": [
+    "?????????????????????? CAN ??",
+    "P07-06 ???????????? 0x75 ???????/????????? 0x75 ??? 0?",
+    "0x75 ?? CAN_TO_NET ?? 108-111 ??????????????CAN_TO_NET ???????? CAN ??????",
+    "0x75 ?? B0 ???/????B1-B6 ??????? 16 ??????",
+    "????? Qt ?? NoProxy ? Modbus ?? 2 ??0x50 A1/A2/A3 ?? 200ms ?????",
+    "????????????????????? 0x75 ???????? MainWindow.cpp.bak_* ???"
+  ]
+}
