@@ -1,62 +1,67 @@
 # 联想电脑 Codex 聊天记录
 
-- Exported at: `2026-06-21T16:15:46`
-- Exported chats: `53`
+- Exported at: `2026-06-27T15:08:39`
+- Exported chats: `58`
 - Missing source files: `0`
 - Content policy: raw Codex `.jsonl` files are not uploaded; Markdown exports are redacted.
 
 ## Chats
 
-- [你好](001_019e4605-8951-7492-99a6-93dd6e605f83_你好.md) `019e4605-8951-7492-99a6-93dd6e605f83` messages: `27`
-- [你好](002_019e4ba3-3a1f-7dc1-828f-519c1ded6f84_你好.md) `019e4ba3-3a1f-7dc1-828f-519c1ded6f84` messages: `33`
-- [现在打开codex app 进不了主界面。](003_019e52c1-87ec-7b90-b34d-960b8192997b_现在打开codex-app-进不了主界面。.md) `019e52c1-87ec-7b90-b34d-960b8192997b` messages: `78`
-- [有没有电磁阀得电，就能吸住铁丝网的装置？](004_019e52c3-9b34-7aa1-bfa6-c5b59064d0f8_有没有电磁阀得电，就能吸住铁丝网的装置？.md) `019e52c3-9b34-7aa1-bfa6-c5b59064d0f8` messages: `99`
-- [读下u盘的记录。](005_019e5557-3947-7a13-9966-302a1436f635_读下u盘的记录。.md) `019e5557-3947-7a13-9966-302a1436f635` messages: `36`
-- [ssh 服务 与codex app 能链接吗？](006_019e5593-cc9b-7281-9754-fb3df0c97b1f_ssh-服务-与codex-app-能链接吗？.md) `019e5593-cc9b-7281-9754-fb3df0c97b1f` messages: `169`
-- [[@openai-developers](plugin://openai-developers@openai-curat](007_019e5aa0-ebfe-7770-8ab9-2b1096e256a1_[@openai-developers](pluginopenai-developers@ope.md) `019e5aa0-ebfe-7770-8ab9-2b1096e256a1` messages: `33`
-- [设置一个定时任务，每周回顾我的工作内容并起草简短的状态更新。](008_019e5aae-c99b-7dc2-99f1-0b874845daab_设置一个定时任务，每周回顾我的工作内容并起草简短的状态更新。.md) `019e5aae-c99b-7dc2-99f1-0b874845daab` messages: `5`
-- [Use OpenAI Docs for official docs lookup, model selection, m](009_019e5ab0-e9c6-7da2-9795-0c09a35b8038_Use-OpenAI-Docs-for-official-docs-lookup,-model-.md) `019e5ab0-e9c6-7da2-9795-0c09a35b8038` messages: `76`
-- [Automation: 每周工作状态更新 Automation ID: automation Automation me](010_019e5cf4-1b3d-7400-94fd-6bfc60d1c3fd_Automation-每周工作状态更新-Automation-ID-automation-Aut.md) `019e5cf4-1b3d-7400-94fd-6bfc60d1c3fd` messages: `11`
-- [E:\AI_划时代\T天腾\C采矿装药车\乳化装药车 读一下里面的程序和word文档。](011_019e5dfb-aacf-7a33-b5fd-9dbeaddd75e0_EAI_划时代T天腾C采矿装药车乳化装药车-读一下里面的程序和word文档。.md) `019e5dfb-aacf-7a33-b5fd-9dbeaddd75e0` messages: `190`
-- [读取下github上面的任务。另外有个skill有更新，你读下。](012_019e5ea3-f175-7de1-8c3e-2e9160230704_读取下github上面的任务。另外有个skill有更新，你读下。.md) `019e5ea3-f175-7de1-8c3e-2e9160230704` messages: `164`
-- [帮我安装下ccswich](013_019e5f2e-b5a9-7d63-a1fa-c2904d8086ad_帮我安装下ccswich.md) `019e5f2e-b5a9-7d63-a1fa-c2904d8086ad` messages: `177`
-- [你好](014_019e5f53-5528-7a62-a058-b08937c2bc41_你好.md) `019e5f53-5528-7a62-a058-b08937c2bc41` messages: `4`
-- [你是什么模型？](015_019e5f57-9bb2-7363-bd9f-58a413754009_你是什么模型？.md) `019e5f57-9bb2-7363-bd9f-58a413754009` messages: `9`
-- [我以前的记录呢](016_019e5f65-1061-7cc3-842a-3ba2dd71d81e_我以前的记录呢.md) `019e5f65-1061-7cc3-842a-3ba2dd71d81e` messages: `120`
-- [在](017_019e602c-e273-7643-a580-159bceb9a948_在.md) `019e602c-e273-7643-a580-159bceb9a948` messages: `6`
-- [你是什么模型](018_019e6431-d0e0-7aa3-af99-18d8b8b84bf0_你是什么模型.md) `019e6431-d0e0-7aa3-af99-18d8b8b84bf0` messages: `22`
-- [、、](019_019e64d3-489d-7700-b300-482f8c007b5f_、、.md) `019e64d3-489d-7700-b300-482f8c007b5f` messages: `7`
-- [定制全机CAN协议](020_019e6872-ac59-7722-8c34-16bab479341c_定制全机CAN协议.md) `019e6872-ac59-7722-8c34-16bab479341c` messages: `60`
-- [查找 GitHub 下载器修改记录](021_019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5_查找-GitHub-下载器修改记录.md) `019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5` messages: `157`
-- [恢复约束纪律](022_019e7150-e769-70f2-a9c3-f7ea512dd2f0_恢复约束纪律.md) `019e7150-e769-70f2-a9c3-f7ea512dd2f0` messages: `131`
-- [在吗？](023_019e745a-332a-7a02-b5a9-dfe963d00a07_在吗？.md) `019e745a-332a-7a02-b5a9-dfe963d00a07` messages: `24`
-- [查看天腾采矿记录](024_019e797a-894f-7a83-8cba-1a4ed098fbbe_查看天腾采矿记录.md) `019e797a-894f-7a83-8cba-1a4ed098fbbe` messages: `386`
-- [查询除锈车](025_019e7d13-eb50-7051-81a3-80057affd603_查询除锈车.md) `019e7d13-eb50-7051-81a3-80057affd603` messages: `23`
-- [安装 Photoshop](026_019e7e9f-96e7-75f1-912a-0a9e59ab37e9_安装-Photoshop.md) `019e7e9f-96e7-75f1-912a-0a9e59ab37e9` messages: `154`
-- [安装广成驱动](027_019e8068-c055-7ee1-b2f4-a30589424e0d_安装广成驱动.md) `019e8068-c055-7ee1-b2f4-a30589424e0d` messages: `13`
-- [每周工作状态更新](028_019e81da-e98f-7e10-870f-a554c18f7d3b_每周工作状态更新.md) `019e81da-e98f-7e10-870f-a554c18f7d3b` messages: `10`
-- [安装 codewhale](029_019e8384-81d4-7451-880e-230292dd8e56_安装-codewhale.md) `019e8384-81d4-7451-880e-230292dd8e56` messages: `67`
-- [tag 相机算法](030_019e8620-4aaa-7dc3-aa52-7cdd68b93523_tag-相机算法.md) `019e8620-4aaa-7dc3-aa52-7cdd68b93523` messages: `38`
-- [cursor 导入](031_019e8932-1dee-7271-bad3-2c954d2f9ce2_cursor-导入.md) `019e8932-1dee-7271-bad3-2c954d2f9ce2` messages: `32`
-- [rollout-2026-06-03T01-34-41-019e8966-e133-76a1-8710-ae567d1f](032_019e8966-e133-76a1-8710-ae567d1fcdb8_rollout-2026-06-03T01-34-41-019e8966-e133-76a1-8.md) `019e8966-e133-76a1-8710-ae567d1fcdb8` messages: `71`
-- [rollout-2026-06-04T11-04-50-019e9097-3c21-7ab1-a1e0-a0e3dc81](033_019e9097-3c21-7ab1-a1e0-a0e3dc81810b_rollout-2026-06-04T11-04-50-019e9097-3c21-7ab1-a.md) `019e9097-3c21-7ab1-a1e0-a0e3dc81810b` messages: `25`
-- [排查送管输出条件](034_019e92ab-a533-7882-b12d-92b78ad0ec55_排查送管输出条件.md) `019e92ab-a533-7882-b12d-92b78ad0ec55` messages: `12`
-- [了解 Photoshop 功能](035_019e9311-0d62-7881-ad75-b8f39981fed7_了解-Photoshop-功能.md) `019e9311-0d62-7881-ad75-b8f39981fed7` messages: `269`
-- [rollout-2026-06-06T00-32-07-019e98a0-acde-75c0-b851-72e69f28](036_019e98a0-acde-75c0-b851-72e69f288eec_rollout-2026-06-06T00-32-07-019e98a0-acde-75c0-b.md) `019e98a0-acde-75c0-b851-72e69f288eec` messages: `15`
-- [排查bin到底无输出](037_019e9be6-de6e-7970-9f64-9e0bd2aa1c5b_排查bin到底无输出.md) `019e9be6-de6e-7970-9f64-9e0bd2aa1c5b` messages: `33`
-- [下载全电脑项目和CAN协议](038_019e9cb5-3b38-7092-933d-0e8b86398b3d_下载全电脑项目和CAN协议.md) `019e9cb5-3b38-7092-933d-0e8b86398b3d` messages: `46`
-- [rollout-2026-06-06T20-58-26-019e9d03-53bb-7170-8807-e6bb7a61](039_019e9d03-53bb-7170-8807-e6bb7a6184cb_rollout-2026-06-06T20-58-26-019e9d03-53bb-7170-8.md) `019e9d03-53bb-7170-8807-e6bb7a6184cb` messages: `541`
-- [rollout-2026-06-06T23-19-15-019e9d84-3f61-7b62-a91d-060b4a19](040_019e9d84-3f61-7b62-a91d-060b4a19dd5a_rollout-2026-06-06T23-19-15-019e9d84-3f61-7b62-a.md) `019e9d84-3f61-7b62-a91d-060b4a19dd5a` messages: `27`
-- [你好](041_019ea18d-4000-7ed1-95b8-d066e99df22a_你好.md) `019ea18d-4000-7ed1-95b8-d066e99df22a` messages: `6`
-- [相关的skill 你学习了吗？](042_019ea20a-edb7-7210-93af-c3b6e25b993f_相关的skill-你学习了吗？.md) `019ea20a-edb7-7210-93af-c3b6e25b993f` messages: `943`
-- [每周工作状态更新](043_019ea4cb-3836-78f0-bedf-81fe8ffdff0c_每周工作状态更新.md) `019ea4cb-3836-78f0-bedf-81fe8ffdff0c` messages: `12`
-- [定位干喷显示屏7-200程序](044_019ea4d1-607d-7953-afe6-64a4ebeacb7c_定位干喷显示屏7-200程序.md) `019ea4d1-607d-7953-afe6-64a4ebeacb7c` messages: `19`
-- [7391027_ZHCN编程手册CR0020.pdf 读下桌面的文档。然后看下截图，我一会发](045_019ea621-a1a3-7c71-830b-f74eb271ce21_7391027_ZHCN编程手册CR0020.pdf-读下桌面的文档。然后看下截图，我一会发.md) `019ea621-a1a3-7c71-830b-f74eb271ce21` messages: `14`
-- [每周工作状态更新](046_019ea676-ff2b-7663-be11-983cd5e0b33e_每周工作状态更新.md) `019ea676-ff2b-7663-be11-983cd5e0b33e` messages: `9`
-- [E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_](047_019eb5e5-338c-76b0-b0bf-cad20db6d1a0_EAI_划时代o欧阳MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压--.md) `019eb5e5-338c-76b0-b0bf-cad20db6d1a0` messages: `99`
-- [查找目录丢失文件](048_019eb5f3-49a5-7e12-9882-3aa1a1007803_查找目录丢失文件.md) `019eb5f3-49a5-7e12-9882-3aa1a1007803` messages: `2992`
-- [继续开发 V1.20 下载修复](049_019ebcf7-54ad-7101-9184-774f509d736b_继续开发-V1.20-下载修复.md) `019ebcf7-54ad-7101-9184-774f509d736b` messages: `2118`
-- [排查向日葵登录失败](050_019ebf3d-ae09-7580-bb47-820755dc55d1_排查向日葵登录失败.md) `019ebf3d-ae09-7580-bb47-820755dc55d1` messages: `71`
-- [每周工作状态更新](051_019ecaab-355a-75d2-81ec-5883b09b4e46_每周工作状态更新.md) `019ecaab-355a-75d2-81ec-5883b09b4e46` messages: `10`
-- [E:\AI_划时代\全电脑_算法PCB\上位机（siton）\Z16EA-1.2.5 这个是上位机的源代码吗？](052_019ed629-1720-7f13-aa70-526a27dee106_EAI_划时代全电脑_算法PCB上位机（siton）Z16EA-1.2.5-这个是上位机的源代码.md) `019ed629-1720-7f13-aa70-526a27dee106` messages: `51`
-- [我这个目录里面的记忆和对话到哪里去了？](053_019ee8a1-961d-7c51-95d9-2bb054e3c775_我这个目录里面的记忆和对话到哪里去了？.md) `019ee8a1-961d-7c51-95d9-2bb054e3c775` messages: `18`
+- [你好](001_019e4605-8951-7492-99a6-93dd6e605f83_你好.md) `019e4605-8951-7492-99a6-93dd6e605f83` messages: `34`
+- [现在打开codex app 进不了主界面。](002_019e52c1-87ec-7b90-b34d-960b8192997b_现在打开codex-app-进不了主界面。.md) `019e52c1-87ec-7b90-b34d-960b8192997b` messages: `78`
+- [有没有电磁阀得电，就能吸住铁丝网的装置？](003_019e52c3-9b34-7aa1-bfa6-c5b59064d0f8_有没有电磁阀得电，就能吸住铁丝网的装置？.md) `019e52c3-9b34-7aa1-bfa6-c5b59064d0f8` messages: `99`
+- [读下u盘的记录。](004_019e5557-3947-7a13-9966-302a1436f635_读下u盘的记录。.md) `019e5557-3947-7a13-9966-302a1436f635` messages: `36`
+- [ssh 服务 与codex app 能链接吗？](005_019e5593-cc9b-7281-9754-fb3df0c97b1f_ssh-服务-与codex-app-能链接吗？.md) `019e5593-cc9b-7281-9754-fb3df0c97b1f` messages: `169`
+- [[@openai-developers](plugin://openai-developers@openai-curat](006_019e5aa0-ebfe-7770-8ab9-2b1096e256a1_[@openai-developers](pluginopenai-developers@ope.md) `019e5aa0-ebfe-7770-8ab9-2b1096e256a1` messages: `33`
+- [设置一个定时任务，每周回顾我的工作内容并起草简短的状态更新。](007_019e5aae-c99b-7dc2-99f1-0b874845daab_设置一个定时任务，每周回顾我的工作内容并起草简短的状态更新。.md) `019e5aae-c99b-7dc2-99f1-0b874845daab` messages: `5`
+- [Use OpenAI Docs for official docs lookup, model selection, m](008_019e5ab0-e9c6-7da2-9795-0c09a35b8038_Use-OpenAI-Docs-for-official-docs-lookup,-model-.md) `019e5ab0-e9c6-7da2-9795-0c09a35b8038` messages: `76`
+- [Automation: 每周工作状态更新 Automation ID: automation Automation me](009_019e5cf4-1b3d-7400-94fd-6bfc60d1c3fd_Automation-每周工作状态更新-Automation-ID-automation-Aut.md) `019e5cf4-1b3d-7400-94fd-6bfc60d1c3fd` messages: `11`
+- [E:\AI_划时代\T天腾\C采矿装药车\乳化装药车 读一下里面的程序和word文档。](010_019e5dfb-aacf-7a33-b5fd-9dbeaddd75e0_EAI_划时代T天腾C采矿装药车乳化装药车-读一下里面的程序和word文档。.md) `019e5dfb-aacf-7a33-b5fd-9dbeaddd75e0` messages: `190`
+- [读取下github上面的任务。另外有个skill有更新，你读下。](011_019e5ea3-f175-7de1-8c3e-2e9160230704_读取下github上面的任务。另外有个skill有更新，你读下。.md) `019e5ea3-f175-7de1-8c3e-2e9160230704` messages: `164`
+- [帮我安装下ccswich](012_019e5f2e-b5a9-7d63-a1fa-c2904d8086ad_帮我安装下ccswich.md) `019e5f2e-b5a9-7d63-a1fa-c2904d8086ad` messages: `177`
+- [你好](013_019e5f53-5528-7a62-a058-b08937c2bc41_你好.md) `019e5f53-5528-7a62-a058-b08937c2bc41` messages: `17`
+- [你是什么模型？](014_019e5f57-9bb2-7363-bd9f-58a413754009_你是什么模型？.md) `019e5f57-9bb2-7363-bd9f-58a413754009` messages: `9`
+- [我以前的记录呢](015_019e5f65-1061-7cc3-842a-3ba2dd71d81e_我以前的记录呢.md) `019e5f65-1061-7cc3-842a-3ba2dd71d81e` messages: `120`
+- [在](016_019e602c-e273-7643-a580-159bceb9a948_在.md) `019e602c-e273-7643-a580-159bceb9a948` messages: `6`
+- [你是什么模型](017_019e6431-d0e0-7aa3-af99-18d8b8b84bf0_你是什么模型.md) `019e6431-d0e0-7aa3-af99-18d8b8b84bf0` messages: `22`
+- [、、](018_019e64d3-489d-7700-b300-482f8c007b5f_、、.md) `019e64d3-489d-7700-b300-482f8c007b5f` messages: `10`
+- [定制全机CAN协议](019_019e6872-ac59-7722-8c34-16bab479341c_定制全机CAN协议.md) `019e6872-ac59-7722-8c34-16bab479341c` messages: `60`
+- [查找 GitHub 下载器修改记录](020_019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5_查找-GitHub-下载器修改记录.md) `019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5` messages: `157`
+- [恢复约束纪律](021_019e7150-e769-70f2-a9c3-f7ea512dd2f0_恢复约束纪律.md) `019e7150-e769-70f2-a9c3-f7ea512dd2f0` messages: `131`
+- [在吗？](022_019e745a-332a-7a02-b5a9-dfe963d00a07_在吗？.md) `019e745a-332a-7a02-b5a9-dfe963d00a07` messages: `24`
+- [查看天腾采矿记录](023_019e797a-894f-7a83-8cba-1a4ed098fbbe_查看天腾采矿记录.md) `019e797a-894f-7a83-8cba-1a4ed098fbbe` messages: `386`
+- [查询除锈车](024_019e7d13-eb50-7051-81a3-80057affd603_查询除锈车.md) `019e7d13-eb50-7051-81a3-80057affd603` messages: `23`
+- [安装 Photoshop](025_019e7e9f-96e7-75f1-912a-0a9e59ab37e9_安装-Photoshop.md) `019e7e9f-96e7-75f1-912a-0a9e59ab37e9` messages: `154`
+- [安装广成驱动](026_019e8068-c055-7ee1-b2f4-a30589424e0d_安装广成驱动.md) `019e8068-c055-7ee1-b2f4-a30589424e0d` messages: `13`
+- [每周工作状态更新](027_019e81da-e98f-7e10-870f-a554c18f7d3b_每周工作状态更新.md) `019e81da-e98f-7e10-870f-a554c18f7d3b` messages: `10`
+- [安装 codewhale](028_019e8384-81d4-7451-880e-230292dd8e56_安装-codewhale.md) `019e8384-81d4-7451-880e-230292dd8e56` messages: `67`
+- [tag 相机算法](029_019e8620-4aaa-7dc3-aa52-7cdd68b93523_tag-相机算法.md) `019e8620-4aaa-7dc3-aa52-7cdd68b93523` messages: `38`
+- [cursor 导入](030_019e8932-1dee-7271-bad3-2c954d2f9ce2_cursor-导入.md) `019e8932-1dee-7271-bad3-2c954d2f9ce2` messages: `32`
+- [rollout-2026-06-03T01-34-41-019e8966-e133-76a1-8710-ae567d1f](031_019e8966-e133-76a1-8710-ae567d1fcdb8_rollout-2026-06-03T01-34-41-019e8966-e133-76a1-8.md) `019e8966-e133-76a1-8710-ae567d1fcdb8` messages: `71`
+- [rollout-2026-06-04T11-04-50-019e9097-3c21-7ab1-a1e0-a0e3dc81](032_019e9097-3c21-7ab1-a1e0-a0e3dc81810b_rollout-2026-06-04T11-04-50-019e9097-3c21-7ab1-a.md) `019e9097-3c21-7ab1-a1e0-a0e3dc81810b` messages: `25`
+- [排查送管输出条件](033_019e92ab-a533-7882-b12d-92b78ad0ec55_排查送管输出条件.md) `019e92ab-a533-7882-b12d-92b78ad0ec55` messages: `12`
+- [了解 Photoshop 功能](034_019e9311-0d62-7881-ad75-b8f39981fed7_了解-Photoshop-功能.md) `019e9311-0d62-7881-ad75-b8f39981fed7` messages: `269`
+- [rollout-2026-06-06T00-32-07-019e98a0-acde-75c0-b851-72e69f28](035_019e98a0-acde-75c0-b851-72e69f288eec_rollout-2026-06-06T00-32-07-019e98a0-acde-75c0-b.md) `019e98a0-acde-75c0-b851-72e69f288eec` messages: `15`
+- [排查bin到底无输出](036_019e9be6-de6e-7970-9f64-9e0bd2aa1c5b_排查bin到底无输出.md) `019e9be6-de6e-7970-9f64-9e0bd2aa1c5b` messages: `33`
+- [下载全电脑项目和CAN协议](037_019e9cb5-3b38-7092-933d-0e8b86398b3d_下载全电脑项目和CAN协议.md) `019e9cb5-3b38-7092-933d-0e8b86398b3d` messages: `46`
+- [rollout-2026-06-06T20-58-26-019e9d03-53bb-7170-8807-e6bb7a61](038_019e9d03-53bb-7170-8807-e6bb7a6184cb_rollout-2026-06-06T20-58-26-019e9d03-53bb-7170-8.md) `019e9d03-53bb-7170-8807-e6bb7a6184cb` messages: `541`
+- [rollout-2026-06-06T23-19-15-019e9d84-3f61-7b62-a91d-060b4a19](039_019e9d84-3f61-7b62-a91d-060b4a19dd5a_rollout-2026-06-06T23-19-15-019e9d84-3f61-7b62-a.md) `019e9d84-3f61-7b62-a91d-060b4a19dd5a` messages: `27`
+- [你好](040_019ea18d-4000-7ed1-95b8-d066e99df22a_你好.md) `019ea18d-4000-7ed1-95b8-d066e99df22a` messages: `6`
+- [相关的skill 你学习了吗？](041_019ea20a-edb7-7210-93af-c3b6e25b993f_相关的skill-你学习了吗？.md) `019ea20a-edb7-7210-93af-c3b6e25b993f` messages: `943`
+- [每周工作状态更新](042_019ea4cb-3836-78f0-bedf-81fe8ffdff0c_每周工作状态更新.md) `019ea4cb-3836-78f0-bedf-81fe8ffdff0c` messages: `12`
+- [定位干喷显示屏7-200程序](043_019ea4d1-607d-7953-afe6-64a4ebeacb7c_定位干喷显示屏7-200程序.md) `019ea4d1-607d-7953-afe6-64a4ebeacb7c` messages: `19`
+- [7391027_ZHCN编程手册CR0020.pdf 读下桌面的文档。然后看下截图，我一会发](044_019ea621-a1a3-7c71-830b-f74eb271ce21_7391027_ZHCN编程手册CR0020.pdf-读下桌面的文档。然后看下截图，我一会发.md) `019ea621-a1a3-7c71-830b-f74eb271ce21` messages: `14`
+- [每周工作状态更新](045_019ea676-ff2b-7663-be11-983cd5e0b33e_每周工作状态更新.md) `019ea676-ff2b-7663-be11-983cd5e0b33e` messages: `9`
+- [E:\AI_划时代\o欧阳\MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压 - 0606 - 副本\MC_LCD70_Control_](046_019eb5e5-338c-76b0-b0bf-cad20db6d1a0_EAI_划时代o欧阳MC_LCD70_Control_XGPL_LDB_V2.0-国三高低压--.md) `019eb5e5-338c-76b0-b0bf-cad20db6d1a0` messages: `99`
+- [继续开发 V1.20 下载修复](047_019ebcf7-54ad-7101-9184-774f509d736b_继续开发-V1.20-下载修复.md) `019ebcf7-54ad-7101-9184-774f509d736b` messages: `2398`
+- [排查向日葵登录失败](048_019ebf3d-ae09-7580-bb47-820755dc55d1_排查向日葵登录失败.md) `019ebf3d-ae09-7580-bb47-820755dc55d1` messages: `71`
+- [每周工作状态更新](049_019ecaab-355a-75d2-81ec-5883b09b4e46_每周工作状态更新.md) `019ecaab-355a-75d2-81ec-5883b09b4e46` messages: `10`
+- [E:\AI_划时代\全电脑_算法PCB\上位机（siton）\Z16EA-1.2.5 这个是上位机的源代码吗？](050_019ed629-1720-7f13-aa70-526a27dee106_EAI_划时代全电脑_算法PCB上位机（siton）Z16EA-1.2.5-这个是上位机的源代码.md) `019ed629-1720-7f13-aa70-526a27dee106` messages: `51`
+- [我这个目录里面的记忆和对话到哪里去了？](051_019ee8a1-961d-7c51-95d9-2bb054e3c775_我这个目录里面的记忆和对话到哪里去了？.md) `019ee8a1-961d-7c51-95d9-2bb054e3c775` messages: `32`
+- [Automation: 每周工作状态更新 Automation ID: automation Automation memory: $CODEX_HOME/au](052_019eed11-6c96-71e2-9c69-9e01ceecc5d5_Automation-每周工作状态更新-Automation-ID-automation-Aut.md) `019eed11-6c96-71e2-9c69-9e01ceecc5d5` messages: `3`
+- [这个里面怎么啥都么有了？加载下](053_019ef002-c37e-79d1-8d8e-df6a6f85457c_这个里面怎么啥都么有了？加载下.md) `019ef002-c37e-79d1-8d8e-df6a6f85457c` messages: `40`
+- [UI](054_019f0139-acde-7932-beb5-e6842e03d130_UI.md) `019f0139-acde-7932-beb5-e6842e03d130` messages: `927`
+- [你是不是对硬盘读写有bug？ 如果有，修复下。](055_019f013b-7151-7041-bea6-3eb9a9aaf301_你是不是对硬盘读写有bug？-如果有，修复下。.md) `019f013b-7151-7041-bea6-3eb9a9aaf301` messages: `39`
+- [算法PCB的任务](056_019f02d9-0e21-7fc1-9384-693abd7a42c7_算法PCB的任务.md) `019f02d9-0e21-7fc1-9384-693abd7a42c7` messages: `304`
+- [处理 CAN_TO_NET Modbus](057_019f02da-6f8f-7843-8c4a-d2d5c3ed7100_处理-CAN_TO_NET-Modbus.md) `019f02da-6f8f-7843-8c4a-d2d5c3ed7100` messages: `1068`
+- [梳理QT软件逻辑](058_019f02db-bae6-7bf0-a533-c749bdd402be_梳理QT软件逻辑.md) `019f02db-bae6-7bf0-a533-c749bdd402be` messages: `792`

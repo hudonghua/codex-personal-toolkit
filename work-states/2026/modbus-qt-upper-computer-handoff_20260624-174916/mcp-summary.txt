@@ -1,0 +1,4 @@
+# MCP / config summary
+
+[mcp_servers.node_repl]
+[mcp_servers.node_repl.env]
