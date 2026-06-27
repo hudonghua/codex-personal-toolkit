@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-27T18:51:24`
+- Exported at: `2026-06-27T18:58:36`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -9634,4 +9634,149 @@ Qt 是轮询 CAN_TO_NET 的寄存器块，不是直接监听 CAN 总线。当前
 
 ```text
 模拟器 Release 编译通过了。现在跑模拟器自测，尤其看刚加的“共享输入持续发送合帧”是否通过。
+```
+
+### assistant 2026-06-27T10:51:30.150Z
+
+```text
+模拟器自测通过。现在编译 Qt 上位机固定构建目录 `build_audit_p201`，验证 Qt 的全 0 清零逻辑。
+```
+
+### assistant 2026-06-27T10:51:37.220Z
+
+```text
+刚才是 PowerShell 引号把 `(x86)` 提前解析了，命令没真正跑到 CMake。我换成 PowerShell 字符串再执行。
+```
+
+### assistant 2026-06-27T10:51:57.530Z
+
+```text
+Qt 固定目录编译通过。现在跑 `--self-test-can`，确认 `0x170` 液位低置位后收到清零帧会立即失效。
+```
+
+### assistant 2026-06-27T10:52:10.240Z
+
+```text
+Qt 自测通过了。最后我重新打开新编译的模拟器，确保你现在点圆圈用的是新版本。
+```
+
+### assistant 2026-06-27T10:52:23.158Z
+
+```text
+新模拟器已经启动。现在我快速看一下最终改动范围，确认没有额外文档/乱文件，只动了 Qt 业务模型和模拟器主文件。
+```
+
+### assistant 2026-06-27T10:52:48.191Z
+
+```text
+我再把 Qt 自测里清零帧改成 `B7.b0=1` 的情况，专门验证心跳位不影响清零判断。这样覆盖 CAN_TO_NET 心跳跳变时的真实情况。
+```
+
+### assistant 2026-06-27T10:52:57.435Z
+
+```text
+重新编译并跑 Qt 自测，确认心跳位为 1 的清零帧也通过。
+```
+
+### assistant 2026-06-27T10:53:12.677Z
+
+```text
+两个工程都重新编译通过。现在跑最终自测：模拟器合帧自测和 Qt 清零自测。
+```
+
+### assistant 2026-06-27T10:53:19.100Z
+
+```text
+最终自测通过。模拟器还在运行中，我确认一下当前进程。
+```
+
+### assistant 2026-06-27T10:53:40.491Z
+
+```text
+已改好，核心逻辑按你说的“控制器整包发送”处理了。
+
+模拟器现在不是一个圆圈一帧轮流发了，而是每个发送周期扫描所有已勾选圆圈，按 `CAN ID + B0索引` 合并成控制器当前状态整包再发。也就是说：
+- 只勾选“液位低”：发 `0x170/B0=0x01/B2=0x08`
+- 同时勾选“液位低、液位最低、油温高”：发同一帧 `0x170/B0=0x01/B2=0x38`
+- 取消勾选后模拟器不主动发清零，下一周期就不再发该项，让 CAN_TO_NET 自己按心跳/超时清寄存器
+
+Qt 这边也修了：收到 CAN_TO_NET 清出来的整车帧业务数据全 0 时，立即清掉旧的台车状态缓存，不再等 `5s`。并且清零判断会忽略 `B7.b0` 心跳位，所以 `DATA=00 00 00 00 00 00 00 01` 也按清零处理。
+
+改动文件：
+- [MainForm.cs](<C:\Users\t250c\Documents\全电脑台车-CAN协议\pcb-can-simulator\MainForm.cs>)
+- [CanBusModel.cpp](<C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\src\CanBusModel.cpp>)
+- [CanBusModel.h](<C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\src\CanBusModel.h>)
+
+验证已跑过：
+- 模拟器 `dotnet build -c Release` 通过
+- 模拟器 `--self-test` 通过
+- Qt `build_audit_p201` Release 编译通过
+- Qt `--self-test-can` 输出 `CAN_TO_NET self-test OK`
+- `git diff --check` 通过
+
+新模拟器已经重新打开了，进程 PID 是 `34528`。
+```
+
+### user 2026-06-27T10:53:52.356Z
+
+```text
+对QT只管接收数据，显示数据即可。QT要刷新快。里面要有响应。我为了增加响应度，多发了好多包数据过来。170-179.
+```
+
+### assistant 2026-06-27T10:54:14.071Z
+
+```text
+我按这个原则继续处理：Qt 不主动模拟设备逻辑，只做快接收、快解析、快显示。你既然已经把整车状态拆到 `0x170-0x179` 多包来提高响应，Qt 这边要确保这些包都被轮询/解析，不能漏掉 `0x179`，也不能靠慢定时器才刷新。
+```
+
+### assistant 2026-06-27T10:54:31.742Z
+
+```text
+我看了一下现状：Qt 主界面实时刷新已经是 `33ms`，这部分够快；风险在 CAN_TO_NET 轮询列表和轮询周期。现在默认轮询列表有 `0x170-0x178`，漏了你说的 `0x179`；默认轮询周期是 `20ms`，还可以再降到 `5ms`，让 Qt 更快拿到 CAN_TO_NET 寄存器变化。
+```
+
+### assistant 2026-06-27T10:54:38.285Z
+
+```text
+我会改 Qt 的 CAN_TO_NET 客户端：默认轮询周期降到 `5ms`，单帧/寄存器轮询也允许 `5ms`，默认整车列表补上 `0x179`。这符合“Qt 只快接收、快显示”，不在 Qt 里加控制器逻辑。
+```
+
+### assistant 2026-06-27T10:54:45.202Z
+
+```text
+已按你的备份规则备份这两个 Qt 通讯文件。现在直接改轮询参数和默认 ID 列表。
+```
+
+### assistant 2026-06-27T10:55:03.463Z
+
+```text
+改完了：Qt 现在默认每 `5ms` 轮询一轮 CAN_TO_NET 寄存器块，并包含 `0x179`。接下来编译固定 Qt 目录并跑 CAN 自测。
+```
+
+### assistant 2026-06-27T10:55:23.788Z
+
+```text
+Qt 编译通过。现在跑自测。
+```
+
+### assistant 2026-06-27T10:55:40.522Z
+
+```text
+按你这个原则改了 Qt：Qt 不做控制器逻辑，只快接收、快解析、快显示。
+
+改动在：
+- [CanToNetClient.cpp](<C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\src\CanToNetClient.cpp>)
+- [CanToNetClient.h](<C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\src\CanToNetClient.h>)
+
+具体改了三点：
+- 默认 CAN_TO_NET 轮询周期从 `20ms` 改成 `5ms`
+- 手动单帧/寄存器轮询最低间隔也从 `20ms` 放开到 `5ms`
+- 默认轮询列表补上 `0x179`，现在默认收 `0x170-0x179`
+
+Qt 主界面实时刷新本来就是 `33ms`，这部分没再降，避免 UI 自己抢主线程。现在数据进来后还是由 `canFrameReceived -> applyFrame -> refreshRealtimeUi` 快速显示。
+
+验证已过：
+- Qt `build_audit_p201` Release 编译通过
+- `QdnUpperComputerUi.exe --self-test-can` 输出 `CAN_TO_NET self-test OK`
+- `git diff --check` 通过
 ```
