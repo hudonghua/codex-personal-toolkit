@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-27T23:59:43`
+- Exported at: `2026-06-28T00:06:55`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -13179,4 +13179,119 @@ N = 当前左右屏需要发送的分包数量
 
 ```text
 还有一个空调度分支也提前返回了，我继续改成无提前返回，确保任何分支都会恢复状态并按单帧规则处理队列。
+```
+
+### assistant 2026-06-27T15:59:51.427Z
+
+```text
+接着补上调度结果结构和计算函数：34页仍 10ms，44页自动 8ms，极端情况下不低于 6ms。
+```
+
+### assistant 2026-06-27T16:03:07.875Z
+
+```text
+调度计算已加。现在把界面/日志里仍然拿旧发送周期的地方改成“整车槽周期”，并让 Systec 队列也按这个槽周期继续吐下一帧。
+```
+
+### assistant 2026-06-27T16:03:40.483Z
+
+```text
+核心逻辑已改完一轮。我先查一下源码里还残留哪些 `50ms` 文案或逻辑，再补自测覆盖这个 360ms/6ms 规则。
+```
+
+### assistant 2026-06-27T16:03:46.261Z
+
+```text
+源码里 `50ms` 文案已经没有了；README 里还写着旧的 100ms 可调，我后面会顺手改成当前真实规则。先跑一次编译，看看 C# 语法有没有问题。
+```
+
+### assistant 2026-06-27T16:04:09.161Z
+
+```text
+编译先过了。现在补一个离线自测：验证 34/44/80 页的槽周期计算，以及多选时每个整车轮询槽只更新一帧。
+```
+
+### assistant 2026-06-27T16:04:35.106Z
+
+```text
+自测已补。现在跑 Release 编译和离线自测，确认改动没有破坏已有模拟器功能。
+```
+
+### assistant 2026-06-27T16:04:51.989Z
+
+```text
+编译和离线自测都通过了。README 里还写旧的 `100ms 可调`，这会误导后续使用；我只改现有 README，不新增文件。
+```
+
+### assistant 2026-06-27T16:05:00.480Z
+
+```text
+继续把 README 的发送机制描述同步成当前行为：默认 10ms 槽，超过 360ms 自动压缩到最小 6ms，Systec 每次只写 1 帧。
+```
+
+### assistant 2026-06-27T16:05:09.450Z
+
+```text
+README 里只改旧发送周期描述，不加新文档。
+```
+
+### assistant 2026-06-27T16:05:44.503Z
+
+```text
+README 同步完成。现在重新跑构建和自测，并查一下旧的 `100ms/50ms` 文案是否还残留在源码说明里。
+```
+
+### assistant 2026-06-27T16:05:51.558Z
+
+```text
+刚才我把 build 和 run 并行跑了，两个 dotnet 进程同时写同一个 runtimeconfig，导致自测那一路文件占用失败；编译本身已经成功。现在顺序跑已生成 DLL 的自测，不再触发并行构建。
+```
+
+### assistant 2026-06-27T16:06:10.269Z
+
+```text
+自测顺序跑通过了。接下来确认用户实际打开的 exe 是哪一个；如果桌面快捷方式指向 `build_verify`，我需要把新编译结果同步过去，不能只停留在 `bin\\Release`。
+```
+
+### assistant 2026-06-27T16:06:16.116Z
+
+```text
+桌面快捷方式指向的是 `bin\\Release\\net9.0-windows\\win-x64\\整车算法PCB模拟器.exe`，正好是刚才编译更新的位置，不需要再改快捷方式。
+```
+
+### assistant 2026-06-27T16:06:25.426Z
+
+```text
+最后我再做一次针对源码的定位校验：确认改动点、备份、以及桌面目标 exe 时间戳。
+```
+
+### assistant 2026-06-27T16:06:44.797Z
+
+```text
+已把模拟器按“整车 PCB”方式改了，核心在 [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs:20)：
+
+- 整车持续发送不再一轮塞多个 CAN ID。
+- 勾选项先合并成真实协议分包。
+- 每个整车轮询槽只发 `1` 帧。
+- 默认 `10ms/帧`。
+- `N * 10ms <= 360ms` 保持 10ms。
+- 超过 360ms 时用 `floor(360 / N)`。
+- 最小 `6ms/帧`，保证严格大于 5ms。
+- Systec CAN 每次 flush 只写 1 帧，不再一次写多帧。
+
+也补了自测：34 帧保持 10ms，44 帧变 8ms，极限不低于 6ms，并验证多选时第一槽只发 0x170、第二槽才发 0x171。README 也同步了当前规则：[README.md](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/README.md:12)。
+
+验证结果：
+
+```text
+dotnet build ... Release win-x64
+0 warning, 0 error
+
+dotnet 整车算法PCB模拟器.dll --self-test
+exit code 0
+```
+
+桌面快捷方式指向的就是已更新的这个 exe：
+
+`C:\Users\t250c\Documents\全电脑台车-CAN协议\pcb-can-simulator\bin\Release\net9.0-windows\win-x64\整车算法PCB模拟器.exe`
 ```
