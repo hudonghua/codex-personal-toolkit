@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T00:21:18`
+- Exported at: `2026-06-28T00:28:32`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -13430,4 +13430,132 @@ exit code 0
 
 ```text
 界面发送链路已经切到 `ProtocolPayloads` 的真实算法。还需要补一组小 helper，把当前输入框统一封装成 `Arm200AEndpointInputs`，避免后面 0x150/0x152/0x154 各读一套值。
+```
+
+### assistant 2026-06-27T16:21:20.103Z
+
+```text
+还有一个自动轮发路径残留了旧函数引用，我现在把它也切掉。这样点击发送、自动下一组、演示刷新都走同一套真实正解。
+```
+
+### assistant 2026-06-27T16:21:44.337Z
+
+```text
+无界面服务的默认种子也已经改成真实 `Arm200AEndpointInputs.Default`，不会再用简化 L1/L2。现在同步改自测，确保 0x150/0x152/0x154 的基本封包和 cd/gg1 钳位行为被覆盖。
+```
+
+### assistant 2026-06-27T16:22:29.134Z
+
+```text
+代码改完，先做一次静态搜索，确认旧的 `EndpointInputs/yawBox/L1/L2` 没有残留调用；然后直接编译。
+```
+
+### assistant 2026-06-27T16:22:41.235Z
+
+```text
+编译暴露了一个命名冲突：`MainForm` 里还有一个旧的嵌套 `EndpointPoint` 类型，和全局 `ProtocolPayloads` 的 `EndpointPoint` 冲突。我把这个旧类型删掉/改用全局类型后再编译。
+```
+
+### assistant 2026-06-27T16:22:54.855Z
+
+```text
+旧嵌套类型已去掉，现在重新编译。
+```
+
+### assistant 2026-06-27T16:23:06.890Z
+
+```text
+Release 构建已过，0 警告 0 错误。现在跑自测，覆盖协议封包、正解结果、离线 Modbus 往返和整车语义按钮。
+```
+
+### assistant 2026-06-27T16:23:26.538Z
+
+```text
+自测也通过了。最后我看一下实际 diff，确认没有误改到别的模块，也确认只是在模拟器和说明里更新。
+```
+
+### assistant 2026-06-27T16:23:43.273Z
+
+```text
+`git diff` 没有输出，说明这个目录可能不是 Git 跟踪区或这些文件没有被当前 Git 记录管理。我再用文件时间和备份确认实际文件已更新。
+```
+
+### assistant 2026-06-27T16:23:49.014Z
+
+```text
+我顺手发现显示解码里 0x154 仍然把所有组都叫“角度1/2/3”，对 cd/gg1 不清楚。这个不影响发包，但会让日志不好判断，我把解码别名也改成 root/base/boom、d1/e1/f、cd/gg1。
+```
+
+### assistant 2026-06-27T16:24:15.108Z
+
+```text
+0x154 日志别名也改完了，再跑一次完整构建和自测。
+```
+
+### assistant 2026-06-27T16:24:25.255Z
+
+```text
+构建仍然 0 警告 0 错误；搜索结果是新类型 `Arm200AEndpointInputs` 的命中，不是旧简化类型。现在跑自测。
+```
+
+### assistant 2026-06-27T16:24:46.254Z
+
+```text
+自测通过，命令无输出代表返回码为 0。最后确认 Release 输出的 exe/dll 时间戳，桌面快捷方式指向的还是这个 Release 目录，所以用户直接从桌面打开会用到新版本。
+```
+
+### assistant 2026-06-27T16:24:58.978Z
+
+```text
+我又检查了一下 0x154：源码 `Arm200A_SendAngleFrame()` 不写 B7 有效位，旧模拟器曾经给单组封包塞了 B7=1。虽然现在实际轮发已经走分组函数，但这个公共 overload 也要改成源码口径，避免以后误用。
+```
+
+### assistant 2026-06-27T16:25:07.669Z
+
+```text
+把自测也加上 B7=0 的约束，防止这个细节再退回去。
+```
+
+### assistant 2026-06-27T16:25:22.911Z
+
+```text
+最后这个 0x154 细节也纳入自测了，再做最后一次构建和自测。
+```
+
+### assistant 2026-06-27T16:25:36.385Z
+
+```text
+刚才我把构建和自测并行跑了，自测进程短时间锁住 DLL，导致构建有一个文件复制重试警告。不是代码问题；我按顺序再跑一遍，消掉这个干扰。
+```
+
+### assistant 2026-06-27T16:26:03.419Z
+
+```text
+已改好。模拟器现在“算法PCB模拟”不是简化 yaw/L1/L2 模型了，已经按算法PCB源码 `Arm200A_Kine.c::arm_calc_one()` 的正解链路移植：
+
+- 输入改成 `root/base/boom/cd/d1/e1/f/gg1/body roll/body pitch`
+- `0x150` 输出 H 点坐标
+- `0x152` 输出 H1->H 的 XZ/YZ 平面角
+- `0x154` 按源码 raw 分组发送：`root/base/boom`、`d1/e1/f`、`cd/gg1`
+- `FloatToS16X100()` / H 点 mm 钳位也按源码口径处理
+- 未做 Q 点世界系标定时，和算法PCB源码一致，输出 Body 坐标
+
+改动文件：
+[ProtocolPayloads.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/ProtocolPayloads.cs)  
+[MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs)  
+[HeadlessSimulatorServer.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/HeadlessSimulatorServer.cs)  
+[SimulatorSelfTest.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/SimulatorSelfTest.cs)  
+[README.md](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/README.md)
+
+验证已通过：
+
+```powershell
+dotnet build ... -c Release -r win-x64 --no-self-contained
+# 0 警告，0 错误
+
+dotnet ...\整车算法PCB模拟器.dll --self-test
+# 返回码 0
+```
+
+桌面快捷方式仍指向 Release 目录里的新 `整车算法PCB模拟器.exe`，直接打开就是这版。
 ```
