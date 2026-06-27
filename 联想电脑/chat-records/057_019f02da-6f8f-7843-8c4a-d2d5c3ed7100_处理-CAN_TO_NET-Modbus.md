@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T00:14:06`
+- Exported at: `2026-06-28T00:21:18`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -13364,4 +13364,70 @@ exit code 0
 
 ```text
 我会把真实正解链移进模拟器侧，而不是继续用 Link1/Link2 的简化模型。关键是先拿到 `ARM200A_BASE/FIX/INPUT/RESULT` 和三臂默认机械参数，这样 C# 算出来的 H 点才能和固件一致。
+```
+
+### assistant 2026-06-27T16:14:56.565Z
+
+```text
+我先把模拟器里“算法PCB模拟”的当前输入、组包和正解函数再核一遍，然后只改模拟器本身。这里的关键不是再造一个简化算法，而是把算法PCB源码里的正解链路移植过来，让同一组角度输入算出的 H 点坐标一致。
+```
+
+### assistant 2026-06-27T16:15:13.296Z
+
+```text
+现在看到模拟器算法页还是旧的“yaw/L1/L2”简化模型，编码器 0x154 也在用派生假数据。下一步我会把算法PCB源码里的 ARM200A 输入字段和正解几何常量接进来，0x150 用同一条正解链路算 H 点，0x154 按真实分组发原始角度/行程。
+```
+
+### assistant 2026-06-27T16:15:27.753Z
+
+```text
+我也确认了算法PCB源码：如果 Q 点世界系标定还没生效，`arm_body_to_world_result` 直接返回 Body 坐标；所以模拟器先按真实 Body 正解输出，后面如果要模拟 Q 点标定，再接世界系变换。现在这个需求只要“输入角度、输出坐标，中间算法一致”，先把 Body 正解一致做掉。
+```
+
+### assistant 2026-06-27T16:15:50.915Z
+
+```text
+我会在原有 `ProtocolPayloads.cs` 里放正解实现，不再额外拆新文件；界面上把旧的简化输入换成算法PCB源码里的字段名：root/base/boom/cd/d1/e1/f/gg1/body roll/body pitch。这样用户改角度和行程时，0x150、0x152、0x154 都从同一组真实输入生成。
+```
+
+### assistant 2026-06-27T16:15:59.806Z
+
+```text
+准备改文件前我先按你的备份规则处理：只给要动的模拟器文件保留最新一份 `.bak_时间戳`，不碰其他无关文件。改动范围会控制在 `ProtocolPayloads.cs`、`MainForm.cs`、`HeadlessSimulatorServer.cs`、`SimulatorSelfTest.cs` 和 README 说明。
+```
+
+### assistant 2026-06-27T16:16:31.016Z
+
+```text
+这里我会特别注意一个点：算法PCB源码里左/右臂的 `root_deg` 只用于 O0-O1 基座偏置，后面的 B/A/C/D/D1/E/E1/F/G/G1/H 链路仍从固定 O 点继续；这看起来反直觉，但必须照源码移植，不能按常规机械臂想当然改。
+```
+
+### assistant 2026-06-27T16:17:07.039Z
+
+```text
+还有一个细节：算法PCB的 0x154 发送的是 `gArm*Raw` 原始传感器值乘 100，不是正解换算后的 `gArm*In`。模拟器界面现在先把 raw 和工程量按调试直通口径处理成同一值，后续如果你要测试零点补偿，再加 zero/scale/sign。
+```
+
+### assistant 2026-06-27T16:17:36.508Z
+
+```text
+0x154 对 cd/gg1 也确实用 `FloatToS16X100`，超过 int16 就按源码钳位；所以模拟器也必须钳位，而不是为了好看改协议。这个地方我会照 `Arm200A_FloatToS16X100()` 的行为处理。
+```
+
+### assistant 2026-06-27T16:18:07.301Z
+
+```text
+现在开始改代码。改完我会先构建，再跑模拟器自测；如果自测里有协议钳位或字段名不一致，会直接暴露出来。
+```
+
+### assistant 2026-06-27T16:19:36.090Z
+
+```text
+正解核心已经放进 `ProtocolPayloads.cs`，包括三臂基座常量、旋转矩阵、H/H1、0x152 平面角，以及源码同款 S16 钳位。接着改界面字段和发送组包，把旧的简化 yaw/L1/L2 全部断开。
+```
+
+### assistant 2026-06-27T16:20:47.772Z
+
+```text
+界面发送链路已经切到 `ProtocolPayloads` 的真实算法。还需要补一组小 helper，把当前输入框统一封装成 `Arm200AEndpointInputs`，避免后面 0x150/0x152/0x154 各读一套值。
 ```
