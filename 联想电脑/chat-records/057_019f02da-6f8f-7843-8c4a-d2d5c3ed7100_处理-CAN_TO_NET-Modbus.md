@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T11:13:04`
+- Exported at: `2026-06-28T11:20:18`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -15681,4 +15681,73 @@ PEAK 适配器这块已经加上 BUS-OFF 自动恢复和失败后的通道复位
 
 ```text
 编译和自检都通过了。现在启动新版界面。
+```
+
+### assistant 2026-06-28T03:13:05.929Z
+
+```text
+新版模拟器已打开并响应。最终判断我会直接说清楚：外部 PEAK GUI 不是更稳的方案；这次真正需要修的是底层 PCAN 恢复和日志确认点。
+```
+
+### assistant 2026-06-28T03:13:30.223Z
+
+```text
+不建议让模拟器去自动调用那个 PEAK GUI 工具。GUI 没有稳定命令行/API，自动点窗口反而更不可靠。根因更像是两类问题：
+
+1. 模拟器旧日志把“计划发/入队”写得像“已经上 CAN 总线”，但硬件写入是在后面队列 flush 才发生。
+2. PEAK CAN 如果遇到 BUS-OFF，驱动会出现写不出去的状态。PEAK 官方文档也说明 BUS-OFF 后不能通信，直到 CAN 控制器 reset；`PCAN_BUSOFF_AUTORESET` 就是为这个场景准备的。
+
+我已经改了模拟器：
+
+- [PcanCanAdapter.cs](</C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/PcanCanAdapter.cs:38>)：连接 PEAK 时启用 BUS-OFF 自动恢复；写失败或检测到 BUS-OFF 时，自动 `CAN_Reset` 并重初始化。
+- [MainForm.cs](</C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs:2572>)：日志改成“计划帧”和“PEAK PCAN实际TX成功”分开。以后只有看到 `PEAK PCAN实际TX成功`，才代表 `CAN_Write` 成功返回。
+- [MainForm.cs](</C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs:4592>)：如果硬件通道恢复失败，会直接标记断开，不再假装还在发。
+
+验证已跑过：`dotnet build -c Release -r win-x64 --no-self-contained` 通过，`--self-test` 通过。新版模拟器已重新打开，PID `3608`；Qt 仍在运行，PID `38840`。
+
+你现在测试时看两件事：如果模拟器日志有 `PEAK PCAN实际TX成功` 但 PCAN 工具仍看不到，那就查波特率、通道、终端电阻、CAN-H/CAN-L、CAN_TO_NET 是否 ACK；如果没有 `实际TX成功`，那就是 PCAN 驱动/通道层的问题，模拟器现在会把错误暴露出来。
+
+资料依据：PEAK 的 PCAN-Basic 文档说明 BUS-OFF 后需要 reset，且可用 `PCAN_BUSOFF_AUTORESET` 自动恢复；`CAN_SetValue` 用于设置这类通道参数。参考：[PCAN Reset](https://www.peak-system.com/documentation/API/PCAN-Basic.Net/html/9ca6aa06-164b-c163-3d69-9a8155514c2b.htm)、[TPCANParameter](https://documentation.help/PCAN-Basic/TPCANParameter.html)、[CAN_SetValue](https://documentation.help/PCAN-Basic/CAN_SetValue.html)。
+```
+
+### user 2026-06-28T03:17:27.660Z
+
+```text
+发出来的报文 感觉发不出来。174 173 发来几十包后，就停止了。
+```
+
+### assistant 2026-06-28T03:17:45.141Z
+
+```text
+我会按三个方向查：队列是不是被卡死、PEAK 写入是否失败后停止、173/174 的同一页 key 是否被覆盖导致后续不再排队。先读当前发送队列相关代码和运行状态，再直接修。
+```
+
+### assistant 2026-06-28T03:18:57.935Z
+
+```text
+我查到一个可能会导致“几十包后停”的代码风险：如果底层发送队列的 key 队列和 pending 字典不同步，`pending` 里还有帧但定时器已经没有可发 key，就会表现成卡死。另外 PEAK `CAN_Write` 返回 OK 后，如果 `CAN_GetStatus` 已经非 OK，现在还没当故障处理。我会把这两个点补上。
+```
+
+### user 2026-06-28T03:19:10.006Z
+
+```text
+只有172稳定输出。在电磁阀监控 这个界面 模拟器的总开关一开。
+```
+
+### assistant 2026-06-28T03:19:26.340Z
+
+```text
+这个信息很关键：不是全部 ID 都停，是总开关打开后只有 `0x172` 稳定。那更像是模拟器的页面订阅过滤/调度表把电磁阀监控页错误地压成了 `0x172`，不是 PEAK 物理层问题。我先按“电磁阀监控总开关应该稳定轮询 170-174”去查。
+```
+
+### assistant 2026-06-28T03:19:43.119Z
+
+```text
+代码自测里原本就写了“电磁阀总开关调度应覆盖 0x170/0x171/0x172/0x173/0x174”，但实际你看到只有 `0x172` 稳定，说明自测没有覆盖“真实页面订阅状态 + 总开关持续发送”的运行场景。我会把订阅规则和总开关调度一起修。
+```
+
+### assistant 2026-06-28T03:19:48.301Z
+
+```text
+电磁阀页的订阅自测用的是 `{2,2,0,0,0x0D}`，也就是只模拟了左屏 P2-2 + 主页之类的组合。你实际 Qt 页面可能给过来的订阅和这个不一致；如果模拟器严格按旧映射过滤，就可能只剩 `0x172`。我继续读 `AllowsVehiclePageGroup` 全部映射。
 ```
