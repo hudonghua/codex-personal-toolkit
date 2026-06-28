@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T23:51:17`
+- Exported at: `2026-06-28T23:58:31`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -24844,4 +24844,179 @@ Qt 固定 build 也已经编译通过。现在跑两个自测：模拟器 `--sel
 
 ```text
 截图确认：单机未连接数据时，进水压力、出水压力现在显示 `0`；气压力仍是 `--`，因为你前面说气压力先放一边，我没有动它。
+```
+
+### assistant 2026-06-28T15:51:34.139Z
+
+```text
+注意到 Qt 文件里有很多早已存在的未提交差异；我只动了进水/出水压力这两行显示逻辑，不会去回退其他人的改动。模拟器文件在当前 git diff 里没有额外输出，我再做一次状态核对。
+```
+
+### assistant 2026-06-28T15:51:53.334Z
+
+```text
+状态核对完成：模拟器目录在父级仓库里整体是未跟踪目录，所以 `git diff` 不显示单文件差异；文件内容本身还要按关键字再验一次。
+```
+
+### assistant 2026-06-28T15:52:03.982Z
+
+```text
+模拟器关键点验证通过：有 `基准面 X(m)`，有 `H点X`，原来的 `H点Y/Z` 输入控件引用没有匹配到。我再核对 Qt 两行显示代码。
+```
+
+### assistant 2026-06-28T15:52:37.237Z
+
+```text
+已改好。
+
+模拟器里目标孔深流程现在只需要填 `H点 X(m)`，新增了 `基准面 X(m)`，默认就是 `0`；底层 `0x150` 协议仍然按 X/Y/Z 发，Y/Z 自动按 `0` 补齐。位置在 [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs:122)。
+
+Qt 主界面常用数据里，单机没连数据时，进水压力/出水压力以前因为 `valid=false` 显示 `--`，现在改成显示 `0`。收到真实数据后还是显示实际值。气压力我没动，仍然按你说的先放一边。位置在 [SitonDrillMainView.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/SitonDrillMainView.cpp:212)。
+
+验证过：
+- 模拟器 `dotnet build -c Release` 通过
+- 模拟器 `--self-test` 通过
+- Qt `build_audit_p201` 构建通过
+- Qt `--self-test-can` 通过
+- 启动 Qt 截图检查：未连接数据时进水/出水压力显示为 `0`
+```
+
+### assistant 2026-06-28T15:52:37.263Z
+
+```text
+已改好。
+
+模拟器里目标孔深流程现在只需要填 `H点 X(m)`，新增了 `基准面 X(m)`，默认就是 `0`；底层 `0x150` 协议仍然按 X/Y/Z 发，Y/Z 自动按 `0` 补齐。位置在 [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs:122)。
+
+Qt 主界面常用数据里，单机没连数据时，进水压力/出水压力以前因为 `valid=false` 显示 `--`，现在改成显示 `0`。收到真实数据后还是显示实际值。气压力我没动，仍然按你说的先放一边。位置在 [SitonDrillMainView.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/SitonDrillMainView.cpp:212)。
+
+验证过：
+- 模拟器 `dotnet build -c Release` 通过
+- 模拟器 `--self-test` 通过
+- Qt `build_audit_p201` 构建通过
+- Qt `--self-test-can` 通过
+- 启动 Qt 截图检查：未连接数据时进水/出水压力显示为 `0`
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:582-582|note=[checked prior CAN register map context for this project]
+</citation_entries>
+<rollout_ids>
+</rollout_ids>
+</oai-mem-citation>
+```
+
+### user 2026-06-28T15:53:59.921Z
+
+```text
+# Files mentioned by the user:
+
+## codex-clipboard-31a6d24d-2a3c-44e5-b72f-c70d9f0db7d6.png: C:/Users/t250c/AppData/Local/Temp/codex-clipboard-31a6d24d-2a3c-44e5-b72f-c70d9f0db7d6.png
+
+## My request for Codex:
+你能看清吗？  挤压了。
+
+<image name=[Image #1] path="C:\Users\t250c\AppData\Local\Temp\codex-clipboard-31a6d24d-2a3c-44e5-b72f-c70d9f0db7d6.png">
+</image>
+```
+
+### user 2026-06-28T15:53:59.921Z
+
+```text
+# Files mentioned by the user:
+
+## codex-clipboard-31a6d24d-2a3c-44e5-b72f-c70d9f0db7d6.png: C:/Users/t250c/AppData/Local/Temp/codex-clipboard-31a6d24d-2a3c-44e5-b72f-c70d9f0db7d6.png
+
+## My request for Codex:
+你能看清吗？  挤压了。
+```
+
+### assistant 2026-06-28T15:54:15.554Z
+
+```text
+看清了，右侧这组流程按钮高度不够，最后一行被容器裁掉了。我直接把这块布局改成可换行且高度自适应，避免按钮互相挤压。
+```
+
+### assistant 2026-06-28T15:54:29.636Z
+
+```text
+问题点在右侧流程按钮容器：固定高度只有几行空间，按钮换到第四行后被下面边框裁掉。我先读这段布局代码，改成给按钮区更高的固定空间，并让输入区滚动/自适应。
+```
+
+### assistant 2026-06-28T15:54:45.859Z
+
+```text
+截图里的这块是在“模拟量”页内的压缩版流程区，外层 `flowGroup` 高度也偏小。我会同时加高外层流程区，并把按钮区域放到底部固定四行高度，保证第 7 个按钮完整显示。
+```
+
+### assistant 2026-06-28T15:54:52.826Z
+
+```text
+外层右侧 `SplitContainer` 没有给流程按钮留足宽度和高度。改法是：右侧流程区最小宽度、按钮区四行高度、按钮窄一点并带间距。这样在你截图这个宽度下不会裁。
+```
+
+### assistant 2026-06-28T15:55:01.768Z
+
+```text
+先备份 `MainForm.cs`，只保留最新一份备份，然后改布局。
+```
+
+### assistant 2026-06-28T15:55:13.422Z
+
+```text
+开始改：把压缩版流程按钮高度从 126 提到 154，按钮宽度从 174 降到 164，并给按钮加固定间距；同时右侧流程区至少保留 440px 宽。
+```
+
+### assistant 2026-06-28T15:55:40.147Z
+
+```text
+第一下补丁没命中，是因为这份文件当前行号/内容和我刚看的片段有细微差别。我重新按实际内容分段打补丁。
+```
+
+### assistant 2026-06-28T15:55:49.326Z
+
+```text
+实际行确认了。现在按这些精确行修改。
+```
+
+### assistant 2026-06-28T15:56:26.989Z
+
+```text
+布局修改已写入。我先检查这个 `Math.Clamp` 在小窗口时不会反过来，再编译。
+```
+
+### assistant 2026-06-28T15:56:51.722Z
+
+```text
+我发现小于 660px 的极窄窗口下右侧 440px 最小宽会和左侧最小宽冲突，先把这个边界写稳，避免窗口拖窄时报错。
+```
+
+### assistant 2026-06-28T15:57:01.066Z
+
+```text
+现在要重新编译 Release。检测到模拟器还开着，我先正常关闭窗口再构建，避免 exe 被占用。
+```
+
+### assistant 2026-06-28T15:57:14.538Z
+
+```text
+窗口已正常关闭。开始构建和自测。
+```
+
+### assistant 2026-06-28T15:57:22.881Z
+
+```text
+Release 构建通过，关键布局参数也已经验证写入。继续跑模拟器自测，再启动界面截图检查按钮是否还被裁。
+```
+
+### assistant 2026-06-28T15:57:41.623Z
+
+```text
+我现在做实际界面截图验证，会自动打开模拟器并切到“整车PCB模拟 / 模拟量”。如果窗口控件名拿不到，我会用截图再判断。
+```
+
+### assistant 2026-06-28T15:58:16.107Z
+
+```text
+截图已生成，我打开看按钮区是否完整。
 ```
