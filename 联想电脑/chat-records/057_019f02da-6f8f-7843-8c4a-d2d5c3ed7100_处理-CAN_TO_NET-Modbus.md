@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T10:22:28`
+- Exported at: `2026-06-28T10:29:42`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -14929,4 +14929,123 @@ Qt 主界面这块会从 `setP202Numeric` 改到 `setP202Digital`，这样吊篮
 
 ```text
 文档里的轮询估算也要跟着变：P02-2 加了共享模拟量和吊篮页后，不再是约 34 帧，而是约 40 帧，按 360ms 目标会自动用 9ms 左右的槽周期，不应该再出现 1ms 突发。
+```
+
+### assistant 2026-06-28T02:22:33.039Z
+
+```text
+MD 的页面调度和响应度估算已经改了。现在改三份 HTML 的 G3 订阅、吊篮 bit 定义和响应度例子。
+```
+
+### assistant 2026-06-28T02:24:34.855Z
+
+```text
+`CanBusModel.cpp` 最后不需要改，我会把刚才为它准备但没用上的备份删掉，避免多余文件；保留真正改过的 `MainForm.cs` 和 `MainWindow.cpp` 备份。
+```
+
+### assistant 2026-06-28T02:25:17.369Z
+
+```text
+开始验证。先跑模拟器编译和自测，重点看新增的 0x170 三页轮发、P02-2 页面订阅、吊篮 bit 输出。
+```
+
+### assistant 2026-06-28T02:25:45.500Z
+
+```text
+模拟器编译被当前正在运行的 `整车算法PCB模拟器.exe` 锁住了，PID 4384。为了把新版本落到同一个 exe，我先关闭这个旧进程，再重新编译和自测。
+```
+
+### assistant 2026-06-28T02:25:52.000Z
+
+```text
+模拟器已重新生成。现在跑模拟器自测，确认不是只编过。
+```
+
+### assistant 2026-06-28T02:26:05.001Z
+
+```text
+模拟器自测退出码为 0，说明新增的轮发和吊篮编码检查通过。接下来编译 Qt 固定目录，验证吊篮显示逻辑没有破坏现有自测。
+```
+
+### assistant 2026-06-28T02:26:12.321Z
+
+```text
+刚才 Qt 编译命令被 PowerShell 的括号转义吃掉了，不是代码错误。我用 cmd 的单引号包装重跑。
+```
+
+### assistant 2026-06-28T02:26:32.881Z
+
+```text
+Qt 固定构建目录已编译通过，下一步跑 `--self-test-can`。
+```
+
+### assistant 2026-06-28T02:26:39.299Z
+
+```text
+自测命令也被 PowerShell 当成字符串了，用调用符 `&` 重跑。
+```
+
+### assistant 2026-06-28T02:26:56.478Z
+
+```text
+Qt 自测通过：`CAN_TO_NET self-test OK`。我再扫一遍旧协议词，确认没有残留“吊篮输出 int16”这种误导项。
+```
+
+### assistant 2026-06-28T02:27:11.491Z
+
+```text
+旧误导项已经扫过，代码里也没有旧的吊篮数值映射引用了。我把刚才停止的模拟器重新打开，同时启动固定路径的 Qt，方便你直接测。
+```
+
+### assistant 2026-06-28T02:27:49.929Z
+
+```text
+已查到并修了，根因不是 Qt 刷新慢，而是协议调度和模拟器组包不一致：
+
+1. P02-2“电磁阀监控”页面原来只订阅 `0x172~0x174` 阀值，没订阅 `0x170/B0=0x04/0x05/0x06`，所以润滑液位能快，液压油液位和油温会被页面规则压住。
+2. 模拟器“润滑液位/液压油液位/油温”组合发送时，连续三次单包写 `0x170`，会把循环缓存覆盖，导致油温一发，共享输出也跟着变慢、现象看起来没规律。
+3. 吊篮输出原来模拟器和 Qt 都按 `int16` 数值做了，但你说实际是开关量，所以也一起改了。
+
+已修改：
+- [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs)：P02-2 放行 `0x170/B0=04~06` 和吊篮 `0x171/B0=0B/0D/0E`；组合模拟量保留三页轮发；吊篮输出改成圆圈开关，编码到 `0x171/B0=0x0B/B1.b0-b7`。
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp)：Qt 台车状态里的吊篮输出改为开关显示，不再当数值显示。
+- 三份 HTML、统一 MD、README 已同步协议：P02-2 现在明确包含共享模拟量和吊篮输入/输出；吊篮输出明确是 bit 开关量。
+
+验证：
+- 模拟器 `dotnet build` 通过，`--self-test` 通过。
+- Qt 固定目录 `build_audit_p201` 编译通过，`--self-test-can` 输出 `CAN_TO_NET self-test OK`。
+- 已重新打开模拟器和 Qt：模拟器 PID `37408`，Qt PID `37620`。
+
+现在再测时，油温加入后不应该再把共享输出拖慢；吊篮输出应该按开关灯显示，不是数字。
+```
+
+### assistant 2026-06-28T02:27:49.994Z
+
+```text
+已查到并修了，根因不是 Qt 刷新慢，而是协议调度和模拟器组包不一致：
+
+1. P02-2“电磁阀监控”页面原来只订阅 `0x172~0x174` 阀值，没订阅 `0x170/B0=0x04/0x05/0x06`，所以润滑液位能快，液压油液位和油温会被页面规则压住。
+2. 模拟器“润滑液位/液压油液位/油温”组合发送时，连续三次单包写 `0x170`，会把循环缓存覆盖，导致油温一发，共享输出也跟着变慢、现象看起来没规律。
+3. 吊篮输出原来模拟器和 Qt 都按 `int16` 数值做了，但你说实际是开关量，所以也一起改了。
+
+已修改：
+- [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs)：P02-2 放行 `0x170/B0=04~06` 和吊篮 `0x171/B0=0B/0D/0E`；组合模拟量保留三页轮发；吊篮输出改成圆圈开关，编码到 `0x171/B0=0x0B/B1.b0-b7`。
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp)：Qt 台车状态里的吊篮输出改为开关显示，不再当数值显示。
+- 三份 HTML、统一 MD、README 已同步协议：P02-2 现在明确包含共享模拟量和吊篮输入/输出；吊篮输出明确是 bit 开关量。
+
+验证：
+- 模拟器 `dotnet build` 通过，`--self-test` 通过。
+- Qt 固定目录 `build_audit_p201` 编译通过，`--self-test-can` 输出 `CAN_TO_NET self-test OK`。
+- 已重新打开模拟器和 Qt：模拟器 PID `37408`，Qt PID `37620`。
+
+现在再测时，油温加入后不应该再把共享输出拖慢；吊篮输出应该按开关灯显示，不是数字。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:581-583|note=[used CAN_TO_NET transparent link and register map context]
+MEMORY.md:1488-1488|note=[used fixed Qt build path for validation]
+</citation_entries>
+<rollout_ids>
+</rollout_ids>
+</oai-mem-citation>
 ```
