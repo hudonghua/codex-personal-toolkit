@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T18:08:33`
+- Exported at: `2026-06-28T18:55:36`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -22903,4 +22903,94 @@ HTML 我直接替换对应段落，不生成备份文件，保持协议页只呈
 
 ```text
 修改前我先按本地规则给这两个源码文件重新留一份最新备份，旧的同名 `.bak_*` 会清掉；协议 HTML/MD 按你的规则不生成备份文件。
+```
+
+### assistant 2026-06-28T10:08:35.002Z
+
+```text
+刚才备份命令里 `Split-Path` 参数组合在这台 PowerShell 上不兼容，备份本身已经复制出来了，但旧备份清理没有按预期执行。我现在先把同名旧备份整理到只保留最新这一份，再继续改代码。
+```
+
+### assistant 2026-06-28T10:08:56.590Z
+
+```text
+现在开始改发送策略：去掉“已触发臂”的状态位，`publishContinuousDrillTargetDepths()` 每周期直接发左/中/右三臂 `0x51`。凿岩信号最多只能影响显示/参考点更新，不能作为发包开关。
+```
+
+### assistant 2026-06-28T10:48:02.878Z
+
+```text
+头文件已去掉“哪个臂已触发才发”的状态。接下来改实现，让计时器启动后固定轮询三臂目标值。
+```
+
+### assistant 2026-06-28T10:48:40.130Z
+
+```text
+代码策略已经改成默认发送。下面清协议文档，把“凿岩开启后才开始发”“Qt接到后再持续下发”这类表述改成“上电/启动后持续发送，整车PCB按自身逻辑采用”。
+```
+
+### assistant 2026-06-28T10:49:06.531Z
+
+```text
+我会把文档里的旧触发口径统一成一句话：`0x51` 是 Qt 上电/软件启动后固定周期持续发送；Qt 不用凿岩开启来决定发停；整车PCB自己按控制逻辑采用这个目标值。
+```
+
+### assistant 2026-06-28T10:50:01.392Z
+
+```text
+文档批量替换脚本刚才因为重复键没有执行，文件还没被改坏。我去掉重复项后重新跑。
+```
+
+### assistant 2026-06-28T10:50:55.616Z
+
+```text
+协议文档已统一替换完一轮。现在我反查残留旧说法，尤其是“凿岩开启后才发”“触发后发送”“Qt判断停止/后退”这些词。
+```
+
+### assistant 2026-06-28T10:51:03.724Z
+
+```text
+反查发现 `整车PCB通信说明.html` 的总览表还有一处旧句没替换到，我单独改掉，然后再查一遍。
+```
+
+### assistant 2026-06-28T10:51:21.721Z
+
+```text
+我再审了一下代码：虽然发包不再被凿岩信号控制，但还有一个函数会在凿岩上升沿更新参考点。按你“Qt 不要有逻辑”的口径，这个也不应该参与 `0x51` 下发策略。我把这条依赖也去掉，让 `0x51` 只按当前配置/当前坐标计算并周期发。
+```
+
+### assistant 2026-06-28T10:51:43.526Z
+
+```text
+我会把 `updateDrillingEntryReferences` 这条凿岩状态依赖删掉，同时删掉“入口参考点已锁定”的内部状态。这样目标值只来源于当前配置、H点/孔位和公式，不再因为凿岩信号改变发包策略。
+```
+
+### assistant 2026-06-28T10:51:54.218Z
+
+```text
+头文件里的凿岩触发参考点状态已删除。现在清 cpp 里的调用和实现。
+```
+
+### assistant 2026-06-28T10:52:09.019Z
+
+```text
+`setRealtimeState()` 现在不会再调用凿岩触发处理。接下来删掉对应函数体，避免后面误用。
+```
+
+### user 2026-06-28T10:55:10.116Z
+
+```text
+<environment_context>
+  <cwd>C:\Users\t250c\Documents\Codex\2026-06-28\51</cwd>
+  <shell>powershell</shell>
+  <current_date>2026-06-28</current_date>
+  <timezone>Asia/Shanghai</timezone>
+  <filesystem><workspace_roots><root>C:\Users\t250c\Documents\全电脑上位机</root><root>C:\Users\t250c\Documents\Codex\2026-06-28\51</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
+```
+
+### user 2026-06-28T10:55:10.158Z
+
+```text
+51 是一直发。不管是什么时候。
 ```
