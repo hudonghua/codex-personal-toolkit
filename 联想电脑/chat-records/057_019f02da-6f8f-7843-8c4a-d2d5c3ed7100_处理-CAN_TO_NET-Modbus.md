@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T10:58:37`
+- Exported at: `2026-06-28T11:05:51`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -15478,4 +15478,87 @@ Form 关闭、快速点击时的清队列、轮询合批延迟发送这些都已
 
 ```text
 PCAN 接收也要走同一个 `PollSystecCanCommands` 逻辑，我把里面的适配器和日志名改成当前硬件名称。
+```
+
+### assistant 2026-06-28T02:58:42.284Z
+
+```text
+还剩少量默认值/关闭位置保留了 Systec 文案。默认我改成 `PEAK PCAN`，这样你重新打开默认就是 PEAK；仍可以手动切回 Systec 或 Modbus。
+```
+
+### assistant 2026-06-28T02:59:01.636Z
+
+```text
+默认值改成 PEAK，这样没有旧配置或配置异常时会自动选 PEAK PCAN。旧配置如果保存了 Systec，界面仍会尊重；我最后会把本机当前 settings 也切到 PEAK。
+```
+
+### assistant 2026-06-28T02:59:12.675Z
+
+```text
+默认值已改。继续修保存兜底文案和启动连接日志。
+```
+
+### assistant 2026-06-28T02:59:33.888Z
+
+```text
+代码接完了，先停掉当前模拟器进程再编译；如果 PCANBasic 调用签名有问题，编译阶段能先抓出来。
+```
+
+### assistant 2026-06-28T02:59:44.978Z
+
+```text
+编译通过，0 警告 0 错误。现在跑模拟器自测，确认之前的整车协议调度和日志改动没有被 PCAN 接入破坏。
+```
+
+### assistant 2026-06-28T02:59:59.965Z
+
+```text
+自测通过。接下来我把本机模拟器配置也切到 `PEAK PCAN`，否则旧 settings 里如果保存了 `Systec CAN`，重新打开还会默认进 Systec。
+```
+
+### assistant 2026-06-28T03:00:13.792Z
+
+```text
+本机配置已改成 `PEAK PCAN / 250K`。现在重新打开模拟器，让它直接按 PCAN 模式连接。
+```
+
+### assistant 2026-06-28T03:00:37.263Z
+
+```text
+模拟器已重新打开，当前 PID `27700`，Qt 仍在 PID `38840`。我再抓一下关键代码位置，方便你后面确认。
+```
+
+### assistant 2026-06-28T03:00:49.294Z
+
+```text
+已把模拟器增加 `PEAK PCAN` 发送方式，并切为当前默认。
+
+改动点：
+- 新增 [PcanCanAdapter.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/PcanCanAdapter.cs:7)，用 `PCANBasic.dll` 调 `CAN_Initialize / CAN_Write / CAN_Read`。
+- [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs:3036) 发送方式增加 `PEAK PCAN`。
+- PCAN 和 Systec 共用同一套限速队列：单次只写 1 帧，仍按整车轮询槽周期发送，避免写 CAN 工具过快。
+- 本机 `%LOCALAPPDATA%\PcbCanSimulator\settings.json` 已改成 `TransportMode: PEAK PCAN`、`CanBaud: 250K`。
+
+验证：
+- Release 编译通过，0 警告 0 错误。
+- `--self-test` 通过。
+- 模拟器已重新打开，PID `27700`，进程响应正常。
+```
+
+### user 2026-06-28T03:04:02.654Z
+
+```text
+我发现模拟器有时候无法产生报文出来，虽然日志上显示有报文，实际用工具看，是没看到数据，Qt也没反应。你要不这样。模拟器需要发报文出来，你自动调用E:\安装软件\PEAK简易CAN工具_免安装\PEAK简易CAN工具.exe 这个工具？ 是否这个方案会更好？ 更稳定？ 模拟器只用来组包，UI等工作？
+```
+
+### assistant 2026-06-28T03:04:24.065Z
+
+```text
+我先不急着把模拟器绑到另一个 GUI 工具上。这个方案是否更稳，关键看那个 `PEAK简易CAN工具.exe` 有没有命令行、管道、Socket 或配置文件接口；如果只是人工点击的 GUI，模拟器去“控制另一个窗口发帧”反而更不稳。先把这个工具实际能力查清楚。
+```
+
+### assistant 2026-06-28T03:04:44.912Z
+
+```text
+我看到了这个外部工具确实带了 `PCANBasic.dll`，但目前还没看到它有命令行发送接口。继续查它的 `settings.json` 和进程接口；如果它只是 GUI，模拟器去调用它发帧不会更稳，只会多一层窗口自动化。
 ```
