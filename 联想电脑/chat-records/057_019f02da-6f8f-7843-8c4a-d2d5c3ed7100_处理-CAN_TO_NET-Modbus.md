@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T22:48:22`
+- Exported at: `2026-06-28T22:55:34`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -23999,4 +23999,121 @@ DATA[5..6]=润滑液位
 
 ```text
 Qt 编译失败不是代码错误，而是当前 PowerShell 没加载 MSVC 头文件环境，`cl.exe` 找不到标准库头 `array`。我先用 Visual Studio 的开发环境脚本重跑；同时把模拟器刚刚单独输出的版本跑自检。
+```
+
+### assistant 2026-06-28T14:48:30.244Z
+
+```text
+模拟器自检已经通过，输出为空但退出码是 0。Qt 这边找到 VS BuildTools 的 `VsDevCmd.bat` 了，我现在在它加载的 x64 编译环境里重跑 Qt 编译。
+```
+
+### assistant 2026-06-28T14:48:40.701Z
+
+```text
+刚才是 PowerShell 对带括号路径的转义问题，我换成 `$env:ComSpec /c` 的单引号命令行重跑。
+```
+
+### assistant 2026-06-28T14:49:10.216Z
+
+```text
+Qt 已经在正确的 VS x64 环境里编译通过。现在跑 CAN 自检，确认 `0x92` 的进水/出水压力会把有效标志和值一起打进去。
+```
+
+### assistant 2026-06-28T14:49:22.027Z
+
+```text
+Qt 自检通过。接下来我再看模拟器自检覆盖范围；如果没有覆盖这次的水压组包路径，我会补一个直接测试，避免只是“编译过了”。
+```
+
+### assistant 2026-06-28T14:49:55.454Z
+
+```text
+我发现模拟器自检里还有一条旧断言：`BuildSlowWaterPressurePayload` 仍然认为水压包 `B0=0x04`。这说明修 UI 按钮路径还不够，公共组包函数也要改成 `0x92`，否则后面别的入口仍可能发旧包。
+```
+
+### assistant 2026-06-28T14:50:15.005Z
+
+```text
+我会把公共组包函数一起修掉：`ProtocolPayloads.BuildSlowWaterPressurePayload()` 改为 `B0=0x92`，对应自检也改成校验 `0x92`。这样 UI 按钮、无界面服务、自检三条路径是一致的。
+```
+
+### assistant 2026-06-28T14:50:39.248Z
+
+```text
+公共组包函数和自检已同步改完。现在重新编译模拟器到隔离输出目录，再跑 `--self-test`。
+```
+
+### assistant 2026-06-28T14:50:49.681Z
+
+```text
+模拟器重新编译通过，检索也确认两个水压入口都已经是 `B0=0x92`。现在跑隔离输出的自检。
+```
+
+### assistant 2026-06-28T14:51:16.559Z
+
+```text
+还有一个实际落地问题：你当前打开的旧模拟器进程占用了正式 Release exe。为了让桌面快捷方式/正常启动路径用上这次修复，我会先尝试“正常关闭窗口”，然后编译回原来的发布目录；不直接强杀进程。
+```
+
+### assistant 2026-06-28T14:51:34.200Z
+
+```text
+旧模拟器窗口已正常关闭。现在编译正式 Release 输出，并用正式 exe 跑自检。
+```
+
+### assistant 2026-06-28T14:51:52.945Z
+
+```text
+正式自检抓到了另一个旧逻辑：界面“泵前后水压”的语义自检还在要求 `0x170/B0=0x04`。这就是为什么这种问题会反复出现，我继续把这条自检按新协议改成 `B0=0x92`。
+```
+
+### assistant 2026-06-28T14:52:11.895Z
+
+```text
+旧断言已改。现在再次编译正式 Release 并跑完整模拟器自检。
+```
+
+### assistant 2026-06-28T14:52:52.710Z
+
+```text
+WinForms exe 直接用 `&` 启动时 `$LASTEXITCODE` 没返回出来，我改用 `Start-Process -Wait -PassThru` 取进程退出码。
+```
+
+### assistant 2026-06-28T14:53:07.026Z
+
+```text
+正式 Release 已经能自检通过。隔离验证目录只是临时产物，我把它删掉，避免项目里多一份无用输出。
+```
+
+### assistant 2026-06-28T14:53:22.974Z
+
+```text
+我刚才为了覆盖正式 exe 正常关闭了旧模拟器，现在把修复后的正式模拟器重新打开，方便你直接继续测。
+```
+
+### assistant 2026-06-28T14:53:40.640Z
+
+```text
+问题已经定位并改完：不是 Qt 主界面没这个协议，而是模拟器水压入口还残留旧 `B0=0x04`，而当前动态协议应发 `B0=0x92`。我已经把 UI 入口、公共组包函数、自检断言和 Qt 自检都统一到 `0x92`。
+```
+
+### assistant 2026-06-28T14:54:04.808Z
+
+```text
+原因查到了，也已经改完。
+
+`进水压力/出水压力` 协议是有的：动态包 `B0=0x92`，`B1-B2=出水压力`，`B3-B4=进水压力`，`B5-B6=润滑液位`。Qt 主界面显示 `--` 的原因是没有收到/解析到这个有效包时，`inlet/outlet valid` 标志不成立。问题主要在模拟器残留旧协议路径，还在按 `B0=0x04` 做水压组包和自检，导致当前动态协议链路不一致。
+
+已修改：
+- [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs:6872)：泵前/泵后水压发送改为 `B0=0x92`。
+- [ProtocolPayloads.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/ProtocolPayloads.cs:227)：公共水压组包函数也改为 `B0=0x92`，无界面服务不会再发旧包。
+- [SimulatorSelfTest.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/SimulatorSelfTest.cs:68)：自检同步校验 `0x92`。
+- [CanBusModel.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanBusModel.cpp:2620)：Qt CAN 自检补上进水/出水压力有效值校验。
+
+验证结果：
+- Qt 已重新编译，通过 `--self-test-can`，退出码 `0`。
+- 模拟器正式 Release 已重新编译，通过 `--self-test`，退出码 `0`。
+- 我已把修复后的模拟器重新打开，正式 exe 已更新。
+
+`气压力` 这次没动：目前协议里只看到气压低报警位，没有气压力数值字段，所以它继续先放一边。
 ```
