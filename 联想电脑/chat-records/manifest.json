@@ -1,6 +1,6 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-06-29T01:25:39",
+  "exported_at": "2026-06-29T01:32:54",
   "exported_count": 58,
   "missing_count": 0,
   "exports": [
@@ -408,7 +408,7 @@
       "title": "梳理QT软件逻辑",
       "file": "联想电脑/chat-records/058_019f02db-bae6-7bf0-a533-c749bdd402be_梳理QT软件逻辑.md",
       "updated_at": "2026-06-26T07:36:27.513Z",
-      "message_count": 999
+      "message_count": 1026
     }
   ],
   "missing": []
