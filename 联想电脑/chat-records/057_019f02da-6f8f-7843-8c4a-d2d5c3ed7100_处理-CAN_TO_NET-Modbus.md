@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T15:00:08`
+- Exported at: `2026-06-28T15:07:22`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -19129,4 +19129,154 @@ MEMORY.md:1488-1488|note=[used fixed Qt build path for validation]
 
 ```text
 我把新页插到“手柄监测”和“模拟量”之间，名字用“钻机参数”。这页不负责发送，只负责像整车PCB内部参数表一样显示已保存值。
+```
+
+### assistant 2026-06-28T07:00:19.195Z
+
+```text
+我刚加页面时检查到一个细节：物理控件只有一套，孔类型切换只是换显示内容，所以同一套值标签要映射到三个孔类型。现在顺手把这个索引修正，避免切到锚杆孔/超前孔后空刷新。
+```
+
+### assistant 2026-06-28T07:00:27.943Z
+
+```text
+接下来补刷新触发点：Qt 发 `0x50/B7=0x52` 切换工作孔型、`0x50/B7=0x54` 选择 P8 参数组、`0x71` 写参数时，这个模拟器页面都会同步刷新。
+```
+
+### assistant 2026-06-28T07:00:47.335Z
+
+```text
+我还会把这个纳入现有语义自测：模拟 Qt 在 P8 写一组锚杆孔左臂参数，模拟器页面切到锚杆孔后必须看到对应值。这样后面再改不会悄悄断。
+```
+
+### assistant 2026-06-28T07:01:01.432Z
+
+```text
+自测会通过完整的 `InjectQtCommand` 路径走，不直接改内部数组：这样能同时验证 Qt 命令解析、模拟器保存、页面刷新三段链路。
+```
+
+### assistant 2026-06-28T07:01:27.912Z
+
+```text
+代码改动已经落下来了。现在我先编译模拟器，编译过后再跑它自己的语义自测，重点看新增的 P8 参数显示链路是否通过。
+```
+
+### assistant 2026-06-28T07:01:37.427Z
+
+```text
+Release 编译通过，0 警告 0 错误。现在跑模拟器自测，确认新增页面不会影响原来的发送、动态调度、P8 保存链路。
+```
+
+### assistant 2026-06-28T07:02:13.795Z
+
+```text
+自测已通过。最后我做一次差异检查和一个离屏截图检查，看新增页有没有明显控件重叠或空白失控。
+```
+
+### assistant 2026-06-28T07:02:24.341Z
+
+```text
+`git diff --check` 没报空白错误。不过这个模拟器目录像是未跟踪/独立工作目录，普通 `git diff` 没有可用差异输出；我会用文件内容和编译自测作为验证依据。
+```
+
+### assistant 2026-06-28T07:02:38.835Z
+
+```text
+我准备用本地 WinForms 渲染一张临时截图，只看新页布局。这个截图放在临时目录，检查完就删，不作为交付文件留下。
+```
+
+### assistant 2026-06-28T07:03:00.359Z
+
+```text
+第一次截图脚本被 Windows PowerShell 的中文路径编码绊住了，不是应用问题。我改用 UTF-16 encoded command 再跑一次，避免路径乱码。
+```
+
+### assistant 2026-06-28T07:03:33.818Z
+
+```text
+离屏加载 net9 程序不适合 Windows PowerShell，我换成真实启动应用、用 UI Automation 切到“整车PCB模拟 -> 钻机参数”再截窗口。完成后会关掉进程。
+```
+
+### assistant 2026-06-28T07:04:00.013Z
+
+```text
+截图已经生成，进程也关掉了。我现在看一下截图，确认“钻机参数”页确实切到了、布局没有遮挡。
+```
+
+### assistant 2026-06-28T07:04:15.366Z
+
+```text
+截图看过了：新页已经在整车PCB模拟里，三臂三列、孔类型切换、黑底数值区域都正常，没有看到文字遮挡。现在我清理临时截图并确认没有遗留模拟器进程。
+```
+
+### assistant 2026-06-28T07:04:27.146Z
+
+```text
+源码和 Release 输出都已经更新。为避免你桌面快捷方式还指向旧位置，我再快速核对一下桌面上的模拟器快捷方式目标。
+```
+
+### assistant 2026-06-28T07:04:43.637Z
+
+```text
+桌面快捷方式也核对了，目标就是刚刚编译更新的 Release exe，不会打开旧版本。准备给你收口说明。
+```
+
+### assistant 2026-06-28T07:04:49.671Z
+
+```text
+我还取了记忆索引的行号，方便最后注明我用了哪条本机路径规则。
+```
+
+### assistant 2026-06-28T07:05:09.317Z
+
+```text
+已改。模拟器现在在 `整车PCB模拟 -> 钻机参数` 下面新增了一个和 Qt 钻机参数监控对应的页面：
+
+- 三列显示：左臂 / 中臂 / 右臂
+- 上方切换：爆破孔 / 锚杆孔 / 超前孔
+- 未收到或未保存的参数显示 `0`
+- Qt 发 `0x50/B7=0x52` 切换当前工作孔型、`0x50/B7=0x54` 选择 P8 参数组、`0x71` 下发参数后，模拟器页面会同步刷新
+- P8 确认后，模拟器内部保存的整车PCB参数可以直接在这个页面看出来
+
+改动文件：
+- [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs)
+- [SimulatorRuntimeModel.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/SimulatorRuntimeModel.cs)
+
+验证结果：
+- `dotnet build -c Release` 通过，0 警告 0 错误
+- `整车算法PCB模拟器.exe --self-test` 通过
+- 已实际截图检查新页面布局，没有看到文字遮挡
+- 桌面快捷方式 `整车算法PCB模拟器.lnk` 指向的就是刚编译更新后的 Release exe
+```
+
+### assistant 2026-06-28T07:05:09.342Z
+
+```text
+已改。模拟器现在在 `整车PCB模拟 -> 钻机参数` 下面新增了一个和 Qt 钻机参数监控对应的页面：
+
+- 三列显示：左臂 / 中臂 / 右臂
+- 上方切换：爆破孔 / 锚杆孔 / 超前孔
+- 未收到或未保存的参数显示 `0`
+- Qt 发 `0x50/B7=0x52` 切换当前工作孔型、`0x50/B7=0x54` 选择 P8 参数组、`0x71` 下发参数后，模拟器页面会同步刷新
+- P8 确认后，模拟器内部保存的整车PCB参数可以直接在这个页面看出来
+
+改动文件：
+- [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs)
+- [SimulatorRuntimeModel.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/SimulatorRuntimeModel.cs)
+
+验证结果：
+- `dotnet build -c Release` 通过，0 警告 0 错误
+- `整车算法PCB模拟器.exe --self-test` 通过
+- 已实际截图检查新页面布局，没有看到文字遮挡
+- 桌面快捷方式 `整车算法PCB模拟器.lnk` 指向的就是刚编译更新后的 Release exe
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:147-167|note=[confirmed real Qt repo path context]
+MEMORY.md:1488-1488|note=[confirmed fixed Qt validation path preference]
+</citation_entries>
+<rollout_ids>
+019ee8a1-961d-7c51-95d9-2bb054e3c775
+</rollout_ids>
+</oai-mem-citation>
 ```
