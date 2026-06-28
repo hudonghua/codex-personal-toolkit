@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T19:46:07`
+- Exported at: `2026-06-28T19:53:21`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -23668,4 +23668,67 @@ MEMORY.md:557-557|note=[used protocol html no bak preference]
 019ee8a1-961d-7c51-95d9-2bb054e3c775
 </rollout_ids>
 </oai-mem-citation>
+```
+
+### user 2026-06-28T11:49:22.024Z
+
+```text
+<environment_context>
+  <current_date>2026-06-28</current_date>
+  <timezone>Asia/Shanghai</timezone>
+  <filesystem><workspace_roots><root>C:\Users\t250c\Documents\Codex\2026-06-28\51</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
+```
+
+### user 2026-06-28T11:49:22.039Z
+
+```text
+核对后，做一个任务清单，同事一接到这个任务和思路，就可以完成整车PCB代码的编写
+```
+
+### assistant 2026-06-28T11:49:47.654Z
+
+```text
+我先按当前四份协议文档做一次实查，不凭上一轮印象。核对点是：ID/页面订阅/动态 B0/0x51/参数下发/心跳/端口映射，确认任务清单能直接给整车 PCB 固件同事落代码。
+```
+
+### assistant 2026-06-28T11:50:08.362Z
+
+```text
+核对结果：四份文档的主口径是一致的，关键链路已经统一到 `0x50/B7=0x53` 页面订阅、`0x170~0x178+B0` 动态通道、`B7.b0` 心跳、独立 `0x51` 目标孔深、`0x71/0x75/0x7A` 参数下发。现在我把任务清单再补成“固件同事拿到即可拆模块开写”的形式，仍只更新总 MD 和整车 HTML 的既有任务清单。
+```
+
+### assistant 2026-06-28T11:51:09.336Z
+
+```text
+任务清单已经补成模块化交付清单。接下来我再做一次精准校验，确认新增内容在总 MD 和整车 HTML 中都存在，同时没有带回旧端口或旧 0x170~0x179 口径。
+```
+
+### assistant 2026-06-28T11:51:20.288Z
+
+```text
+校验发现内容正确，但总 MD 的第 9 节前少一个空行，影响阅读。我顺手修掉这个排版问题。
+```
+
+### assistant 2026-06-28T11:51:45.270Z
+
+```text
+已核对四份协议文档，并把任务清单补成可以直接交给整车 PCB 固件同事开的版本。
+
+已更新位置：
+- [三模块CAN协议统一梳理.md](E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/三模块CAN协议统一梳理.md:194)
+- [整车PCB通信说明.html](E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/整车PCB——CAN协议/整车PCB通信说明.html:337)
+
+任务清单现在按代码模块拆开了：
+
+- `can_rx_router`：解析 `0x50/0x51/0x71/0x75/0x7A/0x153`
+- `page_subscription`：保存左右屏页面、P02 子页、焦点臂、订阅超时
+- `vehicle_state_snapshot`：采集整车真实状态、报警、掉线、模拟量、阀值、压力电流
+- `parameter_store`：保存 P8 三孔型×三臂参数、P7 电流标定参数
+- `dynamic_b0_builder`：按当前左右屏页面生成 B0 队列
+- `vehicle_frame_packer`：按 B0 把数据打进 8 字节，处理 `B7.b0` 心跳
+- `can_tx_scheduler`：把队列填入 `0x170~0x178`，间隔不小于 `6ms/帧`
+- `acceptance_tests`：用 CAN 工具、Qt、模拟器验证 ID/B0/字节位/显示一致
+
+核对结果也写进清单里了：`0x170~0x178` 只作为动态通道，业务只看 `B0`；`0x179` 保留；独立 `0x51` 是目标孔深；`0x50/B7=0x51` 是 P09 强制解除；不发清零包；未显示页面不发送。验证时没有旧 `500` 端口、旧 `0x170~0x179` 心跳口径、旧版本号残留。
 ```
