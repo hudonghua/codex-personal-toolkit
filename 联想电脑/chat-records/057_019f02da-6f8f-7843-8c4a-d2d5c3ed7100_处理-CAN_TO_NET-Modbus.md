@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T15:14:34`
+- Exported at: `2026-06-28T15:21:48`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -19363,4 +19363,140 @@ MEMORY.md:1488-1488|note=[confirmed fixed Qt validation path preference]
 
 ```text
 Qt 解析已改：收到九组钻机参数只写对应数据表，不再把当前孔型强行改成收到的那一组。接下来补自测，避免以后又退回“只收到一部分”。
+```
+
+### assistant 2026-06-28T07:14:54.078Z
+
+```text
+我找到真正导致“大部分没收到”的关键点了：动态调度为了防止同一个 B0 重复，按 `B0` 去重；但钻机参数 `0xF0~0xF8` 每组有 `B1=0/1/2/3` 四个子包。原逻辑只保留每组第一个子包，后面三包被自己过滤掉了。这个必须按 `B0+B1` 去重。
+```
+
+### assistant 2026-06-28T07:15:28.257Z
+
+```text
+我把自测也加上了：三孔型九组、每组四个子包，共 36 个动态页，必须都进调度，且前 9 个动态槽对应 0x170~0x178。现在补独立 runtime 自测。
+```
+
+### assistant 2026-06-28T07:15:55.793Z
+
+```text
+自测补完了。现在先编译模拟器，主要看 C# 这几处动态调度和三孔型响应有没有编译问题。
+```
+
+### assistant 2026-06-28T07:16:18.540Z
+
+```text
+编译被当前正在运行的模拟器进程锁住了，PID 42092。我要先正常关闭这个旧进程再重新编译，否则桌面快捷方式还是旧 exe。
+```
+
+### assistant 2026-06-28T07:16:35.372Z
+
+```text
+旧进程已关闭，继续编译并跑模拟器自测。
+```
+
+### assistant 2026-06-28T07:16:44.991Z
+
+```text
+模拟器 Release 编译已经通过。现在跑模拟器自测，再编译 Qt 固定构建目录并跑 `--self-test-can`。
+```
+
+### assistant 2026-06-28T07:17:02.433Z
+
+```text
+模拟器自测通过。Qt 构建这边 `cmake` 不在当前 PowerShell PATH，我会用本机已有的 CMake 路径或构建目录里的生成器直接继续，不把这个当成通过。
+```
+
+### assistant 2026-06-28T07:18:13.657Z
+
+```text
+Qt 构建目录是 Ninja 工程，我找到了 VS BuildTools 附带的 CMake。现在用绝对路径构建固定目录。
+```
+
+### assistant 2026-06-28T07:18:23.871Z
+
+```text
+Qt 编译失败不是代码语法，是 MSVC 环境没初始化，连标准库 `<array>` 都找不到。用 VS 的 `VsDevCmd.bat` 初始化后再构建。
+```
+
+### assistant 2026-06-28T07:18:32.445Z
+
+```text
+PowerShell 把带括号的路径拆坏了，我换成单引号包整条 cmd 命令。
+```
+
+### assistant 2026-06-28T07:18:54.025Z
+
+```text
+Qt 这次编译到链接阶段了，失败原因是 `QdnUpperComputerUi.exe` 正在运行被锁。先关旧 Qt 进程，再重新链接。
+```
+
+### assistant 2026-06-28T07:19:14.706Z
+
+```text
+旧 Qt 进程已关闭，继续构建。
+```
+
+### assistant 2026-06-28T07:19:28.203Z
+
+```text
+Qt 固定目录构建通过。现在跑 Qt 的 CAN 自测。
+```
+
+### assistant 2026-06-28T07:20:02.308Z
+
+```text
+已修，问题点不是一个：
+
+1. 模拟器原来 `0xF0~0xF8` 按 `B0` 去重，导致每组 4 个子包只保留了 `B1=0`，`B1=1/2/3` 被自己过滤掉，所以“大部分数据没收到”。
+2. 模拟器原来只回传当前孔型，不是三孔型九组。
+3. Qt 收到 `0xF0~0xF8` 后会自动把当前显示孔型切到收到的孔型，九组轮询时最后容易停在超前孔，看起来“三个孔类型对不上”。
+
+已改：
+- [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs)：钻机参数动态调度改成 `B0+B1` 去重，36 个子包都能进入 0x170~0x178 动态通道。
+- [SimulatorRuntimeModel.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/SimulatorRuntimeModel.cs)：P02-4 按三孔型九组回传；P8 每个 0x71 保存后只回对应子包，避免队列过大。
+- [CanBusModel.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanBusModel.cpp)：Qt 解析钻机参数时只更新对应孔型/臂/行，不再被回传包带着自动切孔型。
+- [SimulatorSelfTest.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/SimulatorSelfTest.cs)：新增 36 子包完整性自测。
+
+验证：
+- 模拟器 Release 编译通过，0 警告 0 错误
+- 模拟器 `--self-test` 通过
+- Qt 固定目录 `build_audit_p201` 编译通过
+- Qt `QdnUpperComputerUi.exe --self-test-can` 通过：`CAN_TO_NET self-test OK`
+
+我为了更新 exe，关闭了旧的模拟器和 Qt 进程；桌面快捷方式现在会打开新编译的模拟器。
+```
+
+### assistant 2026-06-28T07:20:02.329Z
+
+```text
+已修，问题点不是一个：
+
+1. 模拟器原来 `0xF0~0xF8` 按 `B0` 去重，导致每组 4 个子包只保留了 `B1=0`，`B1=1/2/3` 被自己过滤掉，所以“大部分数据没收到”。
+2. 模拟器原来只回传当前孔型，不是三孔型九组。
+3. Qt 收到 `0xF0~0xF8` 后会自动把当前显示孔型切到收到的孔型，九组轮询时最后容易停在超前孔，看起来“三个孔类型对不上”。
+
+已改：
+- [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs)：钻机参数动态调度改成 `B0+B1` 去重，36 个子包都能进入 0x170~0x178 动态通道。
+- [SimulatorRuntimeModel.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/SimulatorRuntimeModel.cs)：P02-4 按三孔型九组回传；P8 每个 0x71 保存后只回对应子包，避免队列过大。
+- [CanBusModel.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanBusModel.cpp)：Qt 解析钻机参数时只更新对应孔型/臂/行，不再被回传包带着自动切孔型。
+- [SimulatorSelfTest.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/SimulatorSelfTest.cs)：新增 36 子包完整性自测。
+
+验证：
+- 模拟器 Release 编译通过，0 警告 0 错误
+- 模拟器 `--self-test` 通过
+- Qt 固定目录 `build_audit_p201` 编译通过
+- Qt `QdnUpperComputerUi.exe --self-test-can` 通过：`CAN_TO_NET self-test OK`
+
+我为了更新 exe，关闭了旧的模拟器和 Qt 进程；桌面快捷方式现在会打开新编译的模拟器。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:147-167|note=[confirmed real Qt repo path context]
+MEMORY.md:1488-1488|note=[confirmed fixed Qt build path preference]
+</citation_entries>
+<rollout_ids>
+019ee8a1-961d-7c51-95d9-2bb054e3c775
+</rollout_ids>
+</oai-mem-citation>
 ```
