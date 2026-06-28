@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T17:17:32`
+- Exported at: `2026-06-28T17:24:50`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -22160,4 +22160,124 @@ CAN 自测通过。我把 Qt 主程序重新打开，保持你现场能直接继
 
 ```text
 我先核 Qt 主界面的进度条代码，确认它现在是不是用 `已打A + 剩余B = 目标孔深` 这个口径。如果不是，就直接修到这个逻辑。
+```
+
+### assistant 2026-06-28T09:17:33.567Z
+
+```text
+检索结果显示它已经在用 `target - current` 算剩余。我现在读具体绘制代码，确认显示文字和发给 0x51 的目标值是同一个函数出来的。
+```
+
+### assistant 2026-06-28T09:17:52.077Z
+
+```text
+对，这个口径是对的，而且我刚才核了代码：Qt 下面三臂进度条和 `0x51` 下发用的是同一个目标孔深函数。
+
+现在逻辑是：
+
+`目标孔深 = 已打 A + 剩余 B`
+
+代码里对应是：
+
+- `A = realtimeState_.arms[i].drillingDepthM`
+- `目标孔深 = targetDrillDepthMForArm(i)`
+- `B = 目标孔深 - A`
+- 进度条比例 = `A / 目标孔深`
+- `0x51 B1-B2` 下发的也是这个 `targetDrillDepthMForArm(i)` 算出来的目标孔深
+
+位置：
+- 显示进度条：[SitonDrillMainView.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/SitonDrillMainView.cpp:1508)
+- 下发 `0x51`：[SitonDrillMainView.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/SitonDrillMainView.cpp:2743)
+
+所以你测试时可以这样判断：模拟器收到的目标孔深，应该等于 Qt 主界面进度条左边“已打 A”加右边“剩 B”。如果不等，就说明公式计算或界面刷新有问题。
+```
+
+### user 2026-06-28T09:18:57.357Z
+
+```text
+推进梁的实时位移长度，协议里面有，是通过报文发给QT，由QT根据这个值与当前孔深目标值进行渲染。是这个逻辑吧。
+```
+
+### assistant 2026-06-28T09:19:12.734Z
+
+```text
+我按源码和当前协议再核一遍，不按印象答。重点看“推进梁实时位移/当前已钻深度”是哪帧解析进来的，以及渲染是否用它和目标孔深相减。
+```
+
+### assistant 2026-06-28T09:19:23.362Z
+
+```text
+协议文档和源码都指向 `0x153`：它进 Qt 后变成三臂 `drillingDepthM`，主界面再用这个实时值和目标孔深渲染。再读一下解析细节，避免单位说错。
+```
+
+### assistant 2026-06-28T09:19:35.273Z
+
+```text
+是，这个逻辑是对的。
+
+当前 Qt 代码里：
+
+`整车/算法侧报文 0x153` → Qt 解析三臂实时钻进深度/推进梁位移 → 存到 `drillingDepthM` → 主界面进度条渲染：
+
+`已打 A = drillingDepthM`  
+`目标孔深 = Qt 当前钻孔模式算出来的 targetDrillDepthMForArm()`  
+`剩余 B = 目标孔深 - 已打 A`
+
+所以界面下面三根进度条应该满足：
+
+`A + B = 当前孔深目标值`
+
+源码对应：
+- `0x153` 解析：[CanBusModel.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanBusModel.cpp:560)
+- 进度条渲染：[SitonDrillMainView.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/SitonDrillMainView.cpp:1508)
+
+单位也核了：`0x153` 里是 `mm`，Qt 除以 `1000.0` 变成 `m` 显示。
+```
+
+### user 2026-06-28T09:20:11.881Z
+
+```text
+你刚才说html需要更新？ 那就更新下。
+```
+
+### assistant 2026-06-28T09:20:29.803Z
+
+```text
+我来更新协议 HTML，把 `0x51` 里 `B3/B4` 以及“输入值只是公式基准，最终目标孔深由公式计算后下发”的口径写清楚。先找当前实际 HTML 文件，避免改错旧副本。
+```
+
+### assistant 2026-06-28T09:20:45.375Z
+
+```text
+当前 `全电脑台车-CAN协议` 下面没有正式协议 HTML，只看到 UI 审计/旧前端页面；正式的协议 HTML 很可能在另一个资料目录。我继续按文件名全盘定位“电脑端/整车PCB/算法PCB通信说明”的 HTML。
+```
+
+### assistant 2026-06-28T09:22:04.551Z
+
+```text
+E 盘全文搜太大了，我缩小到项目资料目录和文件名搜索，先定位正式协议文件。
+```
+
+### assistant 2026-06-28T09:22:22.536Z
+
+```text
+定位到一批正式协议 HTML 的镜像/上传副本，但当前工作目录下没有直接的协议 HTML。我再看 `E:\AI_划时代\全电脑_算法PCB` 的目录结构，找“正确资料”或当前主文件夹。
+```
+
+### assistant 2026-06-28T09:22:35.068Z
+
+```text
+正式目录找到了：`E:\AI_划时代\全电脑_算法PCB\正确资料_算法PCB_CAN协议`。我会直接改这里的当前协议 HTML，不去动那些历史镜像/构建产物。
+```
+
+### assistant 2026-06-28T09:22:58.279Z
+
+```text
+正式 HTML 共 5 个。这个点涉及电脑端下发、整车接收、三模块总览；算法 PCB 文档只需保持“算法忽略独立 0x51”边界。现在我读这些文件里的相关段落后统一改。
+```
+
+### assistant 2026-06-28T09:23:20.673Z
+
+```text
+我不会新建备份文件，直接在这几个正式 HTML 上就地更新。先改 0x51 的字节定义和目标孔深说明，再做全目录校验看有没有残留“B3-B7 保留”。
 ```
