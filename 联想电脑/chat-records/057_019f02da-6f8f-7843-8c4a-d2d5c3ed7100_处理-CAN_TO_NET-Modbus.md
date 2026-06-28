@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T15:36:18`
+- Exported at: `2026-06-28T15:43:34`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -20076,4 +20076,142 @@ Qt 和模拟器编译都通过了，Qt 基础 CAN 自测也通过。还差一步
 
 ```text
 自测已按新动态通道协议修正。现在重建模拟器并重新跑 `--self-test`。
+```
+
+### assistant 2026-06-28T07:36:38.021Z
+
+```text
+模拟器编译被当前正在运行的模拟器进程锁住了：PID 42344 正占用 Release exe。为了把修正后的 exe 写进去，我会关掉这个旧进程再编译；否则桌面快捷方式仍然启动旧版本。
+```
+
+### assistant 2026-06-28T07:36:50.307Z
+
+```text
+已关掉旧模拟器并重建成功。现在跑模拟器自测和 Qt 自测最后确认。
+```
+
+### assistant 2026-06-28T07:37:03.968Z
+
+```text
+两边自测都通过了。我刚才为了写入新版模拟器关掉了旧窗口，现在把新版模拟器重新打开，方便你直接接着测。
+```
+
+### assistant 2026-06-28T07:37:24.274Z
+
+```text
+已改好并验证。
+
+P8 现在确认下发逻辑改成：
+
+- 协议本体仍是 `3个孔型 * (1个参数组选择 + 15个0x71参数帧) = 48帧`
+- 每帧重复发送 `10遍`，总共 `480帧`
+- 按 `35ms` 分帧发送，整次大约 `16.8秒`
+- 如果通讯没连，状态会明确显示“通讯未连接，未下发”，不会再让你误以为已下发
+- 右屏/副窗口的 P8 现在会看主窗口真实通讯状态，不会再误报“通讯未连接”
+
+改动文件：
+[MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp)
+[MainWindow.h](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.h)
+
+另外模拟器自测里旧的 `0x170` 判断也修了：现在按动态 `0x170~0x178` 通道检查，不再只盯死 `0x170`。
+
+验证结果：
+- Qt 固定目标 `build_audit_p201` 编译通过
+- `QdnUpperComputerUi.exe --self-test-can` 通过
+- 模拟器 Release 编译通过
+- `整车算法PCB模拟器.exe --self-test` 通过
+- 我关掉了锁住 exe 的旧模拟器进程 `42344`，并已重新打开新版模拟器
+```
+
+### assistant 2026-06-28T07:37:24.297Z
+
+```text
+已改好并验证。
+
+P8 现在确认下发逻辑改成：
+
+- 协议本体仍是 `3个孔型 * (1个参数组选择 + 15个0x71参数帧) = 48帧`
+- 每帧重复发送 `10遍`，总共 `480帧`
+- 按 `35ms` 分帧发送，整次大约 `16.8秒`
+- 如果通讯没连，状态会明确显示“通讯未连接，未下发”，不会再让你误以为已下发
+- 右屏/副窗口的 P8 现在会看主窗口真实通讯状态，不会再误报“通讯未连接”
+
+改动文件：
+[MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp)
+[MainWindow.h](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.h)
+
+另外模拟器自测里旧的 `0x170` 判断也修了：现在按动态 `0x170~0x178` 通道检查，不再只盯死 `0x170`。
+
+验证结果：
+- Qt 固定目标 `build_audit_p201` 编译通过
+- `QdnUpperComputerUi.exe --self-test-can` 通过
+- 模拟器 Release 编译通过
+- `整车算法PCB模拟器.exe --self-test` 通过
+- 我关掉了锁住 exe 的旧模拟器进程 `42344`，并已重新打开新版模拟器
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:1488-1488|note=[used fixed Qt build and validation path]
+MEMORY.md:147-167|note=[confirmed live qt-upper-computer-ui repo path]
+</citation_entries>
+<rollout_ids>
+019ee8a1-961d-7c51-95d9-2bb054e3c775
+</rollout_ids>
+</oai-mem-citation>
+```
+
+### user 2026-06-28T07:37:53.930Z
+
+```text
+我的意思是1遍是整个发送完毕是1遍。
+```
+
+### assistant 2026-06-28T07:38:11.408Z
+
+```text
+我按你的定义改：不再“同一帧连发10遍”，而是“完整 48 帧发完算 1 遍”，然后整套顺序重复 10 遍。这样整车PCB/模拟器收到的是完整协议循环，不会卡在某个参数帧重复。
+```
+
+### assistant 2026-06-28T07:38:23.858Z
+
+```text
+我现在把队列结构改成两层：先生成“单遍完整协议队列 48 帧”，再把这 48 帧整体复制 10 轮。这样第一遍就是完整下发一次，第二遍再完整重发一次。
+```
+
+### assistant 2026-06-28T07:38:43.562Z
+
+```text
+代码已按“整套重复”改了。现在读回关键代码并编译固定 Qt 目标，确认没有语法和打包问题。
+```
+
+### assistant 2026-06-28T07:39:09.966Z
+
+```text
+读回确认了：现在先生成 `onePassFrames`，再整体复制 10 轮。编译也通过了，接着跑 Qt CAN 自测。
+```
+
+### assistant 2026-06-28T07:39:23.428Z
+
+```text
+对，已经按这个意思改了。
+
+现在 P8 是：
+
+- `48帧完整协议` 发完 = `1遍`
+- 整套 `48帧` 再重复 `10遍`
+- 总发送 `480帧`
+- 顺序是：第1遍完整48帧 -> 第2遍完整48帧 -> ... -> 第10遍完整48帧
+
+不是之前那种“同一帧连发10次再发下一帧”。
+
+已验证：
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp) 读回确认
+- `build_audit_p201` 编译通过
+- `QdnUpperComputerUi.exe --self-test-can` 通过
+```
+
+### user 2026-06-28T07:43:30.683Z
+
+```text
+另外在P2-02 既然有孔类型切换，就要开放出来，这个只是切换显示。真正切换模式 是在主界面的那个地方  这个要分清楚。
 ```
