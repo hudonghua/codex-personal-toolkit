@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T19:53:21`
+- Exported at: `2026-06-28T20:00:33`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -23731,4 +23731,32 @@ MEMORY.md:557-557|note=[used protocol html no bak preference]
 - `acceptance_tests`：用 CAN 工具、Qt、模拟器验证 ID/B0/字节位/显示一致
 
 核对结果也写进清单里了：`0x170~0x178` 只作为动态通道，业务只看 `B0`；`0x179` 保留；独立 `0x51` 是目标孔深；`0x50/B7=0x51` 是 P09 强制解除；不发清零包；未显示页面不发送。验证时没有旧 `500` 端口、旧 `0x170~0x179` 心跳口径、旧版本号残留。
+```
+
+### user 2026-06-28T11:53:41.328Z
+
+```text
+打个包。
+```
+
+### assistant 2026-06-28T11:53:57.038Z
+
+```text
+我直接把当前协议交付资料打成一个 zip，放到桌面。范围按你刚才说的：三个协议目录里的 HTML，加总的 MD；不再额外生成说明文件。
+```
+
+### assistant 2026-06-28T11:54:14.965Z
+
+```text
+`Compress-Archive` 对 `-LiteralPath *` 不认通配符，包还没生成成功。我换成枚举临时目录内容再压缩，继续处理。
+```
+
+### assistant 2026-06-28T11:54:34.570Z
+
+```text
+打好了，放在桌面：
+
+[三模块CAN协议_整车PCB代码任务清单_20260628.zip](C:/Users/t250c/Desktop/三模块CAN协议_整车PCB代码任务清单_20260628.zip)
+
+包含：总 MD、算法 PCB HTML、整车 PCB HTML、电脑端 HTML、CAN-NET HTML。SHA256：`960DA31C77A08AB76ACFB983BFB9DEF8C74D89C33517897FAED1249AFB66DE7D`。
 ```
