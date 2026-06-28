@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-29T00:20:16`
+- Exported at: `2026-06-29T00:27:30`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -25297,4 +25297,115 @@ Qt0x51 ...
 - 模拟器 `--self-test`，里面新增了 `DATA=20 D0 07 01 01 00 00 00` 的断言
 
 备份：`MainForm.cs.bak_20260629_001242`。
+```
+
+### user 2026-06-28T16:22:10.183Z
+
+```text
+算法PCB与QT的互动 。 QT发这些吗：0x50	B7=0x00	标零命令
+0x50	B7=0xA1	出厂四棱镜位置 Q_body
+0x50	B7=0xA3	现场车辆位姿点 Q_world
+0x50	B7=0xA2	机械误差修正 H 点样本 / 拟合触发
+```
+
+### assistant 2026-06-28T16:22:32.280Z
+
+```text
+我先查 Qt 源码和模拟器解析，确认这些 `0x50/B7` 是不是已经作为 Qt 下发命令在走，而不是只写在文档里。
+```
+
+### assistant 2026-06-28T16:23:42.190Z
+
+```text
+我先核对 Qt 代码里 0x50 的打包函数和真实调用点，区分“代码里能组包”和“界面动作是否实际发送”。
+```
+
+### assistant 2026-06-28T16:23:59.422Z
+
+```text
+现在能确定 Qt 里确实有 0x50 的组包函数和界面调用点；我再把 B0-B7 的具体含义读出来，免得只回答“有”但包格式不清楚。
+```
+
+### assistant 2026-06-28T16:24:16.548Z
+
+```text
+关键点出来了：这四类都是 0x50，真正区别在 B7。A1/A3/A2 都会发完后安排一次清零；B7=0x00 的清零命令不会被这个自动清零逻辑再次处理。
+```
+
+### assistant 2026-06-28T16:24:45.575Z
+
+```text
+我还看了模拟器端：它已经按这四类 0x50 命令解析并模拟算法 PCB 返回 0x150 反馈，A1/A3 是四点齐才回结果，A2 样本是逐条收、拟合触发后回结果。
+```
+
+### assistant 2026-06-28T16:25:02.586Z
+
+```text
+结论基本可以直接给了：Qt 不是只写了协议文档，它在界面按钮里实际调用 `sendCommandFrame()` 去发这些帧；前提是通讯已连接，未连接时只保存本机值并提示未发送。
+```
+
+### assistant 2026-06-28T16:25:31.678Z
+
+```text
+是的，当前 Qt 代码里这几类都会发，都是 `CAN ID = 0x50`，并且 `0x50` 映射到 CAN_TO_NET 地址 `100`。
+
+具体对应关系：
+
+- `0x50 / B7=0x00`：标零命令  
+  三臂清零、单传感器清零、吊篮倾角清零都走这个分支。B7 没显式写时默认就是 `0x00`。见 [CanBusModel.cpp](</C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanBusModel.cpp:2047>)。
+
+- `0x50 / B7=0xA1`：出厂四棱镜位置 `Q_body`  
+  格式是 `B0=Q点序号1-4，B1-B2=X/dN，B3-B4=Y/dE，B5-B6=Z/dZ，B7=0xA1`。界面点击“机械四Q点”会逐点下发。见 [CanBusModel.cpp](</C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanBusModel.cpp:2087>)、[MainWindow.cpp](</C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:5539>)。
+
+- `0x50 / B7=0xA3`：现场车辆位姿点 `Q_world`  
+  格式同 A1，只是 B7 改成 `0xA3`。界面点击“现场四Q点”会逐点下发。见 [CanBusModel.cpp](</C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanBusModel.cpp:2091>)、[MainWindow.cpp](</C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:5677>)。
+
+- `0x50 / B7=0xA2`：机械误差修正 H 点样本 / 拟合触发  
+  样本帧：`B0=臂+样本号，B1-B2=H.x/dN，B3-B4=H.y/dE，B5-B6=H.z/dZ，B7=0xA2`。  
+  拟合触发帧：`B0=0x3F/0x7F/0xBF` 分别代表左/中/右臂拟合完成触发。见 [CanBusModel.cpp](</C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanBusModel.cpp:2095>)、[MainWindow.cpp](</C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:5864>)、[MainWindow.cpp](</C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:5927>)。
+
+补充一点：Qt 只有在通讯连接状态下才真正发送到 CAN_TO_NET；未连接时界面会显示“已保存，通讯未连接”。模拟器这边也已经能解析这些 `0x50` 命令，并按算法 PCB 逻辑回 `0x150` 反馈。
+```
+
+### user 2026-06-28T16:25:35.005Z
+
+```text
+互动看板 我看不懂。这个是什么意思？
+```
+
+### assistant 2026-06-28T16:25:55.227Z
+
+```text
+“互动看板”不是协议里的专业名词，是我在模拟器里起的一个测试页名字。
+
+它的意思是：**用来观察 Qt 和模拟器之间有没有互相通信成功**。
+
+主要看三类东西：
+
+1. **Qt 发给 PCB 的数据**  
+   比如 `0x50 A1/A2/A3`、`0x51目标孔深`、P8/P7 参数下发。
+
+2. **模拟器收到后解析出来的中文含义**  
+   比如“收到现场四Q点 Q1”、“收到左臂第3组H点样本”。
+
+3. **模拟器作为算法PCB/整车PCB回给Qt的数据**  
+   比如 `0x150` 标定反馈、拟合结果、保存成功/失败状态。
+
+说白了，它是一个**通信过程观察页**，不是实际设备页面。
+
+这个名字确实不直观，建议改成：
+
+**Qt与PCB通信验证**
+
+或者更直接：
+
+**Qt下发 / PCB反馈**
+
+这样用户一看就知道：左边看 Qt 发了什么，右边看模拟器回了什么。
+```
+
+### user 2026-06-28T16:27:14.890Z
+
+```text
+你这个搞得让人看不懂。你把互动看板改下。改成跟QT界面的类似。这样QT界面发数据过来，对应的数据在同样的位置显示。就说明算法PCB收到数据了。
 ```
