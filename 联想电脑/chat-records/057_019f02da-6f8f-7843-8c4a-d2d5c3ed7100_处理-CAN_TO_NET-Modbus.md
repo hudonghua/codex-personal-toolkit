@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-29T00:05:46`
+- Exported at: `2026-06-29T00:13:02`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -25118,4 +25118,90 @@ Release 构建通过，关键布局参数也已经验证写入。继续跑模拟
 - 已实际打开界面截图检查，按钮不再裁切
 
 备份已按规则更新为最新一份：`MainForm.cs.bak_20260628_235505`。
+```
+
+### user 2026-06-28T16:06:57.205Z
+
+```text
+<environment_context>
+  <current_date>2026-06-29</current_date>
+  <timezone>Asia/Shanghai</timezone>
+  <filesystem><workspace_roots><root>C:\Users\t250c\Documents\Codex\2026-06-28\51</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
+```
+
+### user 2026-06-28T16:06:57.227Z
+
+```text
+QT和整车PCB的互动状态 显示了 QT回传的数据吗？
+```
+
+### assistant 2026-06-28T16:07:13.155Z
+
+```text
+我核对一下当前模拟器这块状态栏的代码，确认它显示的是 Qt 回传值还是模拟器自己的本地值。
+```
+
+### assistant 2026-06-28T16:07:21.266Z
+
+```text
+核对完了：这块确实会显示 Qt 回传的 `0x51` 目标孔深，但只显示当前选择臂对应的回传值。
+```
+
+### assistant 2026-06-28T16:07:32.370Z
+
+```text
+显示了一部分。
+
+在“Qt 和整车PCB互动状态”里，**第 2 行“步骤2 得到目标值”显示的是 Qt 回传的 `0x51` 解析结果**：
+
+- 当前臂目标孔深：例如 `2.000m (2000mm)`
+- 钻孔模式
+- 孔类型
+- 最后收到时间
+
+如果没收到 Qt 的 `0x51`，就显示：
+
+```text
+0.000m (未收到0x51)
+```
+
+代码在 [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs:6819)。
+
+但注意：它现在**没有直接显示 Qt 回传的原始报文**，比如：
+
+```text
+0x51 DATA=20 D0 07 01 01 00 00 00
+```
+
+它只是把 `0x51` 解析成目标孔深/模式/孔类型后显示。  
+如果你要现场一眼确认 Qt 到底回了什么，我建议把第 2 行改成同时显示：
+
+```text
+Qt回传0x51：DATA=...；中臂目标=2.000m；模式=...；孔类型=...
+```
+```
+
+### user 2026-06-28T16:12:01.510Z
+
+```text
+是的。改进
+```
+
+### assistant 2026-06-28T16:12:27.768Z
+
+```text
+我会用备份和验证流程改这个点：在状态栏第 2 行直接拼出 Qt 回传 `0x51 DATA=...`，这样你不用去日志里找原始报文。
+```
+
+### assistant 2026-06-28T16:12:38.898Z
+
+```text
+实现思路：在模拟器接收到 `0x51` 时，按左/中/右臂保存最后一帧原始 DATA；状态栏显示当前选择臂对应的 `DATA=...`。这样切换臂时也能看到各自最后一次 Qt 回传。
+```
+
+### assistant 2026-06-28T16:12:52.028Z
+
+```text
+开始改 `MainForm.cs`：新增 `0x51` 原始帧缓存，并把“步骤2”这一行改成带 `DATA=`。
 ```
