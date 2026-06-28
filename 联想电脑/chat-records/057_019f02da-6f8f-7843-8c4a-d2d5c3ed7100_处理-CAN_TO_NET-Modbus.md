@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T19:38:55`
+- Exported at: `2026-06-28T19:46:07`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -23606,4 +23606,66 @@ MEMORY.md:1488-1488|note=[used fixed build_audit_p201 exe path]
 
 ```text
 准备改文档了：我会把版本号、0x170~0x178 心跳口径、CAN-NET 503 端口和寄存器映射统一掉，并在总 MD 与整车 HTML 里补“整车 PCB 代码编写任务清单”。不生成备份文件，不新增旁路文档。
+```
+
+### assistant 2026-06-28T11:39:25.854Z
+
+```text
+第一轮机械替换已完成；我现在做校验，重点看有没有旧版本号、旧 500 端口、0x170~0x179 心跳残留，以及整车任务清单是否真正插入到 HTML。
+```
+
+### assistant 2026-06-28T11:39:45.934Z
+
+```text
+校验结果：旧的 500 端口和 0x170~0x179 心跳口径在目标文档里已经清掉；整车 HTML 的任务清单也插入成功。再做一遍文件清单和关键版本确认，避免漏掉三个目录主协议页。
+```
+
+### assistant 2026-06-28T11:40:11.737Z
+
+```text
+有两处排版我顺手修一下：总 MD 的第 9 节前需要空行，整车 HTML 新 section 和下一节之间也加换行。内容本身已经对了。
+```
+
+### assistant 2026-06-28T11:40:38.322Z
+
+```text
+排版修正已写入。最后做一次针对性校验，确认旧口径没有回来，新增章节能搜到。
+```
+
+### assistant 2026-06-28T11:41:04.493Z
+
+```text
+已按你限定的范围改完：三个协议目录里的 CAN 协议 HTML，以及总 MD。没有新增文件，也没有生成备份。
+
+改动重点：
+- [三模块CAN协议统一梳理.md](E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/三模块CAN协议统一梳理.md:193)：新增“整车PCB代码编写任务清单”，把接收解析、状态存储、动态调度、打包约束、联调验收写清楚。
+- [整车PCB通信说明.html](E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/整车PCB——CAN协议/整车PCB通信说明.html:337)：同步加入整车PCB代码任务清单。
+- [CAN-NET通信说明.html](E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/电脑端-CAN协议/CAN-NET通信说明.html:54)：端口统一为 `503`，接收映射改为实际动态通道映射，明确 `0x170~0x178` 业务看 `B0`，`0x179` 保留。
+- [算法PCB通信说明.html](E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/算法PCB--CAN协议/算法PCB通信说明.html:28) 和 [电脑端通信说明.html](E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/电脑端-CAN协议/电脑端通信说明.html:28)：版本同步到当前统一协议口径。
+
+验证过：目标文档里已经没有旧的 `192.168.0.105:500`、`<strong>500</strong>`、`端口暂定为 500`、`0x170~0x179` 心跳口径，也没有旧的 `V2026.06.27/V2026.06.26` 协议版本残留。
+```
+
+### assistant 2026-06-28T11:41:04.515Z
+
+```text
+已按你限定的范围改完：三个协议目录里的 CAN 协议 HTML，以及总 MD。没有新增文件，也没有生成备份。
+
+改动重点：
+- [三模块CAN协议统一梳理.md](E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/三模块CAN协议统一梳理.md:193)：新增“整车PCB代码编写任务清单”，把接收解析、状态存储、动态调度、打包约束、联调验收写清楚。
+- [整车PCB通信说明.html](E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/整车PCB——CAN协议/整车PCB通信说明.html:337)：同步加入整车PCB代码任务清单。
+- [CAN-NET通信说明.html](E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/电脑端-CAN协议/CAN-NET通信说明.html:54)：端口统一为 `503`，接收映射改为实际动态通道映射，明确 `0x170~0x178` 业务看 `B0`，`0x179` 保留。
+- [算法PCB通信说明.html](E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/算法PCB--CAN协议/算法PCB通信说明.html:28) 和 [电脑端通信说明.html](E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/电脑端-CAN协议/电脑端通信说明.html:28)：版本同步到当前统一协议口径。
+
+验证过：目标文档里已经没有旧的 `192.168.0.105:500`、`<strong>500</strong>`、`端口暂定为 500`、`0x170~0x179` 心跳口径，也没有旧的 `V2026.06.27/V2026.06.26` 协议版本残留。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:454-455|note=[confirmed protocol project docs scope]
+MEMORY.md:557-557|note=[used protocol html no bak preference]
+</citation_entries>
+<rollout_ids>
+019ee8a1-961d-7c51-95d9-2bb054e3c775
+</rollout_ids>
+</oai-mem-citation>
 ```
