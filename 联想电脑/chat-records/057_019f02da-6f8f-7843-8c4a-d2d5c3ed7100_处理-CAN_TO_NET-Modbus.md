@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T17:53:56`
+- Exported at: `2026-06-28T18:01:13`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -22660,4 +22660,145 @@ QT不要做过多的逻辑。
 
 ```text
 电脑端页有长行不完全匹配，我重新按实际文件片段来补丁，避免误改。
+```
+
+### assistant 2026-06-28T09:54:15.417Z
+
+```text
+我先改短行和明确的三臂行，再单独处理那条很长的合并段，避免整块补丁失败。
+```
+
+### assistant 2026-06-28T09:55:51.751Z
+
+```text
+剩下两处在 HTML 的超长单行里，手写 patch 容易漏字。我会用精确字符串替换，只替换这几个固定句子，然后马上用 `rg` 验证旧句子没有残留。
+```
+
+### assistant 2026-06-28T09:56:32.128Z
+
+```text
+现在进入验证：先查旧措辞和过度逻辑是否还在，再跑 Qt 源码的空白检查和固定构建目录编译。
+```
+
+### assistant 2026-06-28T09:56:55.461Z
+
+```text
+旧的“推进梁停止依据/接到后判断”已经没查到；刚才匹配到的是我新增的“Qt 不做安全保护、到位判断或后退控制”说明，不是残留。再补一轮更窄的核查。
+```
+
+### assistant 2026-06-28T09:57:10.124Z
+
+```text
+文档核查通过：旧的“推进梁停止依据/Qt接到后判断”这类旧句子没残留。现在开始编译固定 `build_audit_p201`，再跑 CAN 自测。
+```
+
+### assistant 2026-06-28T09:57:24.399Z
+
+```text
+当前 PowerShell 环境没有把 `cmake` 加到 PATH。这个不是代码问题，我改用本机已安装的 CMake 绝对路径来构建。
+```
+
+### assistant 2026-06-28T09:57:54.949Z
+
+```text
+`build_audit_p201` 自己的 CMakeCache 里通常会记录当时用的 cmake/qmake 路径，我从这个固定构建目录里取路径，避免换构建目录。
+```
+
+### assistant 2026-06-28T09:58:11.253Z
+
+```text
+源码和文档的静态核查都过了。现在用 `E:\Qt\Tools\CMake_64\bin\cmake.exe` 从固定构建目录编译。
+```
+
+### assistant 2026-06-28T09:58:20.821Z
+
+```text
+这次失败是 MSVC 环境没初始化，标准库 `<array>` 找不到。不是代码编译错误。我用 VS BuildTools 的 `vcvars64.bat` 初始化后再编译。
+```
+
+### assistant 2026-06-28T09:58:29.221Z
+
+```text
+上一条是 PowerShell 引号解析把 `(x86)` 拆了，我换成单引号包 `cmd /c` 内容。
+```
+
+### assistant 2026-06-28T09:58:49.773Z
+
+```text
+固定构建目录已经重新编译通过。现在跑 `--self-test-can`，确认 CAN 组包链路没被这次收窄影响。
+```
+
+### assistant 2026-06-28T09:59:14.005Z
+
+```text
+自测通过。最后我再查一下本次没有在协议目录生成 `.bak_*`，以及确认固定 exe 时间已更新。
+```
+
+### assistant 2026-06-28T09:59:19.691Z
+
+```text
+协议目录没有新增 `.bak_*`。`SitonDrillMainView` 里过度逻辑关键词再次搜不到，固定 exe 已重新链接。
+```
+
+### assistant 2026-06-28T09:59:44.973Z
+
+```text
+已去掉我刚才过度考虑的部分：`SitonDrillMainView` 里已经没有 `lockedTarget`、`pendingTarget`、`lockDrillTarget` 这类锁定/屏蔽逻辑。现在 Qt 的边界就是计算并发送 `0x51` 目标孔深、显示 `0x153` 实时深度进度；整车 PCB 在凿岩开启时自己采纳目标值，并自己判断停止/后退。
+
+同步改了协议文档措辞，去掉“Qt 判断推进梁停止/安全控制”的暗示，保留最新口径，不留历史记录。涉及 README、统一梳理 MD、三模块总览 HTML、整车 PCB HTML、电脑端 HTML、CAN-NET HTML。协议目录未新增 `.bak_*`。
+
+验证结果：
+- `rg` 确认过度逻辑关键词无残留。
+- `git diff --check -- src/SitonDrillMainView.cpp src/SitonDrillMainView.h` 通过。
+- 固定目录 `build_audit_p201` 编译通过，`QdnUpperComputerUi.exe` 更新时间：`2026-06-28 17:58:44`。
+- `QdnUpperComputerUi.exe --self-test-can` 通过：`CAN_TO_NET self-test OK`。
+```
+
+### assistant 2026-06-28T09:59:44.996Z
+
+```text
+已去掉我刚才过度考虑的部分：`SitonDrillMainView` 里已经没有 `lockedTarget`、`pendingTarget`、`lockDrillTarget` 这类锁定/屏蔽逻辑。现在 Qt 的边界就是计算并发送 `0x51` 目标孔深、显示 `0x153` 实时深度进度；整车 PCB 在凿岩开启时自己采纳目标值，并自己判断停止/后退。
+
+同步改了协议文档措辞，去掉“Qt 判断推进梁停止/安全控制”的暗示，保留最新口径，不留历史记录。涉及 README、统一梳理 MD、三模块总览 HTML、整车 PCB HTML、电脑端 HTML、CAN-NET HTML。协议目录未新增 `.bak_*`。
+
+验证结果：
+- `rg` 确认过度逻辑关键词无残留。
+- `git diff --check -- src/SitonDrillMainView.cpp src/SitonDrillMainView.h` 通过。
+- 固定目录 `build_audit_p201` 编译通过，`QdnUpperComputerUi.exe` 更新时间：`2026-06-28 17:58:44`。
+- `QdnUpperComputerUi.exe --self-test-can` 通过：`CAN_TO_NET self-test OK`。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:167-169|note=[confirmed real qt repo and 0x51 source mapping context]
+MEMORY.md:557-557|note=[used protocol html no bak preference]
+MEMORY.md:1488-1488|note=[used fixed build_audit_p201 exe path]
+</citation_entries>
+<rollout_ids>
+019ee8a1-961d-7c51-95d9-2bb054e3c775
+</rollout_ids>
+</oai-mem-citation>
+```
+
+### user 2026-06-28T10:00:09.422Z
+
+```text
+这个流程是：凿岩开启（整车PCB发过来的） QT接到这个指令，公式计算目标值，就一直下发。不要停。 整车PCB拿到这个数据后，会自行控制。
+```
+
+### assistant 2026-06-28T10:00:30.513Z
+
+```text
+我按你这个流程改：`0x51` 不再只是变化时发一次，Qt 收到整车 PCB 的凿岩开启后计算目标孔深，然后周期性持续下发；整车 PCB 只负责接收后自行控制。
+```
+
+### assistant 2026-06-28T10:00:47.861Z
+
+```text
+我先看当前 `0x51` 发送链路和凿岩开启状态从哪里进来，再只改这一条链路。不会把整车 PCB 的控制逻辑搬到 Qt。
+```
+
+### assistant 2026-06-28T10:01:03.407Z
+
+```text
+当前代码的 `publishDrillTargetDepths(false)` 还是“值变化才发”，所以你说的“收到凿岩开启后一直下发”还没有实现。我会加一个 `QTimer` 周期发送，只在凿岩开启后启动，不做控制判断。
 ```
