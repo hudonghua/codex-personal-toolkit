@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T16:41:24`
+- Exported at: `2026-06-28T16:48:37`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -21467,4 +21467,94 @@ P7-7 截图已生成，我现在检查渲染和文本。
 
 ```text
 P7-7 页面截图正常，Qt CAN 自检也仍然通过。最后我把刚才停止的 Qt 和模拟器重新打开，方便你继续实机测试。
+```
+
+### assistant 2026-06-28T08:41:28.667Z
+
+```text
+Qt 和模拟器已经重新启动。我再确认两个进程都在。
+```
+
+### assistant 2026-06-28T08:41:50.166Z
+
+```text
+已按 P08 的成功方式把 P7-6/P7-7 改掉了。
+
+核心改动在 [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:4301)：P7 下发现在是异步排队发送，有 `下发中 x/y` 进度；同一帧连续发 5 次；帧间隔 70ms；下发期间按钮禁用，关键参数通道锁住，避免其它同通道命令插队。  
+P7-6：42 个基础帧，实际 210 帧。P7-7：12 个基础帧，实际 60 帧。
+
+另外我把模拟器自检里几个旧静态协议断言修正为最新动态协议判断，位置在 [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs:584)。之前自检还在查旧的 `B0=0x04/0x05/0x06` 和 `B0=0x01`，现在按动态 `B0=0x92/0x93/0x94`、`B0=0x80` 判断。
+
+验证结果：
+- Qt `build_audit_p201` 编译通过。
+- `QdnUpperComputerUi.exe --self-test-can` 通过。
+- 模拟器 Release 编译通过。
+- 模拟器 `--self-test` 通过。
+- P7-06、P7-07 截图检查正常。
+- Qt 和模拟器都已重新打开。
+```
+
+### assistant 2026-06-28T08:41:50.214Z
+
+```text
+已按 P08 的成功方式把 P7-6/P7-7 改掉了。
+
+核心改动在 [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:4301)：P7 下发现在是异步排队发送，有 `下发中 x/y` 进度；同一帧连续发 5 次；帧间隔 70ms；下发期间按钮禁用，关键参数通道锁住，避免其它同通道命令插队。  
+P7-6：42 个基础帧，实际 210 帧。P7-7：12 个基础帧，实际 60 帧。
+
+另外我把模拟器自检里几个旧静态协议断言修正为最新动态协议判断，位置在 [MainForm.cs](C:/Users/t250c/Documents/全电脑台车-CAN协议/pcb-can-simulator/MainForm.cs:584)。之前自检还在查旧的 `B0=0x04/0x05/0x06` 和 `B0=0x01`，现在按动态 `B0=0x92/0x93/0x94`、`B0=0x80` 判断。
+
+验证结果：
+- Qt `build_audit_p201` 编译通过。
+- `QdnUpperComputerUi.exe --self-test-can` 通过。
+- 模拟器 Release 编译通过。
+- 模拟器 `--self-test` 通过。
+- P7-06、P7-07 截图检查正常。
+- Qt 和模拟器都已重新打开。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:1488-1488|note=[used fixed Qt build and validation path]
+MEMORY.md:147-167|note=[confirmed live qt-upper-computer-ui repo path]
+</citation_entries>
+<rollout_ids>
+019ee8a1-961d-7c51-95d9-2bb054e3c775
+</rollout_ids>
+</oai-mem-citation>
+```
+
+### user 2026-06-28T08:42:20.256Z
+
+```text
+P08 的成功方式把 P7-6/P7-7 改掉   这个经验要形成，后面有大量的这种类似任务。
+```
+
+### assistant 2026-06-28T08:42:33.020Z
+
+```text
+我会把这次经验沉淀成可复用规则，不只留在聊天里。重点写清楚：关键参数下发类任务一律按 P08 模型做，不能同步循环猛发。
+```
+
+### assistant 2026-06-28T08:42:53.382Z
+
+```text
+我会把它放到现有的 Qt 上位机 UI skill 里，因为后面 P07/P08/P10 这类参数下发都属于同一个工作流；同时写一条本地记忆更新 note，后续会更容易检索到。
+```
+
+### assistant 2026-06-28T08:43:00.727Z
+
+```text
+我会追加一个“关键参数下发”规则，写成以后能直接执行的 checklist：先找 P08 模型，排队发，显示进度，同帧重复，关键通道锁住，最后必须实测。
+```
+
+### assistant 2026-06-28T08:43:17.322Z
+
+```text
+skill 已追加。现在我写一条本地记忆 note，专门标记“P08 成功下发模型要复用于 P7/P10 等关键参数页”。
+```
+
+### assistant 2026-06-28T08:43:41.835Z
+
+```text
+我还会同步到 MCP 记忆/记录里，后续检索“P08、P7、关键参数下发、同帧5遍、下发进度”这些关键词时能命中。
 ```
