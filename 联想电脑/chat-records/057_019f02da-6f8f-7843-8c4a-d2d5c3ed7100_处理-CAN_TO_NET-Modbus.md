@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-28T10:00:41`
+- Exported at: `2026-06-28T10:07:54`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -14690,4 +14690,75 @@ QT自己不用清零啊。接收数据就去逻辑处理啊。
 
 ```text
 代码验证点已经看到：`applyFrame()` 不再特殊处理全 0；主窗口也不再启动超时清零定时器。现在构建固定目标并跑自测。
+```
+
+### assistant 2026-06-28T02:00:47.854Z
+
+```text
+Qt 编译到链接阶段失败，不是代码编译错误，是 `QdnUpperComputerUi.exe` 正在被占用，链接器打不开目标 exe。模拟器构建通过。我要先确认哪个进程占用 Qt exe；如果就是正在打开的上位机，需要关掉后才能覆盖新版本。
+```
+
+### assistant 2026-06-28T02:00:56.295Z
+
+```text
+当前正在运行一个旧的 `QdnUpperComputerUi.exe`，所以新 exe 不能覆盖。为了把这次修正落到你实际打开的程序里，我先关闭这个旧进程，再重新链接；否则你继续测的还是旧逻辑。
+```
+
+### assistant 2026-06-28T02:01:07.919Z
+
+```text
+旧进程已经关掉。现在重新构建固定目录，并跑新 exe 的自测。
+```
+
+### assistant 2026-06-28T02:01:25.332Z
+
+```text
+新 exe 已经成功链接。现在跑新版本自测，再做差异检查。
+```
+
+### assistant 2026-06-28T02:01:43.370Z
+
+```text
+自测暴露出我刚才的测试断言写得不对：前一帧已经按正常业务帧把急停状态置回正常，所以不能再拿急停当“是否被空槽清掉”的判断。这里应该只验证 `raw170[0x01]` 里的液位低位没有被 B0=0 空槽覆盖。我改自测断言，不改业务逻辑。
+```
+
+### assistant 2026-06-28T02:01:53.704Z
+
+```text
+断言修正后继续构建和自测。
+```
+
+### assistant 2026-06-28T02:02:10.114Z
+
+```text
+新版本重新链接成功。现在跑完整自测。
+```
+
+### assistant 2026-06-28T02:02:18.863Z
+
+```text
+自测通过了。我刚才为了覆盖 exe 关掉了旧 Qt，现在启动新版本让你继续测。
+```
+
+### assistant 2026-06-28T02:02:38.799Z
+
+```text
+原因查到了：Qt 之前有两套“自己清零”逻辑，会导致闪：
+
+1. `0x170~0x179` 收到全 0 帧时，Qt 会直接清掉这个 ID 的缓存状态。
+2. Qt 还有 5 秒超时清零定时器，没收到帧就把状态置无效。
+
+这和你说的“不需要 Qt 自己清零，只按接收到的数据处理”冲突。我已经改掉了：
+
+- [CanBusModel.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanBusModel.cpp:263)：去掉全 0 帧触发清空的逻辑。空槽 `B0=0` 不再把状态打掉。
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:1939)：停掉 Qt 的超时清零定时器。
+- 自测改成验证：全 0 空槽不能清状态；只有收到正确 B0 分包的正常帧才更新为正常。
+
+注意：如果 CAN_TO_NET 要把断线恢复成正常，不能发整帧全 0，应该发有效业务分包，比如 `0x171 DATA=01 00 00 00 00 00 00 00/01`，也就是 `B0=0x01`，对应位为 0。Qt 只按这种有效分包处理。
+
+已验证：
+- Qt 重新构建通过。
+- `QdnUpperComputerUi.exe --self-test-can` 通过。
+- 模拟器 `--self-test` 通过。
+- 我已经重新打开了新的 Qt 程序，进程是 `QdnUpperComputerUi.exe`。
 ```
