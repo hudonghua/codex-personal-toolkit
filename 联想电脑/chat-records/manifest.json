@@ -1,6 +1,6 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-06-29T15:34:37",
+  "exported_at": "2026-06-29T15:46:50",
   "exported_count": 58,
   "missing_count": 0,
   "exports": [
@@ -331,7 +331,7 @@
       "title": "继续开发 V1.20 下载修复",
       "file": "联想电脑/chat-records/047_019ebcf7-54ad-7101-9184-774f509d736b_继续开发-V1.20-下载修复.md",
       "updated_at": "2026-06-12T17:53:12.441Z",
-      "message_count": 2398
+      "message_count": 2416
     },
     {
       "id": "019ebf3d-ae09-7580-bb47-820755dc55d1",
