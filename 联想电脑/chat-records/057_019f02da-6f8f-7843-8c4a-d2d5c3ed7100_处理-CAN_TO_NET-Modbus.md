@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-29T09:46:42`
+- Exported at: `2026-06-29T10:21:50`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -26626,4 +26626,186 @@ A1/A2/A3 仍然照常发：
 
 ```text
 P10 截图已生成，我现在看一下是否有明显遮挡、空白或文字压缩问题。
+```
+
+### assistant 2026-06-29T01:46:46.678Z
+
+```text
+机械四 Q 点页视觉正常。P10 的重点还有“机械误差补偿”页，我再截这个 tab。
+```
+
+### assistant 2026-06-29T01:48:12.085Z
+
+```text
+**审核结果**
+
+未发现这次 QT 改动对算法 PCB 链路造成阻断问题。
+
+我重点核对了这几块：
+
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:2218)：启动时会恢复 22 个拟合参数、Q_body、Q_world、A2 样本池，不需要进入 P10 才能读取已保存的 22 个参数。
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:327)：22 个参数必须满足 `valid=true` 且数量为 22 才会加载，第一次没算过不会误用。
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:5816)：A1/Q_body 下发仍然走 `0x50 B7=0xA1`。
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:5956)：A3/Q_world 下发仍然走 `0x50 B7=0xA3`。
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:6204)：A2 样本和拟合触发仍然走 `0x50 B7=0xA2`，QT 本地计算失败不会挡住算法 PCB 的下发链路。
+- [CanBusModel.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanBusModel.cpp:2167)：A1/A2/A3 报文组包和当前协议一致。
+
+需要注意一个残留风险：如果 P10 表格里是旧版本留下来的 20 组 H 点数据，但没有对应的 A2 快照池，QT 本地 22 参数拟合不会使用这些旧数据，界面会提示类似“A2池缺少快照”。这不是算法 PCB 链路问题，重新采集样本后就正常。
+
+我已验证：
+
+```powershell
+cmake --build C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\build_audit_p201 --config Release --clean-first
+```
+
+编译通过。
+
+```powershell
+C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\build_audit_p201\QdnUpperComputerUi.exe --self-test-can
+```
+
+结果：`CAN_TO_NET self-test OK`。
+
+另外我截了 P10 页面和机械误差补偿页面检查，当前布局没有明显挤压遮挡。硬件实机链路这次没有跑，只做了代码、构建、自测和界面截图审核。
+```
+
+### assistant 2026-06-29T01:48:12.112Z
+
+```text
+**审核结果**
+
+未发现这次 QT 改动对算法 PCB 链路造成阻断问题。
+
+我重点核对了这几块：
+
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:2218)：启动时会恢复 22 个拟合参数、Q_body、Q_world、A2 样本池，不需要进入 P10 才能读取已保存的 22 个参数。
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:327)：22 个参数必须满足 `valid=true` 且数量为 22 才会加载，第一次没算过不会误用。
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:5816)：A1/Q_body 下发仍然走 `0x50 B7=0xA1`。
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:5956)：A3/Q_world 下发仍然走 `0x50 B7=0xA3`。
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:6204)：A2 样本和拟合触发仍然走 `0x50 B7=0xA2`，QT 本地计算失败不会挡住算法 PCB 的下发链路。
+- [CanBusModel.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanBusModel.cpp:2167)：A1/A2/A3 报文组包和当前协议一致。
+
+需要注意一个残留风险：如果 P10 表格里是旧版本留下来的 20 组 H 点数据，但没有对应的 A2 快照池，QT 本地 22 参数拟合不会使用这些旧数据，界面会提示类似“A2池缺少快照”。这不是算法 PCB 链路问题，重新采集样本后就正常。
+
+我已验证：
+
+```powershell
+cmake --build C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\build_audit_p201 --config Release --clean-first
+```
+
+编译通过。
+
+```powershell
+C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\build_audit_p201\QdnUpperComputerUi.exe --self-test-can
+```
+
+结果：`CAN_TO_NET self-test OK`。
+
+另外我截了 P10 页面和机械误差补偿页面检查，当前布局没有明显挤压遮挡。硬件实机链路这次没有跑，只做了代码、构建、自测和界面截图审核。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:810-821|note=[Q body world A2 and fix semantics]
+MEMORY.md:1496-1498|note=[fixed Qt build path and reliable downlink pattern]
+MEMORY.md:1509-1509|note=[verification pattern]
+</citation_entries>
+<rollout_ids>
+</rollout_ids>
+</oai-mem-citation>
+```
+
+### user 2026-06-29T02:16:17.385Z
+
+```text
+你来接手QT，你把QT算出来的相关数据，打印到主界面上。同时也打印PCB算出来的，并排放放一起。
+```
+
+### assistant 2026-06-29T02:16:37.902Z
+
+```text
+我接手改 QT 这块。先读当前主界面和 CAN/算法数据模型，确认哪些值是 QT 本地算的、哪些是 PCB 回传的，然后把它们并排放到主界面，不先动协议。
+```
+
+### assistant 2026-06-29T02:16:43.892Z
+
+```text
+我会按主界面 P01 的实际代码来放，不做成工程调试页。现在先找主界面里已经显示的目标孔深、实时位移、H 点/末端坐标、PCB 回传坐标这些数据入口。
+```
+
+### assistant 2026-06-29T02:17:07.365Z
+
+```text
+我已经定位到主界面在 `SitonDrillMainView`，PCB 回传的 H 点来自 `0x150/0x152`，QT 本地算法结果在 `MachineRealtimeState` 里也有单独字段。下一步是把这两个结果作为主界面叠加信息并排画出来。
+```
+
+### assistant 2026-06-29T02:18:00.730Z
+
+```text
+改动会集中在 `SitonDrillMainView.cpp`：主视图左上角现有 H 点信息里增加“QT计算 / PCB回传”两列，显示当前臂的 H 点 X/Y/Z 和两者差值；同时保留现有孔数、角度、已打/剩余信息。先按规则给这个文件做一份最新备份。
+```
+
+### assistant 2026-06-29T02:18:43.236Z
+
+```text
+这个显示我会做成调试对照但仍放在主界面：当前臂的 `QT计算H点` 与 `PCB计算H点` 并排显示，下面显示两者差值；目标孔深和 PCB 已打长度也放在同一块里，方便你看整条链路是否一致。
+```
+
+### assistant 2026-06-29T02:19:27.177Z
+
+```text
+代码已经改完主界面对照显示。现在我先做静态检查，再用固定 `build_audit_p201` 重新编译和跑自测，最后截主界面看有没有遮挡。
+```
+
+### assistant 2026-06-29T02:19:41.993Z
+
+```text
+静态检查没发现空白/格式问题，只有当前仓库已有的 CRLF 提示。现在开始固定构建目录编译。
+```
+
+### assistant 2026-06-29T02:19:53.594Z
+
+```text
+当前 PowerShell 里 `cmake` 不在 PATH，这不是代码错误。我先找本机已有的 CMake/Qt 构建入口，再继续用同一个 `build_audit_p201`。
+```
+
+### assistant 2026-06-29T02:20:27.802Z
+
+```text
+找到 VS BuildTools 自带的 CMake。我用它继续构建，不换目录。
+```
+
+### assistant 2026-06-29T02:20:37.995Z
+
+```text
+这次失败不是源码编译错误，是当前 shell 没加载 MSVC 环境，`cl.exe` 找不到标准库头文件 `array`。我切到 VS 开发环境再编译一次。
+```
+
+### assistant 2026-06-29T02:20:48.317Z
+
+```text
+上一个命令是 PowerShell 引号把 `(x86)` 拆坏了。我用 `cmd.exe /c call` 的方式重试。
+```
+
+### assistant 2026-06-29T02:21:13.928Z
+
+```text
+源码已经编过了，链接失败是 `QdnUpperComputerUi.exe` 正在被占用，无法覆盖。我要先结束这个旧进程，再重新链接，避免换目录或换 exe。
+```
+
+### assistant 2026-06-29T02:21:18.390Z
+
+```text
+旧进程已关。现在重新构建。
+```
+
+### assistant 2026-06-29T02:21:38.828Z
+
+```text
+构建通过。接下来跑 CAN 自测，再用同一个 exe 截主界面。
+```
+
+### assistant 2026-06-29T02:21:47.247Z
+
+```text
+自测通过。截图参数支持按页面索引和演示 CAN 数据，我用首页索引截一张带数据的主界面，确认新增对照块能看清。
 ```
