@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-29T11:59:08`
+- Exported at: `2026-06-29T12:06:22`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -27776,4 +27776,140 @@ MEMORY.md:1496-1496|note=[fixed Qt build path]
 
 ```text
 代码已经改完，先读回关键位置确认没有改错函数边界，然后再跑 Keil FLASH 编译。
+```
+
+### assistant 2026-06-29T03:59:12.032Z
+
+```text
+源码读回确认关键插入点在预期位置。这个目录不是 Git 仓库，所以我会用备份文件和当前文件做 `--no-index --check`，同时用 Keil 的 `UV4.exe -b` 编译 FLASH 目标。
+```
+
+### assistant 2026-06-29T03:59:32.950Z
+
+```text
+`--check` 没报空白错误，只提示 CRLF。现在跑 Keil `FLASH` 编译；如果出现 ARMCC 报错，我按报错点继续修。
+```
+
+### assistant 2026-06-29T03:59:55.282Z
+
+```text
+UV4 这次没有把日志写出来，可能命令行参数没有触发实际构建。我检查日志和现有构建脚本/历史命令，换成这个工程之前能跑通的方式。
+```
+
+### assistant 2026-06-29T04:00:04.706Z
+
+```text
+日志文件其实已经生成了，只是我刚才 Tail 没显示出来。先读它确认结果。
+```
+
+### assistant 2026-06-29T04:01:12.594Z
+
+```text
+我先做一次收尾核对：确认算法 PCB 源码里独占下发逻辑还在、备份存在、Keil 构建日志是通过状态，然后我给你汇总这次改动。
+```
+
+### assistant 2026-06-29T04:01:22.969Z
+
+```text
+源码和构建日志核对完了：独占下发入口、重复帧过滤、发送门控都在 `App_usr.c`，Keil 重新构建是 `0 Error(s)`。
+```
+
+### assistant 2026-06-29T04:01:49.011Z
+
+```text
+算法 PCB 代码已经改了，位置是 [App_usr.c](<E:\AI_划时代\全电脑_算法PCB\正确资料_算法PCB_CAN协议\MC_LCD - 7Control_V1.2\Src\App_usr.c:1288>)。
+
+这次加的是下发独占机制：
+
+- 算法 PCB 现在识别 `0x50 / B7=0x55` 独占开始/结束标记。
+- 独占期间暂停普通算法上报，避免和 QT 关键下发抢链路。
+- `A1/A2/A3` 下发仍然正常处理。
+- P10 下发的重复帧做了幂等处理，QT 发 5 次同一帧时，算法 PCB 不会把同一个 H 点样本重复追加 5 次。
+- 如果结束帧丢了，3 秒后自动释放独占状态，避免一直卡死。
+- 独占结束后，排队的算法反馈再继续发。
+
+我也重新跑了 Keil `FLASH` 构建，结果在 [codex_rebuild_critical_downlink_algpcb.log](<E:\AI_划时代\全电脑_算法PCB\正确资料_算法PCB_CAN协议\MC_LCD - 7Control_V1.2\codex_rebuild_critical_downlink_algpcb.log>)：`0 Error(s), 3 Warning(s)`。这 3 个警告是 `messageshow`、`Ramp`、`Arm200A_PageNeedRawAngle`，没有独占下发相关编译错误。
+
+修改前备份保留在：
+
+`E:\AI_划时代\全电脑_算法PCB\正确资料_算法PCB_CAN协议\MC_LCD - 7Control_V1.2\Src\App_usr.c.bak_20260629_115715`
+```
+
+### assistant 2026-06-29T04:01:49.036Z
+
+```text
+算法 PCB 代码已经改了，位置是 [App_usr.c](<E:\AI_划时代\全电脑_算法PCB\正确资料_算法PCB_CAN协议\MC_LCD - 7Control_V1.2\Src\App_usr.c:1288>)。
+
+这次加的是下发独占机制：
+
+- 算法 PCB 现在识别 `0x50 / B7=0x55` 独占开始/结束标记。
+- 独占期间暂停普通算法上报，避免和 QT 关键下发抢链路。
+- `A1/A2/A3` 下发仍然正常处理。
+- P10 下发的重复帧做了幂等处理，QT 发 5 次同一帧时，算法 PCB 不会把同一个 H 点样本重复追加 5 次。
+- 如果结束帧丢了，3 秒后自动释放独占状态，避免一直卡死。
+- 独占结束后，排队的算法反馈再继续发。
+
+我也重新跑了 Keil `FLASH` 构建，结果在 [codex_rebuild_critical_downlink_algpcb.log](<E:\AI_划时代\全电脑_算法PCB\正确资料_算法PCB_CAN协议\MC_LCD - 7Control_V1.2\codex_rebuild_critical_downlink_algpcb.log>)：`0 Error(s), 3 Warning(s)`。这 3 个警告是 `messageshow`、`Ramp`、`Arm200A_PageNeedRawAngle`，没有独占下发相关编译错误。
+
+修改前备份保留在：
+
+`E:\AI_划时代\全电脑_算法PCB\正确资料_算法PCB_CAN协议\MC_LCD - 7Control_V1.2\Src\App_usr.c.bak_20260629_115715`
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:561-565|note=[algorithm PCB handoff and key source files]
+MEMORY.md:594-597|note=[Keil path and live App_usr code facts]
+MEMORY.md:453-455|note=[project scope and live MC_LCD tree]
+</citation_entries>
+<rollout_ids>
+</rollout_ids>
+</oai-mem-citation>
+```
+
+### user 2026-06-29T04:03:51.583Z
+
+```text
+现在我测试P8 下发后，大量数据没有更新。
+```
+
+### assistant 2026-06-29T04:04:09.565Z
+
+```text
+我先按实际链路查，不先猜：P8 下发涉及 QT 组包、独占发送、模拟器接收/保存，任何一边槽位或重复发送策略不一致都会表现成“大量没更新”。我会先定位 P8 的发送代码和模拟器接收代码，再看是不是帧重复、槽位映射、或者独占窗口被打断。
+```
+
+### user 2026-06-29T04:04:10.609Z
+
+```text
+模拟器的对应数据没有更新。
+```
+
+### assistant 2026-06-29T04:04:28.429Z
+
+```text
+收到，重点就放到模拟器端：QT 下发出去以后，模拟器接收/解码/保存的 P8 数据没有同步更新。我先找模拟器工程和 P8 接收槽位，确认是 QT 没发到、还是模拟器解析映射没吃进去。
+```
+
+### assistant 2026-06-29T04:04:45.490Z
+
+```text
+我已经找到模拟器工程在 `pcb-can-simulator`。现在查到一个关键风险：文档/代码里 P8 有过“当前孔类型 15 帧”和“9 组全量”两种历史说法，模拟器很可能只按其中一种接收，所以有些槽位没更新。接下来直接对比 QT 发送帧和模拟器解析帧。
+```
+
+### assistant 2026-06-29T04:05:02.273Z
+
+```text
+现在看到模拟器确实已经有 P8 接收逻辑，但我还没确认它和 QT 当前 `0x71` 的打包完全一致。尤其要看 `0x71/0x81/0x91` 这类子项是不是被误判成“不属于 P8”，这会导致你看到只更新一部分。
+```
+
+### assistant 2026-06-29T04:05:19.197Z
+
+```text
+这里已经发现一个明显不一致：QT 当前 P8 每个孔型会先发 `0x50/B7=0x54` 选参数组，再发 15 个 `0x71`，而且每帧重复 10 次；模拟器按 `currentDrillPresetWriteHoleType` 接收。我要继续查是不是模拟器接收的 `0x50` 选组帧被重复/清空/独占处理影响，导致后续 `0x71` 写到错误孔型或被忽略。
+```
+
+### assistant 2026-06-29T04:05:34.309Z
+
+```text
+目前更像模拟器自身模型没有正确覆盖完整 15 项：自测里只验证了少量槽位，不能证明 P8 全量 9 组都对。我要补一个全量 P8 映射自测，用 QT 同样的 15 帧格式喂模拟器，直接暴露哪几个字段没更新。
 ```
