@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-29T09:32:10`
+- Exported at: `2026-06-29T09:39:26`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -26432,4 +26432,101 @@ MEMORY.md:1509-1509|note=[verification pattern for parameter downlink pages]
 <rollout_ids>
 </rollout_ids>
 </oai-mem-citation>
+```
+
+### user 2026-06-29T01:34:26.450Z
+
+```text
+系统重启，不进入P10 也可以读取22个拟合参数吗？
+```
+
+### assistant 2026-06-29T01:34:46.404Z
+
+```text
+可以。现在代码里 22 个拟合参数不依赖进入 P10。
+
+启动时 [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:2137) 会先执行：
+
+`restoreQtKinematicsFixValues(canState_);`
+
+它在 [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:327) 里从 `QSettings("GengliMachine", "QdnUpperComputerUi")` 读取：
+
+`calibration/qtKinematicsFix/left`
+`calibration/qtKinematicsFix/middle`
+`calibration/qtKinematicsFix/right`
+
+每个臂要求：
+
+- `valid == true`
+- `count == 22`
+- `v0` 到 `v21` 都能正常转成数值
+
+满足这些条件就会调用 `setQtKinematicsFixValues()` 写进本地算法。所以系统重启后，不进入 P10，也能恢复左/中/右三臂各 22 个拟合参数。
+
+但注意：这是“22 个拟合参数”。A1/A3 的 Q 点当前还不是启动即恢复到本地算法，这个和 22 个拟合参数是两回事。
+```
+
+### user 2026-06-29T01:38:16.302Z
+
+```text
+22个参数，是在P10键入20个坐标值后，才能算出来。 下次重启的时候，自动读取22个参数。不需要再去P10这个界面去算了。 第一次的时候，要有判断。如果22没有算过，就不要用。
+```
+
+### assistant 2026-06-29T01:38:39.931Z
+
+```text
+我按你这条要求再核一下当前实现：重点不是 A1/A3，而是“P10 算出 22 个 fix 后保存；下次启动自动读；第一次没算过就不能用这 22 个”。
+```
+
+### assistant 2026-06-29T01:38:47.362Z
+
+```text
+当前代码的保存/恢复逻辑已经核到：保存时会写 `valid=true` 和 `count=22`，恢复时必须满足这两个条件才会写入算法。也就是说“第一次没算过不使用这 22 个”的判断已经有了。我再补看一下构造函数调用顺序。
+```
+
+### assistant 2026-06-29T01:39:01.232Z
+
+```text
+这里还看到你已经补了 `restoreQtKinematicsQPointsFromSettings(canState_)`，也就是 A1/A3 也在启动时读设置了。这个比我上次看到的版本完整。
+```
+
+### assistant 2026-06-29T01:39:09.969Z
+
+```text
+刚才正则写窄了，我用简单搜索重新定位 A1/A3 启动恢复函数。
+```
+
+### assistant 2026-06-29T01:39:17.824Z
+
+```text
+A1/A3 这版也已经改成从 QSettings 直接恢复了，不再依赖 P10 输入框创建时的默认值。现在你的要求里“22 个参数第一次没算过不用”这块，当前实现已经通过 `valid/count` 做了判断。
+```
+
+### assistant 2026-06-29T01:39:25.621Z
+
+```text
+是的，这个逻辑现在是对的。
+
+当前实现是：
+
+- P10 录 20 组样本后，点击“拟合完成”。
+- 只有本机 A2 样本池满足 20 组时，才执行 `fitQtKinematicsMechanicalSamples()`。
+- 拟合完成后才调用 `saveQtKinematicsFixValues()`，把 22 个参数保存到本机。
+- 下次系统重启时，构造函数里会自动执行 `restoreQtKinematicsFixValues(canState_)`，不需要再进入 P10。
+- 第一次没算过时，因为没有 `valid=true` 和 `count=22`，恢复函数不会调用 `setQtKinematicsFixValues()`，也就是不会使用这套 22 个拟合参数。
+
+关键判断在 [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:327)：
+
+```cpp
+const bool valid = settings.value("valid", false).toBool();
+const int count = settings.value("count", 0).toInt();
+if (valid && count == kQtKinematicsFixValueCount) {
+    ...
+    stateModel.setQtKinematicsFixValues(arm, values);
+}
+```
+
+保存只发生在拟合成功后：[MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:6288)。
+
+另外你这版也把 A1/A3 启动恢复补上了：启动时会按顺序恢复 22 个 fix、A1/A3 Q 点、A2 样本池，见 [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:2224)。所以“不进 P10 也能读已保存结果”这条现在成立。
 ```
