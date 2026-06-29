@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-29T14:00:06`
+- Exported at: `2026-06-29T14:12:20`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -29525,4 +29525,449 @@ A1/A3 槽位本身没改，仍然是：
 
 已验证：
 `QdnUpperComputerUi.exe --self-test-can` 通过，模拟器 `--self-test` 通过，完整离线回环 `FULL_OFFLINE_SIMULATOR_SELF_TEST=PASS`。
+```
+
+### developer 2026-06-29T06:10:40.226Z
+
+```text
+<permissions instructions>
+Filesystem sandboxing defines which files can be read or written. `sandbox_mode` is `danger-full-access`: No filesystem sandboxing - all commands are permitted. Network access is enabled.
+Approval policy is currently never. Do not provide the `sandbox_permissions` for any reason, commands will be rejected.
+</permissions instructions>
+<app-context>
+# Codex desktop context
+- You are running inside the Codex (desktop) app, which allows some additional features not available in the CLI alone:
+
+### Images/Visuals/Files
+- In the app, the model can display images and videos using standard Markdown image syntax: ![alt](url)
+- When sending or referencing a local image or video, always use an absolute filesystem path in the Markdown image tag (e.g., ![alt](/absolute/path.png)); relative paths and plain text will not render the media.
+- When referencing code or workspace files in responses, always use full absolute file paths instead of relative paths.
+- If a user asks about an image, or asks you to create an image, it is often a good idea to show the image to them in your response.
+- Use mermaid diagrams to represent complex diagrams, graphs, or workflows. Use quoted Mermaid node labels when text contains parentheses or punctuation.
+- Return web URLs as Markdown links (e.g., [label](https://example.com)).
+
+### Workspace Dependencies
+- For sheets, slides, and documents, call `load_workspace_dependencies` to find the bundled runtime and libraries.
+
+### Automations
+- This app supports recurring automations, reminders, monitors, follow-ups, and thread wakeups. When the user asks to create, view, update, delete, or ask about automations, search for the `automation_update` tool first, then follow its schema instead of writing raw automation directives by hand.
+- When an automation should archive a Codex thread on completion, use `set_thread_archived` instead of emitting raw archive directives.
+
+### Thread Coordination
+- When the user asks to create, fork, inspect, continue, hand off, pin, archive, rename, or otherwise manage Codex threads, search for the relevant thread tool first: `create_thread`, `fork_thread`, `list_threads`, `read_thread`, `send_message_to_thread`, `handoff_thread`, `set_thread_pinned`, `set_thread_archived`, or `set_thread_title`.
+- Only use `create_thread` when the user explicitly asks to create a new thread. Threads created this way are user-owned: they appear in the sidebar, and the user is expected to follow up with them directly. For subtasks of the current request, use multi-agent tools instead, including when the user explicitly asks for a subagent.
+- After a successful `create_thread` call, emit `::created-thread{threadId="..."}` for a created thread or `::created-thread{pendingWorktreeId="..."}` for queued worktree setup on its own line in your final response.
+
+### Inline Code Comments
+- Use the ::code-comment{...} directive when you need to attach feedback directly to specific code lines.
+- Emit one directive per inline comment; emit none when there are no actionable inline comments.
+- Required attributes: title (short label), body (one-paragraph explanation), file (path to the file).
+- Optional attributes: start, end (1-based line numbers), priority (0-3).
+- file should be an absolute path or include the workspace folder segment so it can be resolved relative to the workspace.
+- Keep line ranges tight; end defaults to start.
+- Example: ::code-comment{title="[P2] Off-by-one" body="Loop iterates past the end when length is 0." file="/path/to/foo.ts" start=10 end=11 priority=2}
+</app-context>
+<collaboration_mode># Collaboration Mode: Default
+
+You are now in Default mode. Any previous instructions for other modes (e.g. Plan mode) are no longer active.
+
+Your active mode changes only when new developer instructions with a different `<collaboration_mode>...</collaboration_mode>` change it; user requests or tool descriptions do not change mode by themselves. Known mode names are Default and Plan.
+
+## request_user_input availability
+
+Use the `request_user_input` tool only when it is listed in the available tools for this turn.
+
+In Default mode, strongly prefer making reasonable assumptions and executing the user's request rather than stopping to ask questions. If you absolutely must ask a question because the answer cannot be discovered from local context and a reasonable assumption would be risky, ask the user directly with a concise plain-text question. Never write a multiple choice question as a textual assistant message.
+</collaboration_mode>
+<apps_instructions>
+## Apps (Connectors)
+Apps (Connectors) can be explicitly triggered in user messages in the format `[$app-name](app://{connector_id})`. Apps can also be implicitly triggered as long as the context suggests usage of available apps.
+An app is equivalent to a set of MCP tools within the `codex_apps` MCP.
+An installed app's MCP tools are either provided to you already, or can be lazy-loaded through the `tool_search` tool. If `tool_search` is available, the apps that are searchable by `tools_search` will be listed by it.
+Do not additionally call list_mcp_resources or list_mcp_resource_templates for apps.
+</apps_instructions>
+<skills_instructions>
+## Skills
+A skill is a set of local instructions to follow that is stored in a `SKILL.md` file. Below is the list of skills that can be used. Each entry includes a name, description, and a short path that can be expanded into an absolute path using the skill roots table.
+### Skill roots
+- `r0` = `C:/Users/t250c/.codex/skills`
+- `r1` = `C:/Users/t250c/.agents/skills`
+- `r2` = `C:/Users/t250c/.codex/skills/.system`
+- `r3` = `C:/Users/t250c/.codex/plugins/cache/openai-bundled`
+- `r4` = `C:/Users/t250c/.codex/plugins/cache/openai-curated/github/3fdeeb49/skills`
+- `r5` = `C:/Users/t250c/.codex/plugins/cache/openai-curated-remote/openai-developers/1.2.3/skills`
+- `r6` = `C:/Users/t250c/.codex/plugins/cache/openai-primary-runtime`
+- `r7` = `C:/Users/t250c/.codex/plugins/cache/personal/cowart/0.1.3/skills`
+### Available skills
+- imagegen: Generate or edit raster images when the task benefits from AI-created bitmap visuals such as photos, illustrations, textures, sprites, mockups, or transparent-background cutouts. Use when Codex should create a brand-new image, transform an existing image, or derive visual v (file: r2/imagegen/SKILL.md)
+- openai-docs: Use when the user asks how to build with OpenAI products or APIs, asks about Codex itself or choosing Codex surfaces, needs up-to-date official documentation with citations, help choosing the latest model for a use case, or model upgrade and prompt-upgrade guidance; use OpenA (file: r2/openai-docs/SKILL.md)
+- plugin-creator: Create and scaffold plugin directories for Codex with a required `.codex-plugin/plugin.json`, optional plugin folders/files, valid manifest defaults, and personal-marketplace entries by default. Use when Codex needs to create a new personal plugin, add optional plugin struc (file: r2/plugin-creator/SKILL.md)
+- skill-creator: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Codex's capabilities with specialized knowledge, workflows, or tool integrations. (file: r2/skill-creator/SKILL.md)
+- skill-installer: Install Codex skills into $CODEX_HOME/skills from a curated list or a GitHub repo path. Use when a user asks to list installable skills, install a curated skill, or install a skill from another repo (including private repos). (file: r2/skill-installer/SKILL.md)
+- arm-cortex-expert: ARM Cortex-M embedded development guidance for startup, vector table, NVIC, SysTick, low power, DMA, cache coherency, MPU, fault diagnosis, GPIO/peripheral registers, STM32/nRF/SAMD/RP2040-style MCUs, and real-time firmware debugging. (file: r0/arm-cortex-expert/SKILL.md)
+- backup-and-edit: 修改文件前自动备份，并删除上一次备份（只保留最新一份）。适用于所有需要修改的文件，特别是C/H源码文件。 (file: r0/backup-and-edit/SKILL.md)
+- browser:control-in-app-browser: Control the in-app Browser. Use to open, navigate, inspect, test, click, type, screenshot, or verify local targets such as localhost, 127.0.0.1, ::1, file://, the current in-app browser tab, and websites shown side by side inside Codex. (file: r3/browser/26.623.42026/skills/control-in-app-browser/SKILL.md)
+- cc-switch-provider-routing: Use when working with CC Switch providers backed by third-party OpenAI-compatible or Claude-compatible gateways, especially when reading keys from E:\AI账号\密码.txt, classifying which models a key supports, adding keys to Codex or Claude in CC Switch, or fixing malformed provi (file: r0/cc-switch-provider-routing/SKILL.md)
+- chat-transcript-uploader: Export local Codex chat/session records to timestamped documents and upload them to the user's GitHub toolkit repository. Use for explicit chat transcript/archive requests. For standalone "上传", prefer work-continuity-sync. (file: r0/chat-transcript-uploader/SKILL.md)
+- computer-use:computer-use: Control Windows apps from Codex (file: r3/computer-use/26.623.42026/skills/computer-use/SKILL.md)
+- cowart:cowart-image-edit: Generate new AI images from user-supplied Cowart annotation screenshots. Use when the user provides one or more screenshots showing Cowart images marked with the 批注 tool, arrows, or visible edit notes and wants Codex to apply those requested changes, create revised bitmap  (file: r7/cowart-image-edit/SKILL.md)
+- cowart:cowart-image-gen: Generate a final AI bitmap for the Cowart canvas, including any requested in-image text by default. Use when the user asks Codex to create, fill, replace, or place an AI-generated image on a Cowart canvas. If an AI 图片 holder is selected, fill that holder; otherwise generate  (file: r7/cowart-image-gen/SKILL.md)
+- cowart:cowart-open-canvas: Open the Cowart local web service, a tldraw-powered infinite canvas. Use when the user asks to open, launch, view, or work in the Cowart canvas or wants an infinite canvas inside Codex. (file: r7/cowart-open-canvas/SKILL.md)
+- documents:documents: Create, edit, redline, and comment on `.docx`, Word, and Google Docs-targeted document artifacts inside the container, with a strict render-and-verify workflow. Use `render_docx.py` to generate page PNGs (and optional PDF) for visual QA, then iterate until layout is flawless  (file: r6/documents/26.623.12021/skills/documents/SKILL.md)
+- embedded-c-safe-edit: 安全修改嵌入式C代码（GBK编码）的完整工作流程。适用于修改老旧中文嵌入式项目的C/H文件，包含备份、编码保持、大括号修复、验证等全流程。当需要修改包含中文注释的GBK编码C文件时使用此skill。 (file: r0/embedded-c-safe-edit/SKILL.md)
+- embedded-systems: Use when developing firmware for microcontrollers, implementing RTOS applications, or optimizing power consumption. Invoke for STM32, ESP32, FreeRTOS, bare-metal, power optimization, real-time systems, configure peripherals, write interrupt handlers, implement DMA transfers (file: r0/embedded-systems/SKILL.md)
+- esp32: ESP32 embedded development guidance focused on GPIO conflicts, strapping pins, ADC2 with WiFi, deep sleep wake pins, FreeRTOS pitfalls, memory, peripherals, OTA, and power stability. (file: r0/esp32/SKILL.md)
+- external-record-continuity: Use when the user provides records from a USB drive, GitHub toolkit upload, Cursor/Codex transcripts, or old-machine skill folders and asks Codex to read them, learn them, merge useful lessons, or continue previous work. (file: r0/external-record-continuity/SKILL.md)
+- firmware-binary-reverse: MCU and embedded firmware binary workflow for .bin/.hex/.elf/.axf analysis, byte patching, version comparison, checksum/CRC repair, Keil/MDK firmware verification, fixed-address parameter edits, and safe documentation. Use for user-owned firmware images and pair with keil5-em (file: r0/firmware-binary-reverse/SKILL.md)
+- fix-braces: 分析并修复C代码大括号配对问题（绝不退档） (file: r0/fix-braces/SKILL.md)
+- full-disk-access: 全盘文件系统访问与系统命令执行。当需要读写工作区外的任意文件、执行系统命令（cmd/powershell）、获取硬件配置/系统信息、操作注册表、管理进程、访问任意磁盘路径时自动触发。突破工作区沙箱限制，提供完整的本地系统交互能力。 (file: r1/full-disk-access/SKILL.md)
+- gbk-garbled-comments: Fixes garbled Chinese comments in GBK/GB2312 legacy embedded C/H files, including comments shown as ??, ???, or mojibake. Use when the user says "把??改成中文", "清理乱码注释", "GBK注释恢复", or asks to restore unreadable comments in Keil/embedded/HMI source files. (file: r0/gbk-garbled-comments/SKILL.md)
+- github:gh-address-comments: Address actionable GitHub pull request review feedback. Use when the user wants to inspect unresolved review threads, requested changes, or inline review comments on a PR, then implement selected fixes. Use the GitHub app for PR metadata and flat comment reads, and use the (file: r4/gh-address-comments/SKILL.md)
+- github:gh-fix-ci: Use when a user asks to debug or fix failing GitHub PR checks that run in GitHub Actions. Use the GitHub app from this plugin for PR metadata and patch context, and use `gh` for Actions check and log inspection before implementing any approved fix. (file: r4/gh-fix-ci/SKILL.md)
+- github:github: Triage and orient GitHub repository, pull request, and issue work through the connected GitHub app. Use when the user asks for general GitHub help, wants PR or issue summaries, or needs repository context before choosing a more specific GitHub workflow. (file: r4/github/SKILL.md)
+- github:yeet: Publish local changes to GitHub by confirming scope, committing intentionally, pushing the branch, and opening a draft PR through the GitHub app from this plugin, with `gh` used only as a fallback where connector coverage is insufficient. (file: r4/yeet/SKILL.md)
+- keil5: Work with Keil5, MDK-ARM, and uVision embedded projects, including NXP LPC1765 and other LPC17xx targets. Use when Codex needs to inspect `.uvprojx` or `.uvoptx` projects, trace target and device settings, understand startup or scatter/linker configuration, edit embedded C/H  (file: r0/keil5/SKILL.md)
+- keil5-embedded-c: Keil5 and embedded C firmware workflow for hardware-related work. Use when Codex works on Keil/uVision projects, C51/ARM/MCU/单片机 code, GBK C files, timers/定时器, interrupts/中断, IO/ADC/PWM/CAN/UART/RS485 protocols/硬件协议, screen/屏端 integration, bin/hex verification, protocol doc (file: r0/keil5-embedded-c/SKILL.md)
+- mcu-gpio-peripheral: MCU GPIO and peripheral bring-up workflow for embedded C/Keil/MDK projects. Covers input/output, pullup/pulldown, push-pull/open-drain, alternate functions, EXTI interrupts, debounce, ADC/PWM/UART/I2C/SPI pin conflicts, schematics, register/HAL checks, and Chinese embedded-co (file: r0/mcu-gpio-peripheral/SKILL.md)
+- memory: Load consolidated user memory for Cursor — discipline summary, Claude/Codex status, and links to project memory under .claude/projects/C--Users-DELL/memory. (file: r0/memory/SKILL.md)
+- multi-computer-toolkit-merge: Merge Codex toolkit uploads from multiple computers. Use when another computer has its own skills, MCP servers, work-states, memory/sqlite records, or task snapshots that need to be integrated without overwriting local work. (file: r0/multi-computer-toolkit-merge/SKILL.md)
+- openai-developers:agents-sdk: Build, run, deploy, and evaluate OpenAI Agents SDK apps from Codex. Use when the user asks to create or adapt an Agents SDK app, build from a prompt or Codex thread, prepare a runnable agent prototype, add a focused eval harness, or deploy locally through the Agents SDK Deplo (file: r5/agents-sdk/SKILL.md)
+- openai-developers:build-chatgpt-app: Build, scaffold, refactor, and troubleshoot ChatGPT Apps SDK applications that combine an MCP server and widget UI. Use when Codex needs to design tools, register UI resources, wire the MCP Apps bridge or ChatGPT compatibility APIs, apply Apps SDK metadata or CSP or domain  (file: r5/build-chatgpt-app/SKILL.md)
+- openai-developers:chatgpt-app-submission: Inspect a ChatGPT Apps MCP server codebase and generate chatgpt-app-submission.json with app info suggestions, tool hint justifications, test cases, and negative test cases, then report review-check findings and outputSchema warnings for submission review. (file: r5/chatgpt-app-submission/SKILL.md)
+- openai-developers:openai-api-troubleshooting: Use when an OpenAI API request fails and Codex needs to classify the likely cause, explain the next step, and route to the right follow-up. Covers common runtime failures such as blocked outbound network access, invalid credentials, exhausted API quota or credits, rate limits (file: r5/openai-api-troubleshooting/SKILL.md)
+- openai-developers:openai-platform-api-key=***REDACTED*** when Codex is asked to build, run, test, debug, or configure an OpenAI-backed or provider-unspecified AI app, UI, script, CLI, generator, or tool, especially requests phrased only as "using AI" or generators driven by forms/user input; also use for OPENAI_API_KEY or sk- (file: r5/openai-platform-api-key/SKILL.md)
+- opencv: OpenCV computer vision library. Use for image processing. (file: r0/g1joshi/opencv/SKILL.md)
+- opencv: OpenCV computer vision library. Use for image processing. (file: r0/g1joshi-opencv/SKILL.md)
+- opencv: OpenCV computer vision library. Use for image processing. (file: r0/opencv/SKILL.md)
+- opencv: OpenCV computer vision library. Use for image processing. (file: r0/opencv-g1joshi/SKILL.md)
+- opencv: You are an expert in OpenCV (Open Source Computer Vision Library), the most popular library for real-time computer vision. You help developers build image processing pipelines, object detection systems, video analysis tools, augmented reality, and document processing using O (file: r0/opencv-terminalskills/SKILL.md)
+- pdf: Use when tasks involve reading, creating, or reviewing PDF files where rendering and layout matter; prefer visual checks by rendering pages (Poppler) and use Python tools such as `reportlab`, `pdfplumber`, and `pypdf` for generation and extraction. (file: r0/pdf/SKILL.md)
+- pdf:pdf: Read, create, inspect, render, and verify PDF files where visual layout matters. Use Poppler rendering plus Python tools such as reportlab, pdfplumber, and pypdf for generation and extraction. (file: r6/pdf/26.623.12021/skills/pdf/SKILL.md)
+- pptx-direct-edit: Directly edit PPTX slides without installing python-pptx. Use when the user asks to redesign tables, change colors, adjust layouts, or modify any PPTX content. Fast path via zipfile + ElementTree Open XML manipulation. Targets 10-second turnaround for single-slide table red (file: r1/pptx-direct-edit/SKILL.md)
+- presentations:Presentations: Create or edit PowerPoint or Google Slides decks (file: r6/presentations/26.623.12021/skills/presentations/SKILL.md)
+- ps: Use when the user says "ps", "图片", or asks to optimize, redesign, modularize, layer, split, or export Photoshop/PSD/image-based HMI screens where components must independently show/hide. Especially for industrial equipment UI PSDs, button bars, parameter pages, and Photosho (file: r0/ps/SKILL.md)
+- qdn-project-vision: QDN / 全电脑模型工业视觉项目上下文。涉及四点 LED 光斑、solvePnP 位姿、K/D 内参、 T_shell_cam 标定、QT+OpenCV C++ 工控端视觉时必读。与通用 opencv skill 配合使用。 (file: r0/qdn-project-vision/SKILL.md)
+- qt-upper-computer-ui-layout: Use when working on the user's Qt/C++ industrial upper-computer UI, especially qt-upper-computer-ui, P02/P07/P08/P10 pages, status pages, parameter pages, touch-screen layouts, siton-style screens, or CAN-backed HMI data displays that need worker-facing layout and fixed local (file: r0/qt-upper-computer-ui-layout/SKILL.md)
+- radare2: Radare2 reverse-engineering workflow for binary analysis, disassembly, function discovery, strings, cross references, binary diffing, and safe patch planning. Use when analyzing or patching executables, firmware blobs, ELF/PE/Mach-O files, or raw binaries with r2/rabin2/rahas (file: r0/radare2/SKILL.md)
+- reverse_engineer: Systematic binary reverse engineering toolkit. Extract source code, understand functions, document protocols, compare versions. Uses strings, symbols, disassembly, and differential verification. (file: r0/reverse_engineer/SKILL.md)
+- safe-collab-workflow: Safe collaborative code-edit workflow for shared workspaces. Use when Codex needs to edit, repair, or verify code/files safely, especially for legacy C/H projects, GBK or Chinese-comment source files, brace or scope issues that should be fixed in place, backup or restore de (file: r0/safe-collab-workflow/SKILL.md)
+- safe-edit-gbk: 安全修改GBK编码的C文件（自动备份+Python修改+验证） (file: r0/safe-edit-gbk/SKILL.md)
+- safe-restore: 安全的文件恢复流程（必须用户确认） (file: r0/safe-restore/SKILL.md)
+- security-best-practices: Perform language and framework specific security best-practice reviews and suggest improvements. Trigger only when the user explicitly requests security best practices guidance, a security review/report, or secure-by-default coding help. Trigger only for supported languages ( (file: r0/security-best-practices/SKILL.md)
+- security-threat-model: Repository-grounded threat modeling that enumerates trust boundaries, assets, attacker capabilities, abuse paths, and mitigations, and writes a concise Markdown threat model. Trigger only when the user explicitly asks to threat model a codebase or path, enumerate threats/abus (file: r0/security-threat-model/SKILL.md)
+- senior-computer-vision: Computer vision engineering skill for object detection, image segmentation, and visual AI systems. Covers CNN and Vision Transformer architectures, YOLO/Faster R-CNN/DETR detection, Mask R-CNN/SAM segmentation, and production deployment with ONNX/TensorRT. Includes PyTorch, (file: r0/senior-computer-vision/SKILL.md)
+- spreadsheets:Spreadsheets: Use this skill when a user requests to create, modify, analyze, visualize, or work with spreadsheet files (`.xlsx`, `.xls`, `.csv`, `.tsv`) or Google Sheets-targeted spreadsheet artifacts with formulas, formatting, charts, tables, and recalculation. (file: r6/spreadsheets/26.623.12021/skills/spreadsheets/SKILL.md)
+- survey-data-processor: Survey data processing for total-station, GNSS, leveling, point clouds, DTM/TIN generation, coordinate transformation, traverse adjustment, level-loop adjustment, contour generation, and survey deliverables. Use when processing field survey observations, control points, adjus (file: r0/survey-data-processor/SKILL.md)
+- template-creator:template-creator: Create or update a reusable personal Codex artifact-template skill. Use when the user invokes $template-creator or asks in natural language to create a template using, from, or based on an attached Word document, PowerPoint presentation, or Excel workbook, or explicitly a (file: r6/template-creator/26.623.12021/skills/template-creator/SKILL.md)
+- total-station-calibration: Total station calibration and error-analysis workflow. Use for total-station instrument checks, collimation error, trunnion-axis error, vertical-index error, EDM additive/multiplicative constants, prism constant, atmospheric correction, two-face observations, resection ch (file: r0/total-station-calibration/SKILL.md)
+- understand-anything:understand: Analyze a codebase to produce an interactive knowledge graph for understanding architecture, components, and relationships (file: C:/Users/t250c/.understand-anything/repo/understand-anything-plugin/skills/understand/SKILL.md)
+- understand-anything:understand-chat: Use when you need to ask questions about a codebase or understand code using a knowledge graph (file: C:/Users/t250c/.understand-anything/repo/understand-anything-plugin/skills/understand-chat/SKILL.md)
+- understand-anything:understand-dashboard: Launch the interactive web dashboard to visualize a codebase's knowledge graph (file: C:/Users/t250c/.understand-anything/repo/understand-anything-plugin/skills/understand-dashboard/SKILL.md)
+- understand-anything:understand-diff: Use when you need to analyze git diffs or pull requests to understand what changed, affected components, and risks (file: C:/Users/t250c/.understand-anything/repo/understand-anything-plugin/skills/understand-diff/SKILL.md)
+- understand-anything:understand-domain: Extract business domain knowledge from a codebase and generate an interactive domain flow graph. Works standalone (lightweight scan) or derives from an existing /understand knowledge graph. (file: C:/Users/t250c/.understand-anything/repo/understand-anything-plugin/skills/understand-domain/SKILL.md)
+- understand-anything:understand-explain: Use when you need a deep-dive explanation of a specific file, function, or module in the codebase (file: C:/Users/t250c/.understand-anything/repo/understand-anything-plugin/skills/understand-explain/SKILL.md)
+- understand-anything:understand-knowledge: Analyze a Karpathy-pattern LLM wiki knowledge base and generate an interactive knowledge graph with entity extraction, implicit relationships, and topic clustering. (file: C:/Users/t250c/.understand-anything/repo/understand-anything-plugin/skills/understand-knowledge/SKILL.md)
+- understand-anything:understand-onboard: Use when you need to generate an onboarding guide for new team members joining a project (file: C:/Users/t250c/.understand-anything/repo/understand-anything-plugin/skills/understand-onboard/SKILL.md)
+- understand-first: 先理解任务再执行，打印理解内容等用户确认 (file: r0/understand-first/SKILL.md)
+- univer-cli: Use when solving spreadsheet workbook problems with the `univer` or `unv` CLI as a terminal-native spreadsheet engine: Excel-compatible `.xlsx` handoff, `.univer` or `.unv` packages, workbook inspection, range search, formulas, formatting, charts, shapes, floating images, r (file: r0/univer-cli/SKILL.md)
+- verify-before-answer: 修改代码后立即验证，不敷衍用户 (file: r0/verify-before-answer/SKILL.md)
+- visual-plan: Turn ordinary text plans into rich interactive visual plans with diagrams, file maps, annotated code, open questions, and UI/prototype review when useful. (file: r1/visual-plan/SKILL.md)
+- visual-plan: Turn ordinary text plans into rich interactive visual plans with diagrams, file maps, annotated code, open questions, and UI/prototype review when useful. (file: r0/visual-plan/SKILL.md)
+- work-continuity-sync: Triggered when the user says "上传" as a standalone command or asks for seamless work handoff across computers. Create and upload a complete work-state snapshot including current workspace, session transcript/raw record, skills/MCP/toolkit state, Memory/SQLite records when av (file: r0/work-continuity-sync/SKILL.md)
+- workflow-memory-skillsmith: Mandatory workflow for turning repeated task lessons, tool discoveries, failure fixes, user-specific procedures, and practical troubleshooting records into global Codex skills under ~/.codex/skills. Use after tasks that reveal reusable methods, recurring failure patterns, i (file: r0/workflow-memory-skillsmith/SKILL.md)
+- xlsx: Use this skill any time a spreadsheet file is the primary input or output. This means any task where the user wants to: open, read, edit, or fix an existing .xlsx, .xlsm, .csv, or .tsv file (e.g., adding columns, computing formulas, formatting, charting, cleaning messy data (file: r0/xlsx/SKILL.md)
+### How to use skills
+- Discovery: The list above is the skills available in this session (name + description + short path). Skill bodies live on disk at the listed paths after expanding the matching alias from `### Skill roots`.
+- Trigger rules: If the user names a skill (with `$SkillName` or plain text) OR the task clearly matches a skill's description shown above, you must use that skill for that turn. Multiple mentions mean use them all. Do not carry skills across turns unless re-mentioned.
+- Missing/blocked: If a named skill isn't in the list or the path can't be read, say so briefly and continue with the best fallback.
+- How to use a skill (progressive disclosure):
+  1) After deciding to use a skill, the main agent must expand the listed short `path` with the matching alias from `### Skill roots`, then open and read its `SKILL.md` completely before taking task actions. If a read is truncated or paginated, continue until EOF.
+  2) When `SKILL.md` references relative paths (e.g., `scripts/foo.py`), resolve them relative to the directory containing that expanded `SKILL.md` first, and only consider other paths if needed.
+  3) If `SKILL.md` points to extra folders such as `references/`, use its routing instructions to identify the files required for the task. The main agent must read each required instruction or reference file itself before acting on it. Do not delegate reading, summarizing, or interpreting skill instructions to a subagent. Subagents may still perform task work when the selected skill allows it.
+  4) If `scripts/` exist, prefer running or patching them instead of retyping large code blocks.
+  5) If `assets/` or templates exist, reuse them instead of recreating from scratch.
+- Coordination and sequencing:
+  - If multiple skills apply, choose the minimal set that covers the request and state the order you'll use them.
+  - Announce which skill(s) you're using and why (one short line). If you skip an obvious skill, say why.
+- Context hygiene:
+  - Progressive disclosure applies to selecting relevant files, not partially reading a selected instruction file. Do not load unrelated references, scripts, or assets.
+  - Avoid deep reference-chasing: prefer opening only files directly linked from `SKILL.md` unless you're blocked.
+  - When variants exist (frameworks, providers, domains), pick only the relevant reference file(s) and note that choice.
+- Safety and fallback: If a skill can't be applied cleanly (missing files, unclear instructions), state the issue, pick the next-best approach, and continue.
+</skills_instructions>
+<plugins_instructions>
+## Plugins
+A plugin is a local bundle of skills, MCP servers, and apps.
+### How to use plugins
+- Skill naming: If a plugin contributes skills, those skill entries are prefixed with `plugin_name:` in the Skills list.
+- MCP naming: Plugin-provided MCP tools keep standard MCP identifiers such as `mcp__server__tool`; use tool provenance to tell which plugin they come from.
+- Trigger rules: If the user explicitly names a plugin, prefer capabilities associated with that plugin for that turn.
+- Relationship to capabilities: Plugins are not invoked directly. Use their underlying skills, MCP tools, and app tools to help solve the task.
+- Relevance: Determine what a plugin can help with from explicit user mention or from the plugin-associated skills, MCP tools, and apps exposed elsewhere in this turn.
+- Missing/blocked: If the user requests a plugin that does not have relevant callable capabilities for the task, say so briefly and continue with the best fallback.
+</plugins_instructions>
+## Memory
+
+You have access to a memory folder with guidance from prior runs. It can save
+time and help you stay consistent. Use it whenever it is likely to help.
+
+Decision boundary: should you use memory for a new user query?
+
+- Skip memory ONLY when the request is clearly self-contained and does not need
+  workspace history, conventions, or prior decisions.
+- Hard skip examples: current time/date, simple translation, simple sentence
+  rewrite, one-line shell command, trivial formatting.
+- Use memory by default when ANY of these are true:
+  - the query mentions workspace/repo/module/path/files in MEMORY_SUMMARY below,
+  - the user asks for prior context / consistency / previous decisions,
+  - the task is ambiguous and could depend on earlier project choices,
+  - the ask is a non-trivial and related to MEMORY_SUMMARY below.
+- If unsure, do a quick memory pass.
+
+Memory layout (general -> specific):
+
+- C:\Users\t250c\.codex\memories/memory_summary.md (already provided below; do NOT open again)
+- C:\Users\t250c\.codex\memories/MEMORY.md (searchable registry; primary file to query)
+- C:\Users\t250c\.codex\memories/skills/<skill-name>/ (skill folder)
+  - SKILL.md (entrypoint instructions)
+  - scripts/ (optional helper scripts)
+  - examples/ (optional example outputs)
+  - templates/ (optional templates)
+- C:\Users\t250c\.codex\memories/rollout_summaries/ (per-rollout recaps + evidence snippets)
+  - The paths of these entries can be found in C:\Users\t250c\.codex\memories/MEMORY.md or C:\Users\t250c\.codex\memories/rollout_summaries/ as `rollout_path`
+  - These files are append-only `jsonl`: `session_meta.payload.id` identifies the session, `turn_context` marks turn boundaries, `event_msg` is the lightweight status stream, and `response_item` contains actual messages, tool calls, and tool outputs.
+  - For efficient lookup, prefer matching the filename suffix or `session_meta.payload.id`; avoid broad full-content scans unless needed.
+
+Quick memory pass (when applicable):
+
+1. Skim the MEMORY_SUMMARY below and extract task-relevant keywords.
+2. Search C:\Users\t250c\.codex\memories/MEMORY.md using those keywords.
+3. Only if MEMORY.md directly points to rollout summaries/skills, open the 1-2
+   most relevant files under C:\Users\t250c\.codex\memories/rollout_summaries/ or
+   C:\Users\t250c\.codex\memories/skills/.
+4. If above are not clear and you need exact commands, error text, or precise evidence, search over `rollout_path` for more evidence.
+5. If there are no relevant hits, stop memory lookup and continue normally.
+
+Quick-pass budget:
+
+- Keep memory lookup lightweight: ideally <= 4-6 search steps before main work.
+- Avoid broad scans of all rollout summaries.
+
+During execution: if you hit repeated errors, confusing behavior, or suspect
+relevant prior context, redo the quick memory pass.
+
+How to decide whether to verify memory:
+
+- Consider both risk of drift and verification effort.
+- If a fact is likely to drift and is cheap to verify, verify it before
+  answering.
+- If a fact is likely to drift but verification is expensive, slow, or
+  disruptive, it is acceptable to answer from memory in an interactive turn,
+  but you should say that it is memory-derived, note that it may be stale, and
+  consider offering to refresh it live.
+- If a fact is lower-drift and expensive to verify, it is usually fine to
+  answer from memory directly.
+
+When answering from memory without current verification:
+
+- If you rely on memory for a fact that you did not verify in the current turn,
+  say so briefly in the final answer.
+- If that fact is plausibly drift-prone or comes from an older note, older
+  snapshot, or prior run summary, say that it may be stale or outdated.
+- If live verification was skipped and a refresh would be useful in the
+  interactive context, consider offering to verify or refresh it live.
+- Do not present unverified memory-derived facts as confirmed-current.
+- Prefer a short refresh offer for interactive questions, especially about prior
+  results, commands, timing, or older snapshots.
+
+Memory citation requirements:
+
+- If ANY relevant memory files were used: append exactly one
+`<oai-mem-citation>` block as the VERY LAST content of the final reply.
+  Normal responses should include the answer first, then append the
+`<oai-mem-citation>` block at the end.
+- Use this exact structure for programmatic parsing:
+```
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:234-236|note=[responsesapi citation extraction code pointer]
+rollout_summaries/2026-02-17T21-23-02-LN3m-example.md:10-12|note=[weekly report format]
+</citation_entries>
+<rollout_ids>
+019c6e27-e55b-73d1-87d8-4e01f1f75043
+019c7714-3b77-74d1-9866-e1f484aae2ab
+</rollout_ids>
+</oai-mem-citation>
+```
+- `citation_entries` is for rendering:
+  - one citation entry per line
+  - format: `<file>:<line_start>-<line_end>|note=[<how memory was used>]`
+  - use file paths relative to the memory base path (for example, `MEMORY.md`,
+    `rollout_summaries/...`, `skills/...`)
+  - only cite files actually used under the memory base path (do not cite
+    workspace files as memory citations)
+  - if you used `MEMORY.md` and then a rollout summary/skill file, cite both
+  - list entries in order of importance (most important first)
+  - `note` should be short, single-line, and use simple characters only (avoid
+    unusual symbols, no newlines)
+- `rollout_ids` is for us to track what previous rollouts you find useful:
+  - include one rollout id per line
+  - rollout ids should look like UUIDs (for example,
+    `019c6e27-e55b-73d1-87d8-4e01f1f75043`)
+  - include unique ids only; do not repeat ids
+  - an empty `<rollout_ids>` section is allowed if no rollout ids are available
+  - you can find rollout ids in rollout summary files and MEMORY.md
+  - do not include file paths or notes in this section
+  - For every `citation_entries`, try to find and cite the corresponding rollout id if possible
+- Never include memory citations inside pull-request messages.
+- Never cite blank lines; double-check ranges.
+
+Updating memories:
+
+You can update the memories **only** when explicitly asked by the user. This must always come from a direct request from the user.
+- Write your update in C:\Users\t250c\.codex\memories/extensions/ad_hoc/notes/
+- Each update must be one small file containing what you want to add/delete/update from the memories.
+- The name of this file must be `<timestamp>-<short slug>.md`
+- Do not try to edit the memory files yourself, only add one update note in C:\Users\t250c\.codex\memories/extensions/ad_hoc/notes/
+
+========= MEMORY_SUMMARY BEGINS =========
+v1
+
+## User Profile
+The user works with Codex on Windows across recurring lanes: embedded/Keil firmware diagnosis for industrial machines, CAN/protocol-sheet and HTML protocol documentation work, Qt upper-computer tooling, MCGS scripts, local Windows troubleshooting, and Codex continuity/history repair. They expect the agent to recover prior context from local memory, rollout artifacts, or toolkit mirrors before asking them to restate it.
+
+They prefer concrete, source-backed outputs: exact paths, exact files, exact values, runnable local fallbacks, and deliverables they can open or use immediately. For embedded diagnosis they usually want read-only tracing through the live checkout unless they explicitly ask for edits. When they say something should be remembered globally, they expect the reusable rule or workflow to be persisted.
+
+When they point at a specific local path, file, or package, inspect the real target immediately. When they distinguish a third-party package from their own project, keep those codebases separate while still extracting reusable clues. On Windows troubleshooting or scripting tasks, they often want the agent to finish the real local task, not stop at explanation.
+
+## User preferences
+- When the user asks to recover memory or prior context, search local Codex memory/session artifacts first, then synced toolkit records, before answering from scratch.
+- When the user gives a path or concrete local target, inspect the real path and continue the task instead of turning it into a clarification loop.
+- For embedded source diagnosis, stay read-only and prove the exact branch/path in code unless the user explicitly asks for edits.
+- When the user says a package is `另外一个人做的，跟我没关系`, treat it as a separate third-party codebase and do not mix its terms or conclusions into the user's own project memory.
+- When the user wants something reusable or says it should be remembered globally, persist the rule, workflow, or skill instead of leaving it only in chat.
+- When the user phrases a local engineering task as `我把需求告诉你，你完成这个任务` or `自动给我搞`, default to doing the real file/script/launcher work locally rather than stopping at pseudocode or diagnosis.
+- When the user asks Windows recovery to be clickable, provide a double-clickable wrapper such as `.bat` around the real script, not only the underlying commands.
+- For MCGS or similar industrial scripting questions, answer in directly writable syntax and verify uncertain semantics from local help or reproducible behavior instead of relying on memory.
+- For protocol HTML edits under `E:\AI_划时代\全电脑_算法PCB\正确资料_算法PCB_CAN协议`, do not create `.bak_*` backup files by default; edit the HTML directly and verify the result, while keeping backup discipline for source code or other risky files. [ad-hoc note]
+- When the user asks whether software `全部覆盖` a protocol/doc set, treat it as a full coverage audit: verify field/unit semantics, not just CAN ID presence, and finish with build/test evidence.
+- When the user says a workspace's memory or chat history is missing, inspect `state_5.sqlite`, `session_index.jsonl`, `.codex-global-state.json`, and the thread's real `cwd` before assuming it was moved.
+- When the user asks whether login/account state is saved locally, verify from filesystem/config evidence and avoid guessing or reading secrets.
+- For plugin installs, treat requests like `clone ... 加入personal marketplace ... 校验插件` as end-to-end install + registration + validation jobs, and explicitly say whether a new conversation is needed afterward.
+- For Qt upper-computer UI verification, keep using `C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\build_audit_p201\QdnUpperComputerUi.exe` for running, screenshots, and validation unless the user explicitly allows another build dir. [ad-hoc note]
+- For this user's local engineering tasks, avoid optional confirmation loops; if a non-blocking choice appears and no newer instruction overrides it, proceed unattended and choose option 2 by default. [ad-hoc note]
+- If a system-level approval gate blocks an action, continue with the safest non-destructive alternative instead of asking again. [ad-hoc note]
+
+## General Tips
+- This environment is Windows with PowerShell; many useful fixes depend on real local paths under `C:\Users\t250c\.codex`, not just the current workspace.
+- If Chinese text looks garbled, retry with UTF-8 or byte-level inspection before concluding the file is corrupted.
+- The bundled Codex runtime Python at `C:\Users\t250c\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe` is the reliable fallback when system Python is missing or inconsistent.
+- For Codex history/sidebar/workspace issues, inspect `state_5.sqlite`, `session_index.jsonl`, `.codex-global-state.json`, and relevant `rollout-*.jsonl` together.
+- For plugin validation here, `codex plugin ad…3125 tokens truncated… C:\Users\t250c\Documents\Codex and toolkit mirror
+
+- Codex continuity sync, cross-computer merge, and chat export: codex-personal-toolkit, session_index.jsonl, chat-records, work-states, external-record-continuity, work-continuity-sync, multi-computer-toolkit-merge
+  - desc: Use this for sidebar-chat export, USB/GitHub handoff ingestion, full work-state upload, and merge-not-overwrite behavior across Lenovo and Dell machines; cwd spans local Codex state plus toolkit mirror sync flows.
+
+- CodeWhale offline package and Windows driver installation: CodeWhale-offline-0.8.49-win64.zip, install.ps1, pnputil, GC-Tech, USBCANWDM.INF, VID_0C66&PID_000C
+  - desc: Use this when the user wants a portable Windows CodeWhale package for another machine, or wants a local INF-based driver install handled directly and then verified; cwd=C:\Users\t250c\Documents\Codex and nearby install workspaces.
+
+- Derust-truck historical lookup and cooling-threshold logic: KX_LCD70_200_10AI, bFan_DI, Page19Spare1Pct_retain, Cooling_Motor_DO, Vacuum_Fan_DO, codex-personal-toolkit
+  - desc: Use this when the user asks whether older records or the GitHub mirror already contain derust-truck answers, especially for fan/cooling logic or screen-value interpretation; cwd=C:\Users\t250c\Documents\Codex and toolkit mirror paths.
+
+#### C:\Users\t250c\Documents\Keil监控项目
+
+- Q点全站仪 visual-plan and standalone HTML preview fallback: Q点全站仪输入与一键纠错方案, visual-plan, @plan, visual-preview.html, plan.agent-native.com, localhost:8097, 图框的感觉
+  - desc: Use this when the user wants a visual-first Q-point / total-station plan, asks what `visual-plan` can actually show, or needs a local fallback because the hosted renderer is failing; cwd=C:\Users\t250c\Documents\Keil监控项目.
+
+#### C:\Users\t250c\Documents\全电脑上位机
+
+- Third-party Electron upper-computer package inspection and kinematics-display mapping: Electron, app.asar, poseOperation.js, renderer.js, StartPoseOperation, StartScada, initdata.json, Ouster, ZLGCAN
+  - desc: Use this when the user points at the packed `上位机（siton）` release and asks what reusable motion/data/UI information it contains, or how the three-arm kinematics are actually shown; cwd=C:\Users\t250c\Documents\全电脑上位机 and the referenced third-party package.
+
+- ChatGPT-plan plus Codex-execute workflow, and DevSpace fit check: ChatGPT 做方案, Codex 执行代码, Codex App, Codex CLI, DevSpace, Kubernetes, local repo
+  - desc: Use this when the user asks whether an external tool fits their Windows Qt/Keil/CAN workflow, or wants discussion/planning split from local implementation/execution.
+
+#### E:\AI_划时代\T天腾 embedded checkouts
+
+- Remote-only `PoSui_DO` mode-gating diagnosis: XR_RCV_Demo_haw, PoSui_DO, Local_Control_Mode, DI_L16, 0x377, 0x378
+  - desc: Use this when local `PoSui` still works but remote `PoSui` does not in the small-car Keil firmware; cwd=E:\AI_划时代\T天腾\大小车\小车\XR_RCV_Demo_haw(2025最新小车程序).
+
+#### E:\AI_划时代\T天腾\C采矿装药车
+
+- `work_logic` process verification: App_usr.c, work_logic, cube_speed_logic, AI_logic_study, PWM_ZONE, Paramet_Set7, Paramet_Set8
+  - desc: Use this for source-level verification of whether the charging/withdrawal process in `App_usr.c` matches the user's intended behavior; cwd=E:\AI_划时代\T天腾\C采矿装药车\贵州后续版本\唐山\MC_LCD - 7Control_V1.3 -20250405.
+
+#### E:\工作 and QtCameraCalibration repo
+
+- QtCameraCalibration repo-specific workflow docs and offline HTML output: QtCameraCalibration, CalibrationWorker.cpp, TagPoseWorker.cpp, MainWindow.cpp, tag_camera_algorithm.html, software_usage_steps.html
+  - desc: Use this for repo-specific explanation of the K/D plus AprilTag workflow, or when the user wants standalone HTML documentation that matches the actual UI/source; cwd=E:\工作\QtCameraCalibration.
+
+- Qt/OpenCV environment setup and template scaffolding: QtOpenCVTemplate, aqtinstall, Qt 6.8.3, QtSmokeTest, cv::imdecode, Unicode path
+  - desc: Use this for the working Qt toolchain paths, unattended install route, and the Qt Widgets plus OpenCV starter project in `E:\工作`.
+
+- Weekly automation and concise status reporting: 每周工作状态更新, weekly status update, completed work, current in-progress items, blockers or risks, suggested next steps
+  - desc: Use this when the user invokes the recurring weekly-report automation or wants concise sendable wording for `E:\工作`, including the explicit "inactive week" case; cwd=E:\工作.
+
+#### C:\Users\t250c and mixed vision context
+
+- Fixed-camera AprilTag calibration memory and prompt design: AprilTag, total station, TagCenter_world_calc, ID->TagSize, 150mm, 300mm, solvePnP
+  - desc: Use this for the user's fixed-camera industrial vision context, mixed tag sizes, reusable prompt wording, and world-coordinate validation method; cwd=C:\Users\t250c and related vision discussion in `E:\工作`.
+========= MEMORY_SUMMARY ENDS =========
+
+When memory is likely relevant, start with the quick memory pass above before
+deep repo exploration.
+```
+
+### user 2026-06-29T06:10:40.227Z
+
+```text
+<environment_context>
+  <cwd>C:\Users\t250c\Documents\Codex</cwd>
+  <shell>powershell</shell>
+  <current_date>2026-06-29</current_date>
+  <timezone>Asia/Shanghai</timezone>
+  <filesystem><workspace_roots><root>C:\Users\t250c\Documents\Codex</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
+```
+
+### user 2026-06-29T06:10:40.270Z
+
+```text
+刚刚我在机械误差补偿这里 下发了左臂的数据，你看下模拟器这边是否是对的？ 槽位这块是不是，数据是不是
+```
+
+### assistant 2026-06-29T06:10:57.092Z
+
+```text
+我先按当前 P10/A2 的协议和模拟器接收逻辑查，不先改代码。重点看两件事：左臂样本是否进入了 A2/C0 的 7 包快照格式，以及模拟器槽位是不是按左臂/样本号/包号落位。
+```
+
+### assistant 2026-06-29T06:11:10.152Z
+
+```text
+我会先找模拟器有没有把刚收到的 A1/A3/A2 保存到本地状态或日志；如果没有持久日志，再从代码里确认界面显示的槽位规则，必要时用当前状态文件对照。
+```
+
+### assistant 2026-06-29T06:11:22.296Z
+
+```text
+我看到模拟器和 Qt 都在跑。下一步直接读取模拟器保存的运行态 JSON，看它刚才实际落了哪些左臂样本；这个比只看界面更能判断槽位有没有错。
+```
+
+### assistant 2026-06-29T06:11:33.821Z
+
+```text
+代码里 A2 的槽位规则是清楚的：`B1` 高 2 位是臂号，低 5 位是样本序号，`B2` 是 0~6 的分包号；只有 7 包齐了，模拟器才把这一组样本真正写入左/中/右臂样本池。
+```
+
+### assistant 2026-06-29T06:11:51.528Z
+
+```text
+当前保存文件的更新时间还是 `14:02:39`，也就是模拟器启动后几秒；里面没有刚下发的左臂 A2 样本。保存态里反而只有中臂若干空样本，这说明我现在不能拿这个 JSON 当“刚刚左臂下发成功”的证据。接下来我看接收链路是否实际触发了保存，以及模拟器窗口当前界面是否只是显示了未保存的部分分包。
+```
+
+### assistant 2026-06-29T06:12:12.331Z
+
+```text
+还有一个要注意：模拟器如果一直收到 `0x51` 这类周期帧，保存定时器可能一直被重置，所以 JSON 不一定马上落盘。我改用 Windows 自动化读取正在运行的模拟器窗口，直接看当前“机械误差补偿”表格和状态栏。
 ```
