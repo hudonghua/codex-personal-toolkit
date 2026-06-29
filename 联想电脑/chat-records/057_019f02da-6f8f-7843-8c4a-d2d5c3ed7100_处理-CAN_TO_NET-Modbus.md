@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-29T16:23:03`
+- Exported at: `2026-06-29T16:30:18`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -30886,4 +30886,72 @@ Release 版本已经重新链接出来了。接下来跑 CAN 自检，再抓 P10
 
 ```text
 自检通过，说明这次修改没有把 CAN 自测链路打坏。我现在只截 P10-03 这一页，避免跑完整 UI 审核浪费时间。
+```
+
+### assistant 2026-06-29T08:23:36.990Z
+
+```text
+截图命令没有按预期退出，我先检查一下截图入口参数，避免留下后台窗口或误判。构建和 CAN 自检已经是通过的。
+```
+
+### assistant 2026-06-29T08:23:46.794Z
+
+```text
+找到原因了：这个程序的截图模式必须带 `--screenshot 输出路径`，我刚才只传了页面参数，所以它按普通窗口启动了。我先关闭这个由我启动的进程，再按正确参数截图。
+```
+
+### assistant 2026-06-29T08:23:57.609Z
+
+```text
+后台进程已处理干净。现在生成带文字转储的 P10 截图，主要确认这一页还能正常打开并显示。
+```
+
+### assistant 2026-06-29T08:24:10.971Z
+
+```text
+P10 截图已经生成。我再看一下图像本身，确认不是空白页、不是切错页。
+```
+
+### assistant 2026-06-29T08:24:23.347Z
+
+```text
+页面能打开。现在我直接模拟点击“ H点计算X ”这个显示框再截图，如果键盘还弹出来就说明没修干净。
+```
+
+### assistant 2026-06-29T08:24:36.361Z
+
+```text
+点击后的截图也生成了，我看一下是否还有键盘覆盖。
+```
+
+### assistant 2026-06-29T08:24:48.265Z
+
+```text
+上方 H 计算框点击后没有键盘。表格里的“计算X/Y/Z”列也属于显示值，我再点一次表格计算列确认同样不会弹。
+```
+
+### assistant 2026-06-29T08:25:02.864Z
+
+```text
+表格计算列点击截图也生成了，我做最后一次目视确认。
+```
+
+### assistant 2026-06-29T08:25:21.845Z
+
+```text
+两处点击都没有键盘覆盖，符合“计算值只显示、实测值可输入”的逻辑。我再跑一次差异检查和后台进程检查，然后收尾。
+```
+
+### assistant 2026-06-29T08:25:46.890Z
+
+```text
+原因查到了：P10 机械误差补偿里“ H点计算X/Y/Z ”业务上是显示值，但代码以前按普通输入框创建，所以点击会进触摸键盘；表格里的“计算X/Y/Z”列也被允许触发键盘。
+
+我已改好 QT：
+
+- [MainWindow.cpp](<C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:5642>)：只读输入框禁用焦点和输入法。
+- [MainWindow.cpp](<C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:6094>)：上方 H点计算 X/Y/Z 改成只显示。
+- [MainWindow.cpp](<C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:6393>)：表格只允许“实测X/Y/Z”列弹键盘，“计算X/Y/Z”列不再弹。
+
+验证过了：Release 已重新编译，`--self-test-can` 通过；我还模拟点击了上方 H点计算框和表格计算列，截图确认键盘不再弹出。新版 exe 在 `C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\build_audit_p201\QdnUpperComputerUi.exe`。
 ```
