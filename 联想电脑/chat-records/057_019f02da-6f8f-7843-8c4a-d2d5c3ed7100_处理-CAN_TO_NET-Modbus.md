@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-29T15:20:12`
+- Exported at: `2026-06-29T15:27:25`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -30704,4 +30704,10 @@ MEMORY.md:821-823|note=[prior note on persistence and A2 sample pool]
 
 ```text
 我会直接暴露“收到的原始协议值”，例如角度用 `X100`，距离用 `mm`，这样跟报文槽位一一对应；算法内部换算后的 `gArmQ*Body/World`、`gArm*Sample` 本来就是全局变量，也会继续保留。
+```
+
+### assistant 2026-06-29T07:20:14.276Z
+
+```text
+备份已经创建，现在改 `App_usr.c`。我只加监控变量和接收路径赋值，不改协议行为、不改发送节奏。
 ```
