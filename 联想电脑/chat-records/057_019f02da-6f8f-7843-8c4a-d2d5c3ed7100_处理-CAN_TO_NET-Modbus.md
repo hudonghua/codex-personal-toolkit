@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-29T10:21:50`
+- Exported at: `2026-06-29T10:29:09`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -26808,4 +26808,78 @@ MEMORY.md:1509-1509|note=[verification pattern]
 
 ```text
 自测通过。截图参数支持按页面索引和演示 CAN 数据，我用首页索引截一张带数据的主界面，确认新增对照块能看清。
+```
+
+### assistant 2026-06-29T02:21:58.038Z
+
+```text
+截图已生成，我现在直接看图检查布局和文字是否挤压。
+```
+
+### assistant 2026-06-29T02:22:30.524Z
+
+```text
+截图看过了：主视图左上角现在能看到 `QT计算` 和 `PCB计算` 两个 H 点坐标框，并且下面有差值、PCB 已打、QT 目标。最后我再取一下变更位置行号，方便你后面查。
+```
+
+### assistant 2026-06-29T02:22:56.261Z
+
+```text
+已接手改完 QT 主界面。
+
+改动集中在 [SitonDrillMainView.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/SitonDrillMainView.cpp:2964)：
+
+- 主界面左上角现在并排显示 `QT计算` 和 `PCB计算` 的 H 点坐标。
+- 下面显示 `QT-PCB差值`，方便直接看两边算法结果是否一致。
+- 同一块里也显示 `PCB已打` 和 `QT目标`，用于看目标孔深链路。
+- 调大了主视图上方预留区域，避免新增内容压住炮孔主视图。
+
+我已经做了备份：
+
+`C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\src\SitonDrillMainView.cpp.bak_20260629_101805`
+
+验证结果：
+
+- 固定目录 `build_audit_p201` 编译通过。
+- `QdnUpperComputerUi.exe --self-test-can` 结果：`CAN_TO_NET self-test OK`。
+- `git diff --check` 只有 CRLF 提示，没有代码格式错误。
+- 已截图检查主界面：`C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\test-results\qt-main-hcompare-audit.png`。
+
+另外构建时旧的 `QdnUpperComputerUi.exe` 正在运行并占用文件，我已经关掉旧进程后重新构建成功。
+```
+
+### assistant 2026-06-29T02:22:56.286Z
+
+```text
+已接手改完 QT 主界面。
+
+改动集中在 [SitonDrillMainView.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/SitonDrillMainView.cpp:2964)：
+
+- 主界面左上角现在并排显示 `QT计算` 和 `PCB计算` 的 H 点坐标。
+- 下面显示 `QT-PCB差值`，方便直接看两边算法结果是否一致。
+- 同一块里也显示 `PCB已打` 和 `QT目标`，用于看目标孔深链路。
+- 调大了主视图上方预留区域，避免新增内容压住炮孔主视图。
+
+我已经做了备份：
+
+`C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\src\SitonDrillMainView.cpp.bak_20260629_101805`
+
+验证结果：
+
+- 固定目录 `build_audit_p201` 编译通过。
+- `QdnUpperComputerUi.exe --self-test-can` 结果：`CAN_TO_NET self-test OK`。
+- `git diff --check` 只有 CRLF 提示，没有代码格式错误。
+- 已截图检查主界面：`C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\test-results\qt-main-hcompare-audit.png`。
+
+另外构建时旧的 `QdnUpperComputerUi.exe` 正在运行并占用文件，我已经关掉旧进程后重新构建成功。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:810-821|note=[QT and algorithm PCB H point calculation semantics]
+MEMORY.md:1496-1496|note=[fixed Qt build executable path]
+MEMORY.md:167-170|note=[real qt upper computer repo path]
+</citation_entries>
+<rollout_ids>
+</rollout_ids>
+</oai-mem-citation>
 ```
