@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-29T14:26:49`
+- Exported at: `2026-06-29T14:34:02`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -30196,4 +30196,82 @@ CMake 路径在 `E:\Qt\Tools\CMake_64\bin\cmake.exe`，继续用它构建。
 
 ```text
 改动点很小：新增一个 `criticalDownlinkActive` 判断，然后 P10 的反馈状态只在非下发期间刷新。下发期间仍然接收反馈，只是不抢进度显示。
+```
+
+### assistant 2026-06-29T06:27:03.002Z
+
+```text
+现在做验证：先查补丁位置和空白，再编译固定 build。
+```
+
+### assistant 2026-06-29T06:27:09.902Z
+
+```text
+静态检查过了。现在构建；为了覆盖 exe，我会先关掉当前 Qt 上位机进程，模拟器和 CAN 工具不动。
+```
+
+### assistant 2026-06-29T06:27:36.680Z
+
+```text
+构建通过。再跑一次 CAN 自测，然后启动新 exe。
+```
+
+### assistant 2026-06-29T06:27:58.938Z
+
+```text
+已处理第二处闪烁源。
+
+原因是 P10 下发进度和“校准反馈状态”抢同一个状态标签：发送队列在写 `已完成/剩余/进度`，实时刷新收到反馈后又写成 `左臂反馈/中臂反馈...`，所以后段看起来一闪一闪。
+
+我改成：关键下发期间，P10 状态栏只保留下发进度；等下发结束后，反馈状态再恢复刷新。位置在 [MainWindow.cpp](</C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:8883>) 和 [MainWindow.cpp](</C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:9253>)。
+
+验证：
+- `git diff --check -- src/MainWindow.cpp` 通过。
+- `build_audit_p201` Release 构建通过。
+- `--self-test-can` 输出 `CAN_TO_NET self-test OK`。
+- 新版 Qt 已重新打开，当前 PID `40412`。
+```
+
+### user 2026-06-29T06:31:16.998Z
+
+```text
+H_ref 是什么意思？
+```
+
+### assistant 2026-06-29T06:31:33.078Z
+
+```text
+`H_ref` 就是“参考 H 点”，给机械误差补偿拟合用的实测基准值。
+
+在我们现在的 P10 机械误差补偿流程里：
+
+- `H实测`：全站仪测出来的 H 点坐标。
+- `Q4`：现场位姿四点里的车体参考点。
+- `H_ref = H实测 - Q4`
+
+也就是说，`H_ref` 不是 Qt 算法算出来的 H 点，也不是算法 PCB 当前算出来的 H 点；它是把全站仪测到的 H 点转换成相对 Q4 的参考坐标后，下发给算法 PCB 的目标基准。
+
+算法 PCB 收到 A2 样本时，拿：
+- 记录样本瞬间的关节角度、CD/GG1、车体 roll/pitch
+- `H_ref.X / H_ref.Y / H_ref.Z`
+
+然后自己根据这些样本做机械误差拟合。
+```
+
+### user 2026-06-29T06:33:25.988Z
+
+```text
+我拿左臂举例子，我现在在序号1 实则z 从原来的239.8 改成1239.8. 下发 模拟器会收到什么数据？
+```
+
+### assistant 2026-06-29T06:33:46.229Z
+
+```text
+我先按当前代码核一下，不直接凭记忆答。关键是这个 `实测Z` 会先减去现场 Q4.Z 再转成 mm，并且协议只有有符号 16 位，超范围就不应该下发。
+```
+
+### assistant 2026-06-29T06:33:54.320Z
+
+```text
+代码确认了：表格里的实测 Z 不会原样发给模拟器，而是先算 `H_ref.Z = 实测Z - 现场Q4.Z`，单位再转成 mm；如果超过 `int16` 范围，就整批不发。
 ```
