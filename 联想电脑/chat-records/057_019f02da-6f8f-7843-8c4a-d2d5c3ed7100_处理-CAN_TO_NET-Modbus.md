@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-29T12:21:09`
+- Exported at: `2026-06-29T12:28:22`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -28183,4 +28183,89 @@ MEMORY.md:583-590|note=[CAN and CAN_TO_NET separation context]
 <rollout_ids>
 </rollout_ids>
 </oai-mem-citation>
+```
+
+### user 2026-06-29T04:22:14.853Z
+
+```text
+# Files mentioned by the user:
+
+## cfa6448f-2c7e-487f-9ee2-8a9a49a86fd1.png: C:/Users/t250c/Documents/xwechat_files/dazhude_6dd2/temp/InputTemp/cfa6448f-2c7e-487f-9ee2-8a9a49a86fd1.png
+
+## My request for Codex:
+P10 是按哪一个按键，就下发数据？
+
+<image name=[Image #1] path="C:\Users\t250c\Documents\xwechat_files\dazhude_6dd2\temp\InputTemp\cfa6448f-2c7e-487f-9ee2-8a9a49a86fd1.png">
+</image>
+```
+
+### user 2026-06-29T04:22:14.853Z
+
+```text
+# Files mentioned by the user:
+
+## cfa6448f-2c7e-487f-9ee2-8a9a49a86fd1.png: C:/Users/t250c/Documents/xwechat_files/dazhude_6dd2/temp/InputTemp/cfa6448f-2c7e-487f-9ee2-8a9a49a86fd1.png
+
+## My request for Codex:
+P10 是按哪一个按键，就下发数据？
+```
+
+### assistant 2026-06-29T04:22:35.453Z
+
+```text
+P10 不是所有按钮都下发。
+
+你截图这个 **机械误差补偿** 页面：
+
+- **记录样本**：会下发。  
+  发 `0x50 / B7=0xA2`，内容是当前这一条 H 点样本。
+- **保存样本**：不下发，只保存 Qt 本机表格/本机算法池。
+- **清空选中**：不下发，只清 Qt 本机选中的样本。
+- **拟合完成**：会下发。  
+  发 `0x50 / B7=0xA2` 的拟合触发帧，左臂是 `B0=0x3F`，中臂 `0x7F`，右臂 `0xBF`。但它不重新发送 20 条样本，只告诉算法 PCB “现在拟合”。
+
+所以你截图里显示 **“点数不足”**，核心意思就是：算法 PCB 那边当前没有收到足够的样本。即使 Qt 表格上有 20 行，如果前面“记录样本”没有成功到算法 PCB，点数还是不足。
+
+另外 P10 其他页：
+
+- **机械位置页**：按 **下发控制器** 才发 `A1` 机械四 Q 点。
+- **现场位姿页**：按 **下发控制器** 才发 `A3` 现场四 Q 点。
+- **保存本机/保存样本** 都不是发给 PCB。
+```
+
+### user 2026-06-29T04:24:45.198Z
+
+```text
+机械误差补偿 这个地方 是记录样本，就下发一条吗？
+```
+
+### assistant 2026-06-29T04:25:06.745Z
+
+```text
+是的。**机械误差补偿这里，按一次“记录样本”，业务上就是下发 1 条 H 点样本。**
+
+但要注意两层含义：
+
+1. **业务样本数量：1 条**
+   Qt 会新增当前这一行样本，然后组一帧：
+   `0x50 / B7=0xA2`
+   `B0 = 臂号 + 样本序号`
+   `B1-B6 = H点实测坐标相对 Q4 的 X/Y/Z，单位 mm，int16`
+
+2. **CAN 实际发送：同一帧重复多遍**
+   当前 Qt 的关键下发机制会把这 1 条样本帧重复发多遍，默认是 10 遍，用来防丢包。算法 PCB 在独占窗口内会做重复帧去重，所以正常情况下 **只会记成 1 条样本**，不会因为重复发送就加 10 条。
+
+所以流程是：
+
+按 **记录样本**  
+→ Qt 表格增加一行  
+→ Qt 下发这一行对应的 A2 样本  
+→ 算法 PCB 收到后，拿“当前臂架实时输入/角度状态” + 这条 H 点坐标，存成一条机械误差样本。
+
+对应代码位置：
+- Qt 记录并下发单条样本：[MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:6050)
+- A2 样本组帧：[CanBusModel.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanBusModel.cpp:2186)
+- 算法 PCB 收到 A2 后加样本：[App_usr.c](E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/MC_LCD%20-%207Control_V1.2/Src/App_usr.c:1714)
+
+如果 Qt 表格已经有 20 行，再按“记录样本”会被挡住，不再新增。
 ```
