@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-29T15:27:25`
+- Exported at: `2026-06-29T15:34:37`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -30710,4 +30710,84 @@ MEMORY.md:821-823|note=[prior note on persistence and A2 sample pool]
 
 ```text
 备份已经创建，现在改 `App_usr.c`。我只加监控变量和接收路径赋值，不改协议行为、不改发送节奏。
+```
+
+### assistant 2026-06-29T07:27:35.243Z
+
+```text
+第一次自动替换卡在文件混合换行符上，文件还没写入。我改成更稳的按行/正则方式处理。
+```
+
+### assistant 2026-06-29T07:29:34.577Z
+
+```text
+代码已写入。现在做静态检查：看全局符号是否外部可见、接收分支是否正确写入、有没有把局部变量塞到函数中间导致 Keil C 编译报错。
+```
+
+### assistant 2026-06-29T07:30:37.117Z
+
+```text
+静态代码路径看起来正确：`0x50` 收到后先记最后一帧，A1/A3 先解包到全局监控再交给原算法，A2 每包和完整样本都记。接下来我尝试 Keil 构建，确认不是只看着像对。
+```
+
+### assistant 2026-06-29T07:30:43.931Z
+
+```text
+Keil 工程有 `RAM` 和 `FLASH` 两个目标。我按当前真实下载常用的 `FLASH` 构建，成功后再检查 map 里是否能搜到新符号。
+```
+
+### assistant 2026-06-29T07:31:04.646Z
+
+```text
+这次 `UV4.exe` 没生成日志，可能是命令行对中文路径/参数处理不稳定。我换到 ASCII 日志路径，并检查 Keil 是否实际启动。
+```
+
+### assistant 2026-06-29T07:31:20.863Z
+
+```text
+Keil 实际启动了，FLASH 下的 map/axf 已更新，但 UV4 进程还挂着。我先确认新符号进了 map，再把这次命令行拉起的 UV4 关掉。
+```
+
+### assistant 2026-06-29T07:31:28.065Z
+
+```text
+map 里已经能查到新符号和地址，说明 AXF/MAP 不是空改。现在我关闭刚才命令行拉起的 UV4，然后再做一次符号清单校验。
+```
+
+### assistant 2026-06-29T07:31:39.547Z
+
+```text
+UV4 第一次关闭没退出，我再强制收掉这个由构建拉起的进程，避免后台挂着。
+```
+
+### assistant 2026-06-29T07:31:55.595Z
+
+```text
+UV4 已不再占着进程。现在我补一份完整符号清单，方便你在 Keil Watch 或 map 里直接搜变量名。
+```
+
+### assistant 2026-06-29T07:32:19.585Z
+
+```text
+验证完成：`FLASH\MC_LCD - 7Control_V.map` 和 `.axf` 时间已更新，新变量全部能在 map 里查到地址。Keil 命令没有生成单独日志文件，但 map/axf 已实际重建。
+```
+
+### assistant 2026-06-29T07:32:47.239Z
+
+```text
+已改真实算法 PCB 工程，只动了 [App_usr.c](</E:/AI_划时代/全电脑_算法PCB/正确资料_算法PCB_CAN协议/MC_LCD - 7Control_V1.2/Src/App_usr.c:1004>)。
+
+我加了一组非 `static` 的全局 `volatile` 监控变量，已经进 `FLASH\MC_LCD - 7Control_V.map` 和 `.axf`：
+
+- `gArmCan50MonLastFrame[8]`：最后收到的 `0x50` 原始帧
+- `gArmA1MonXmm/Ymm/Zmm[4]`：A1 机械 Q1-Q4
+- `gArmA3MonXmm/Ymm/Zmm[4]`：A3 现场 Q1-Q4
+- `gArmA2MonRootX100/BaseX100/.../HRefXmm/Ymm/Zmm[3][20]`：A2 三臂 20 组样本
+- `gArmA2MonPacketMask[3][20]`：A2 每组 7 包接收掩码，`0x7F` 表示齐了
+- `gArmA2MonStored[3][20]`：已经写入正式样本池
+- `gArmA2MonFitReqLeft/Mid/Right`：收到拟合命令
+
+索引规则：A1/A3 的 `[0..3]` 对应 Q1-Q4；A2 的第一维 `[0,1,2]` 对应左/中/右臂，第二维 `[0..19]` 对应 20 组样本。
+
+验证：FLASH 目标已重新生成 map/axf，map 里能查到这些地址，例如 `gArmA1MonXmm = 0x2007c764`、`gArmA2MonRootX100 = 0x2007e910`、`gArmA2MonHRefZmm = 0x2007eeb0`。Keil 没生成单独日志文件，但 map/axf 时间已更新并包含新符号。
 ```
