@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-06-29T08:41:23`
+- Exported at: `2026-06-29T08:48:37`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -26102,4 +26102,97 @@ MEMORY.md:806-812|note=[used Q_body Q_world and Body to World calibration rules]
 <rollout_ids>
 </rollout_ids>
 </oai-mem-citation>
+```
+
+### user 2026-06-29T00:43:12.601Z
+
+```text
+<environment_context>
+  <current_date>2026-06-29</current_date>
+  <timezone>Asia/Shanghai</timezone>
+  <filesystem><workspace_roots><root>C:\Users\t250c\Documents\Codex</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
+```
+
+### user 2026-06-29T00:43:12.618Z
+
+```text
+QT本地算法 也需要用A1 A2 A3池子的数据。 当然算法PCB也要用。只是取值路径不同。
+```
+
+### assistant 2026-06-29T00:43:34.298Z
+
+```text
+我按这个要求直接改：Qt 本地算法不再只吃 0x154/0x15A 实时量，还要把 Qt 本机保存/下发的 A1、A2、A3 池子同步给本地算法实例。先核代码里这三类数据现在存在哪、怎么下发，再改成同一套数据源。
+```
+
+### assistant 2026-06-29T00:43:50.730Z
+
+```text
+现在代码里 A1/A3 已经是 Qt 页面保存并下发给算法PCB，但 Qt 本地算法没有拿这些池子；A2 样本也只存在 Qt 设置表里和下发链路里。我要把这三个池子在 Qt 内部整理成一个结构，喂给 `Arm200AQtKinematics`。
+```
+
+### user 2026-06-29T00:44:06.442Z
+
+```text
+不改
+```
+
+### assistant 2026-06-29T00:44:19.554Z
+
+```text
+收到，停止，不改代码、不改文档。
+
+这轮我只读了 Qt 代码、技能说明和记忆记录，没有写文件。后面我按这个口径记住：Qt 本地算法和算法PCB都要用 A1/A2/A3 池子的数据，只是取值路径不同；等你明确让我改再动手。
+```
+
+### assistant 2026-06-29T00:44:19.554Z
+
+```text
+收到，停止，不改代码、不改文档。
+
+这轮我只读了 Qt 代码、技能说明和记忆记录，没有写文件。后面我按这个口径记住：Qt 本地算法和算法PCB都要用 A1/A2/A3 池子的数据，只是取值路径不同；等你明确让我改再动手。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:810-817|note=[used A1 A2 A3 pool meaning and calibration data path context]
+</citation_entries>
+<rollout_ids>
+</rollout_ids>
+</oai-mem-citation>
+```
+
+### user 2026-06-29T00:44:19.628Z
+
+```text
+你跟你商量
+```
+
+### assistant 2026-06-29T00:44:46.880Z
+
+```text
+可以，先商量，不动代码。
+
+我建议把这件事定成一个原则：**A1/A2/A3 不是“只给算法PCB下发的命令”，而是一套标定数据池。算法PCB用 CAN 收到的池子；Qt 本地算法用本机保存的同一套池子。两边输入源不同，但数据口径必须一致。**
+
+我的理解是这样：
+
+`A1`：机械四 Q 点  
+Qt 页面保存的是本机池子；下发算法PCB时转成 `0x50/B7=A1`。Qt 本地算法也应该从这个池子取。
+
+`A3`：现场四 Q 点  
+Qt 页面保存的是全站仪现场点。给算法使用时要和算法PCB一致，以 `Q4/O` 为基准做本地化，也就是 `Qn - Q4` 这套口径，不能 Qt 本地用绝对坐标、算法PCB用相对坐标。
+
+`A2`：H 点样本 / 拟合  
+这里最关键。A2 不是只有一个 H 点坐标，还需要“采样当时的姿态/编码器输入”。算法PCB收到 A2 时会用当时自己的实时输入配对；Qt 本地算法如果也要拟合，就必须在 Qt 记录 A2 样本时，同时保存当时的 `0x154` 角度/行程和 `0x15A` 车体姿态快照。否则关掉重开后，Qt 只有 H 点，没有当时姿态，无法重算拟合。
+
+所以更稳的方案是：
+
+1. Qt 建一个本机标定池：`A1池`、`A3池`、`A2样本池`。
+2. 下发算法PCB时，从这个池子组 CAN。
+3. Qt 本地算法也从这个池子喂 `Arm200A_Kine`。
+4. A2 样本池必须保存：臂号、样本序号、H_ref、记录时的 root/base/boom/d1/e1/f/cd/gg1、车体 roll/pitch。
+5. Qt 主视图如果要用本地算法 H 点，要明确一个开关或优先级：现场算法PCB H 点优先，还是 Qt 本地 H 点优先。调试阶段我建议显示两套并比较误差，别直接替换。
+
+这样做完后，Qt 和算法PCB算出来的 H 点才有资格对比。否则现在“Qt本地算法”只是拿实时角度单独算，没有吃完整标定池，结果肯定容易偏。
 ```
