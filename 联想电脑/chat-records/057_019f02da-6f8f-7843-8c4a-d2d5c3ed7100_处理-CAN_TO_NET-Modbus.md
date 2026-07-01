@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-07-01T22:29:16`
+- Exported at: `2026-07-01T22:36:41`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -54638,4 +54638,125 @@ CPU 有下降但还不够，paint 只有 18 次/秒还吃 60% 核，说明单次
 
 ```text
 我会继续用 `qt-upper-computer-ui-layout`、`backup-and-edit`、`verify-before-answer` 这三个流程：固定 `build_audit_p201`，改前保留最新备份，改后跑自测和性能采样。先查现在自测到底卡在哪。
+```
+
+### assistant 2026-07-01T14:29:30.277Z
+
+```text
+自测结果确认了：现在不是卡死，是 `dashboard-demo-refresh` 仍然慢，平均 59ms，目标是 18ms。刚才把重绘风暴从每秒 300 多次压到了约 18 次，但每次刷新里还在做重计算/大对象复制，下一步从 `setRealtimeState()` 和绘图缓存入手。
+```
+
+### assistant 2026-07-01T14:29:41.722Z
+
+```text
+当前慢点在主视图刷新路径。这里每次 `setRealtimeState()` 都完整复制 `MachineRealtimeState`、扫描孔位、强制 `update()`；绘图里又反复算轮廓和最近孔。我要先加“状态没变就不刷新”和“命中孔只在 H 点变化时重算”，这是低风险优化。
+```
+
+### assistant 2026-07-01T14:30:07.094Z
+
+```text
+`dashboard-demo-refresh` 每轮都会注入模拟 CAN 帧，所以“没变化跳过”只能解决现场空刷，不能完全解决自测。现在更关键的是每帧绘图都在重算轮廓曲线、边界和 200 多个孔映射；我先做缓存，只有孔位/视图/施工痕迹变化时才重算。
+```
+
+### assistant 2026-07-01T14:30:40.167Z
+
+```text
+另外发现主视图自身还有一个 `hTimer_` 在定时刷新演示 H 点，这在有真实/模拟状态输入时会白白触发重绘。我要让这个定时器只在没有任何有效 H 点数据时才刷新，避免真实数据模式下空转。
+```
+
+### assistant 2026-07-01T14:31:05.876Z
+
+```text
+我还发现自测里的 `injectDemoCanFramesForScreenshot()` 一次注入十几包，每包都立即 `refreshRealtimeUi()`，等于一轮数据刷新被拆成很多次 UI 刷新。实际 CAN 高频下也会有这个问题，所以要做 UI 刷新合并：CAN 解析照常即时处理，但界面刷新合并到下一轮事件循环。
+```
+
+### assistant 2026-07-01T14:31:29.005Z
+
+```text
+注意：`scheduleRealtimeRefresh()` 已经是 33ms 合并刷新，但 `injectDemoCanFramesForScreenshot()` 末尾为了截图强制立即刷新，所以自测仍然能暴露主页面单次刷新成本。接下来我不动业务协议，优先把主视图绘制成本降下来。
+```
+
+### assistant 2026-07-01T14:31:39.159Z
+
+```text
+另一个可能的耗时点是每包 CAN 都更新调试接收表的统计数据。这个对调试页有用，但主界面高频接收时不能拖慢显示；我会看它是否在当前页不需要时仍在做字符串和表格工作。
+```
+
+### assistant 2026-07-01T14:31:55.606Z
+
+```text
+这里有一个明确拖慢点：`recordCanDebugReceivedFrame()` 对符合监控 ID 的每一包 CAN 都追加 CSV 文件，还可能刷新调试表。主界面正常显示不应该每包落盘；我会改成默认只做内存统计，只有设置调试环境变量时才写 CSV。这样不影响 P12 表格显示，也避免主界面被磁盘 IO 拖住。
+```
+
+### assistant 2026-07-01T14:32:04.669Z
+
+```text
+已给 `MainWindow.cpp` 建了新的时间戳备份，只保留这一份。现在改 CAN 调试 CSV 默认落盘逻辑，并顺手把主视图演示定时器空转处理掉。
+```
+
+### assistant 2026-07-01T14:32:13.764Z
+
+```text
+已经改完两处低风险点：CAN 调试 CSV 改成显式调试才落盘，主视图有实时 H 点时不再跑演示刷新定时器。现在编译固定 exe，再跑性能自测看数值是否下降。
+```
+
+### assistant 2026-07-01T14:32:45.063Z
+
+```text
+编译通过了。现在跑 `--self-test-ui-perf` 和 `--self-test-can`，如果性能还不够，再继续看绘图缓存。
+```
+
+### assistant 2026-07-01T14:33:01.613Z
+
+```text
+自测已经过了：`dashboard-demo-refresh` 从 59ms 降到 15.37ms，达到目标。现在还要跑真实 exe 一段时间，看进程 CPU、私有内存和句柄是否稳定；同时确认它能正常打开。
+```
+
+### assistant 2026-07-01T14:33:41.683Z
+
+```text
+真实运行稳定，内存和句柄没有增长；CPU 已经从之前约 60-70 降到 33-42 这一档。还可以继续压：我再开一次绘图计数，确认是否还有多余重绘。
+```
+
+### assistant 2026-07-01T14:34:10.547Z
+
+```text
+绘图计数这次没有打出日志，可能是 GUI 子系统 stdout 不稳定，不拿这个当依据。用实际性能自测和进程采样更可靠；我再看一眼进程是否残留，并补一个截图文件用于检查界面没有被性能改动影响。
+```
+
+### assistant 2026-07-01T14:34:18.893Z
+
+```text
+进程还在，响应正常，私有内存在 94MB 左右。现在截一张当前屏幕保存到临时文件，我看一下主界面有没有明显布局异常。
+```
+
+### assistant 2026-07-01T14:35:05.586Z
+
+```text
+截图看得到主界面已经能打开，主视图控件没有因为这次性能优化错位。右侧窗口超出当前截图宽度是窗口本身比截图区域宽，不是这次改动引起的。最后我查一下 touched 文件状态，准备给你汇总。
+```
+
+### assistant 2026-07-01T14:35:27.055Z
+
+```text
+这轮目标已经达到可验证状态：性能自测过线，运行进程稳定，固定 exe 能打开。我会把这个优化目标标记完成，后面如果你继续现场试卡顿，我们再按新的现象继续查。
+```
+
+### assistant 2026-07-01T14:35:41.279Z
+
+```text
+继续做完了，当前固定 exe 能打开，性能自测也过了。
+
+改动点：
+- [MainWindow.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/MainWindow.cpp:8917)：CAN 调试 CSV 默认不再每包落盘，只有设置 `QDN_ENABLE_CAN_DEBUG_CSV` 或 `QDN_TRACE_ALGORITHM_CAN` 时才写文件，避免主界面被磁盘 IO 拖慢。
+- [SitonDrillMainView.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/SitonDrillMainView.cpp:606)：主视图已有真实/模拟 H 点数据时，不再跑演示 H 点定时刷新，减少无意义重绘。
+
+验证结果：
+- `--self-test-ui-perf` 通过，`dashboard-demo-refresh` 从之前约 `59ms` 降到 `15.371ms`。
+- `--self-test-can` 通过。
+- `git diff --check` 通过。
+- 实际运行采样：私有内存约 `89MB`，句柄约 `1218-1219`，进程响应正常；CPU 比之前明显下降。
+- 固定 exe：`C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/build_audit_p201/QdnUpperComputerUi.exe`
+
+目标已标记完成；本轮目标累计用时约 39 分 52 秒，token 计数 `1540785`。
 ```
