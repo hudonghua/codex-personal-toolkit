@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-07-01T22:21:45`
+- Exported at: `2026-07-01T22:29:16`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -54548,4 +54548,94 @@ Do not call update_goal unless the goal is complete or the strict blocked audit 
 
 ```text
 节流控件重绘后 CPU 还是接近一个核，说明还有别的循环。下一步我分离判断：是主视图绘制导致，还是 CAN 连接/发送重试导致。先查启动参数和 CAN client 定时器。
+```
+
+### assistant 2026-07-01T14:21:46.033Z
+
+```text
+我看到程序默认检测到多屏会自动双屏模式，而且镜像定时器 50ms 一直跑。这个会持续复制整套状态、刷新右屏。先做对照实验：用 `--single-window` 跑一遍，如果 CPU 立刻下降，就说明卡顿主要来自双屏镜像定时器。
+```
+
+### assistant 2026-07-01T14:22:27.082Z
+
+```text
+单屏也一样高，排除双屏镜像是主因。现在最像的是 CAN_TO_NET 默认 5ms 轮询：即使没数据，也每 5ms 排队读一轮，会把事件循环占满。我要把默认轮询从“固定 5ms”改成可响应但不烧 CPU 的值，并保持可配置。
+```
+
+### assistant 2026-07-01T14:22:37.166Z
+
+```text
+代码里默认 `DefaultPollIntervalMs = 5`，也就是主程序一启动就每 5ms 轮询一大组 CAN 映射寄存器，这足够解释一个核打满。先用环境变量把轮询改成 30ms 做实测，确认 CPU 降幅和界面稳定性。
+```
+
+### assistant 2026-07-01T14:23:25.385Z
+
+```text
+30ms 环境变量没有明显变化，说明不是简单的轮询间隔，或者 CPU 来自 Qt 绘制/事件循环本身。仓库里已有 `--self-test-ui-perf`，我跑一下它的内部耗时统计。
+```
+
+### assistant 2026-07-01T14:23:58.645Z
+
+```text
+内部性能自测定位到了具体失败项：`dashboard-demo-refresh` 平均 66ms，目标 <=18ms。也就是说刷新主界面实时数据太慢，不是页面切换慢。现在我沿着这个测试调用链优化 `refreshRealtimeUi -> dashboardView_->setRealtimeState`。
+```
+
+### assistant 2026-07-01T14:25:04.625Z
+
+```text
+为了不再盲猜，我加一个环境变量控制的绘制计数器，只在 `QDN_TRACE_DRILL_PAINT` 打开时打印每秒 paint 次数。这个不会影响正常运行，用完也可以保留为诊断开关。
+```
+
+### assistant 2026-07-01T14:25:13.924Z
+
+```text
+加了 gated 诊断计数器。现在编译后从命令行带 trace 跑 6 秒，看主视图是不是在疯狂重绘。
+```
+
+### assistant 2026-07-01T14:25:35.250Z
+
+```text
+程序已编好。现在用 trace 文件跑 8 秒，直接看 paint 频率；如果 paint 很低但 CPU 高，就继续查 CAN/事件循环。
+```
+
+### assistant 2026-07-01T14:26:04.184Z
+
+```text
+paint 频率 300 多次/秒，确认是重绘风暴。前面只处理了按钮 overlay，还剩右侧图例复选框那类控件也在 paint 里反复改几何/显示。继续把这些控件节流。
+```
+
+### assistant 2026-07-01T14:26:16.459Z
+
+```text
+确实还有图例 checkbox 每次 paint 都 `setGeometry/show/raise`。我把它也接入同一套节流函数。
+```
+
+### assistant 2026-07-01T14:26:25.842Z
+
+```text
+继续验证同一个 paint 计数。目标是从每秒几百次降到接近定时刷新量，而不是靠感觉。
+```
+
+### assistant 2026-07-01T14:26:58.340Z
+
+```text
+重绘风暴已经压下来了：从每秒 300 多次降到 18-19 次。现在再测资源，确认 CPU 是否跟着下降。
+```
+
+### assistant 2026-07-01T14:27:36.495Z
+
+```text
+CPU 有下降但还不够，paint 只有 18 次/秒还吃 60% 核，说明单次主视图绘制太重。内部性能自测之前失败在 dashboard refresh，我重新跑一次看是否过线，若没过继续优化绘图算法。
+```
+
+### assistant 2026-07-01T14:28:59.383Z
+
+```text
+我继续接着上一次的优化链路走。先把 Qt UI 专用流程和备份/验证要求重新对齐，然后复查刚才最后被截断的自测结果。
+```
+
+### assistant 2026-07-01T14:29:10.502Z
+
+```text
+我会继续用 `qt-upper-computer-ui-layout`、`backup-and-edit`、`verify-before-answer` 这三个流程：固定 `build_audit_p201`，改前保留最新备份，改后跑自测和性能采样。先查现在自测到底卡在哪。
 ```
