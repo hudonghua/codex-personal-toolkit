@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-07-02T13:15:20`
+- Exported at: `2026-07-02T13:22:39`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -59739,4 +59739,215 @@ MEMORY.md:271-273|note=[scoped third-party siton package context]
 
 ```text
 我再加一个保护：只有 H 点离 TL 隧道线在合理距离内，才启用 TL 转换。否则实验室小坐标或未完成 A3 时不会被误当成大地坐标，仍然走内部坐标兜底。
+```
+
+### assistant 2026-07-02T05:15:32.891Z
+
+```text
+代码接入部分已经完成，下一步先做静态检查和编译。如果编译过了，再跑固定的 `--self-test-can`。
+```
+
+### assistant 2026-07-02T05:15:42.753Z
+
+```text
+还有一个旧的 `machinePointToPlanPoint()` 现在不再被使用，我顺手删掉，避免后续编译告警或误用。
+```
+
+### assistant 2026-07-02T05:15:52.431Z
+
+```text
+静态检查没有发现空白或补丁格式问题。现在开始编译固定的 `build_audit_p201`。
+```
+
+### assistant 2026-07-02T05:16:04.833Z
+
+```text
+当前 PowerShell 里 `cmake` 不在 PATH。我不换 build 目录，先找本机已有 CMake 或 Qt 工具链路径，再用绝对路径继续构建。
+```
+
+### assistant 2026-07-02T05:16:42.574Z
+
+```text
+找到 VS 自带的 CMake 了，我用这个绝对路径继续编译，仍然使用原来的 `build_audit_p201`。
+```
+
+### assistant 2026-07-02T05:16:51.856Z
+
+```text
+这个失败不是代码编译错误，是当前 shell 没加载 MSVC 标准库环境，`<array>` 都找不到。我要通过 VS 的开发者环境重新执行同一个构建。
+```
+
+### assistant 2026-07-02T05:17:00.418Z
+
+```text
+刚才是 Windows `cmd` 引号转义问题，我修正命令继续，不改 build 路径。
+```
+
+### assistant 2026-07-02T05:17:16.418Z
+
+```text
+编译已通过。现在跑 `--self-test-can`，确认现有 CAN/界面自测没有被这次坐标转换改坏。
+```
+
+### assistant 2026-07-02T05:17:49.229Z
+
+```text
+坐标转换链路已经接完并通过自测。我再扫一遍主视图里遗留的“模拟”入口，确认这次没有把实验室模拟功能继续留在真实显示链路里。
+```
+
+### assistant 2026-07-02T05:18:02.290Z
+
+```text
+主视图里当前没有“模拟开关/H 点模拟”残留入口了；只剩 `MainWindow` 里已有的模拟量分包名称和 demo trace 打印，不属于这次 H 点主视图模拟链路。最后我取一下实际修改摘要和内存引用行号，然后收尾。
+```
+
+### assistant 2026-07-02T05:18:43.446Z
+
+```text
+已按这个思路改完并验证。
+
+改动集中在 [SitonDrillMainView.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/SitonDrillMainView.cpp) 和 [SitonDrillMainView.h](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/SitonDrillMainView.h)：
+
+- 解析 `.tl` 里的 `PivotPoint / InSiteCoord / InDRPCoord`。
+- H 点显示统一走 `qtHPointToPlanPoint()`：
+  1. 优先使用已保存的 `drillPlan/worldOrigin/worldAxis` 显式转换。
+  2. 没有显式转换时，用 `.tl` 隧道线最近截面 + PivotPoint 转到炮孔图局部坐标。
+  3. 如果 H 点离隧道线超过 120m，判定不像大地坐标，退回内部坐标转换，避免实验室小坐标被误转。
+- 主视图 H 点、H 点匹配、目标深度相关的 H 点入口都统一到这条转换链路。
+- 没有新增 CAN 帧/字段，所以 CAN 协议文档这次不需要改。操作台 4x4/4x5 协议这次没动。
+
+验证：
+- `cmake --build build_audit_p201 --config Release` 已通过。
+- `.\build_audit_p201\QdnUpperComputerUi.exe --self-test-can` 输出 `CAN_TO_NET self-test OK`。
+- 备份保留为 `src/SitonDrillMainView.cpp.bak_20260702_131221` 和 `src/SitonDrillMainView.h.bak_20260702_131221`。
+```
+
+### assistant 2026-07-02T05:18:43.472Z
+
+```text
+已按这个思路改完并验证。
+
+改动集中在 [SitonDrillMainView.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/SitonDrillMainView.cpp) 和 [SitonDrillMainView.h](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/SitonDrillMainView.h)：
+
+- 解析 `.tl` 里的 `PivotPoint / InSiteCoord / InDRPCoord`。
+- H 点显示统一走 `qtHPointToPlanPoint()`：
+  1. 优先使用已保存的 `drillPlan/worldOrigin/worldAxis` 显式转换。
+  2. 没有显式转换时，用 `.tl` 隧道线最近截面 + PivotPoint 转到炮孔图局部坐标。
+  3. 如果 H 点离隧道线超过 120m，判定不像大地坐标，退回内部坐标转换，避免实验室小坐标被误转。
+- 主视图 H 点、H 点匹配、目标深度相关的 H 点入口都统一到这条转换链路。
+- 没有新增 CAN 帧/字段，所以 CAN 协议文档这次不需要改。操作台 4x4/4x5 协议这次没动。
+
+验证：
+- `cmake --build build_audit_p201 --config Release` 已通过。
+- `.\build_audit_p201\QdnUpperComputerUi.exe --self-test-can` 输出 `CAN_TO_NET self-test OK`。
+- 备份保留为 `src/SitonDrillMainView.cpp.bak_20260702_131221` 和 `src/SitonDrillMainView.h.bak_20260702_131221`。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:183-185|note=[hole-plan coordinate convention and internal fallback]
+MEMORY.md:271-279|note=[third-party siton package kept scoped]
+MEMORY.md:1385-1385|note=[fixed qt build path]
+</citation_entries>
+<rollout_ids>
+019f02db-bae6-7bf0-a533-c749bdd402be
+019ed629-1720-7f13-aa70-526a27dee106
+</rollout_ids>
+</oai-mem-citation>
+```
+
+### user 2026-07-02T05:18:44.756Z
+
+```text
+只有 H 点离 TL 隧道线在合理距离内，才启用 TL 转换。否则实验室小坐标或未完成 A3 时不会被误当成大地坐标，仍然走内部坐标兜底。 这是什么意思？
+```
+
+### assistant 2026-07-02T05:19:04.761Z
+
+```text
+意思是：我加了一个“坐标类型保护”。
+
+现在 H 点可能有两种来源形态：
+
+1. **现场大地坐标**
+   例如 `X=474717, Y=3012845, Z=240`，这种和 `.tl` 隧道线坐标是同一个量级，可以拿 `.tl` 去换算成炮孔图局部坐标。
+
+2. **实验室/内部小坐标**
+   例如 `X=2.12, Y=8.56, Z=1.64`，这种明显不是 `.tl` 的大地坐标。如果强行拿它去和 `.tl` 的 `474705, 3012929, 238` 做转换，结果会乱飞。
+
+所以我加了判断：H 点离 `.tl` 隧道线太远，比如超过 `120m`，就认为它不是 `.tl` 所在的大地坐标系，不启用 TL 转换，而退回原来的内部坐标转换。
+
+简单说：
+
+```text
+H点像大地坐标，并且靠近TL隧道线 -> 用 TL 转炮孔图坐标
+H点不像大地坐标，或者TL不是当前现场 -> 不用TL，走内部坐标兜底
+```
+
+这不是最终标定逻辑，只是防止“坐标系不一致时硬转导致显示乱掉”。真正现场时，如果 Qt 算出来的 H 点已经是全站仪/隧道线同一坐标系，就会走 TL 转换。
+```
+
+### user 2026-07-02T05:19:06.337Z
+
+```text
+我不要你兜底。H点算出来是多少，就是多少。现场不需要兜底，兜底的数据如果有问题怎么办？阈值没搞对怎么办？ 是什么就是什么。如果H点不在炮孔图上，就说明前面的步骤出问题导致。或者是你渲染出问题。
+```
+
+### assistant 2026-07-02T05:19:26.114Z
+
+```text
+你说得对，现场显示层不应该靠兜底掩盖坐标链路问题。这个我直接改：H 点优先走明确的现场/炮孔图转换；转换条件不满足就显示无效/不在图上，不再退回内部坐标。先按 Qt UI 安全编辑流程处理。
+```
+
+### assistant 2026-07-02T05:19:44.691Z
+
+```text
+我理解你的要求是：不要阈值判断、不要内部坐标兜底、不要“看起来还能显示”的假正确。H 点如果能按现场坐标链路转到炮孔图，就转；如果转不了，就按当前值暴露问题，不让软件悄悄换另一套坐标。现在我改这个逻辑。
+```
+
+### assistant 2026-07-02T05:20:16.372Z
+
+```text
+我会把两处都去掉：`120m` 阈值判断去掉；`internalMachineVectorToPlanVector()` 兜底去掉。没有现场转换时就返回原始 H 值作为显示坐标，让它自然落到图外，而不是软件替你“修正”。
+```
+
+### assistant 2026-07-02T05:20:25.135Z
+
+```text
+备份已更新。我现在改代码并重新编译。
+```
+
+### assistant 2026-07-02T05:20:41.403Z
+
+```text
+改完了：现在没有距离阈值，也没有内部坐标兜底。H 点转换失败时会按原始 H 值进入显示链路，坐标不对就会自然暴露出来。开始检查和构建。
+```
+
+### assistant 2026-07-02T05:20:47.656Z
+
+```text
+检查通过，`rg` 也确认旧的阈值和内部兜底名字都不存在了。现在构建固定目标。
+```
+
+### assistant 2026-07-02T05:21:04.422Z
+
+```text
+构建通过。现在跑自测，确认 CAN 自测仍然正常。
+```
+
+### assistant 2026-07-02T05:21:19.846Z
+
+```text
+已改掉。
+
+现在逻辑是：
+
+- 有 `drillPlan/worldOrigin/worldAxis` 明确标定转换，就用它。
+- 否则有 `.tl` 隧道线 + `PivotPoint`，就直接按 TL 转换，不再判断距离阈值。
+- 如果这些转换条件都没有，就返回原始 H 点坐标本身，不再走内部坐标兜底。也就是说坐标不对就会暴露出来，不会被软件“修正”成看似合理的位置。
+
+已确认：
+- 删除了 `120m` 阈值逻辑。
+- 删除了 `internalMachineVectorToPlanVector()` 兜底。
+- `cmake --build build_audit_p201 --config Release` 通过。
+- `.\build_audit_p201\QdnUpperComputerUi.exe --self-test-can` 通过，输出 `CAN_TO_NET self-test OK`。
 ```
