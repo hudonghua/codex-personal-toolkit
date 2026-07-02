@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-07-02T10:42:28`
+- Exported at: `2026-07-02T10:49:51`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -57052,4 +57052,62 @@ CutHole        Y分量 3.98~4.157m，完整孔深 4.00~5.00m
 
 ```text
 读取逻辑现在只找 `*.dp`，所以新 XML 不会被自动选中；而且新 XML 里有一个 `Reference` 零长度参考点，需要作为参考点跳过，不然主视图会多一个假孔。我改这两处。
+```
+
+### assistant 2026-07-02T02:42:32.630Z
+
+```text
+现在开始改代码：加一个“优先炮孔计划文件”的选择函数，优先这个 XML；解析时跳过 `Reference` 或零长度孔。这样界面孔数会按实际钻孔显示，不会把参考点当孔。
+```
+
+### assistant 2026-07-02T02:42:52.908Z
+
+```text
+代码已改完。现在先检查关键片段，再构建固定目标，确认新 XML 能被解析并且不把 Reference 画进去。
+```
+
+### assistant 2026-07-02T02:43:00.099Z
+
+```text
+`diff --check` 通过，只有已有的 CRLF 提示。现在构建。
+```
+
+### assistant 2026-07-02T02:43:23.929Z
+
+```text
+构建通过。接下来跑 CAN 自测和 UI 性能自测，然后打开固定 exe 截图确认孔数变成新文件的实际钻孔数。
+```
+
+### assistant 2026-07-02T02:43:37.043Z
+
+```text
+两个自测都通过。现在实际打开固定 exe，截一张主视图确认新炮孔图已被加载。
+```
+
+### assistant 2026-07-02T02:44:30.613Z
+
+```text
+截图确认主视图现在显示 `孔数 242/242`，说明新 XML 已经生效，那个 `Reference` 零长度点没有算作实际孔。最后清理残留进程。
+```
+
+### assistant 2026-07-02T02:44:42.417Z
+
+```text
+已改成优先使用这个文件：
+
+`E:\AI_划时代\全电脑_算法PCB\0-300000-300_000_dlc_Drill_3k1.xml`
+
+改动在 [SitonDrillMainView.cpp](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/SitonDrillMainView.cpp:68)：
+
+- 优先读这个确认过的 XML。
+- 如果这个文件不存在，再读 `DocFile` 里的最新 `*.xml`。
+- 再没有，才退回读最新 `*.dp`。
+- 解析时跳过 `TypeOfHole=Reference` 或零长度孔，避免把参考点当炮孔显示。
+
+验证结果：
+
+- 构建 `build_audit_p201` 通过。
+- `--self-test-can` 通过，`EXITCODE=0`。
+- `--self-test-ui-perf` 通过，`EXITCODE=0`。
+- 实际打开固定 exe 后，主视图显示 `孔数 242/242`，说明已经用新 XML，并且没有把 1 个 Reference 计入实际孔。
 ```
