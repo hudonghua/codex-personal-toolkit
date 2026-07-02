@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-07-02T12:53:17`
+- Exported at: `2026-07-02T13:00:39`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -59269,4 +59269,173 @@ MEMORY.md:1385-1386|note=[fixed Qt build path and validation pattern]
 
 ```text
 设置页里“导入模拟H点轨迹”只是静态显示，也容易误导；按你说的“模拟相关去掉”，这里一起删。
+```
+
+### assistant 2026-07-02T04:53:37.575Z
+
+```text
+刷新函数已经恢复为直接显示 `canState_` 的真实状态，不再改写关节角度或 H 点。现在做残留扫描。
+```
+
+### assistant 2026-07-02T04:53:46.749Z
+
+```text
+主代码里的模拟关键字已经清掉了。搜索只在旧 `.bak` 备份文件里还能看到，不参与编译。现在编译固定 build。
+```
+
+### assistant 2026-07-02T04:54:07.055Z
+
+```text
+系统 PATH 里没有 `cmake`。我先找本机已有的 CMake/Qt 构建工具，找到后用绝对路径继续编译。
+```
+
+### assistant 2026-07-02T04:54:43.201Z
+
+```text
+找到 VS 自带 CMake：`C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe`，现在用它编译。
+```
+
+### assistant 2026-07-02T04:54:53.934Z
+
+```text
+编译器找不到 C++ 标准库头文件，这是 VS 环境变量没加载，不是代码错误。我用 VS 的 `VsDevCmd` 初始化环境后再跑同一个 build。
+```
+
+### assistant 2026-07-02T04:55:03.111Z
+
+```text
+刚才是 PowerShell 对括号路径的引号拆错了。我换成 `cmd.exe /s /c` 的写法。
+```
+
+### assistant 2026-07-02T04:55:12.489Z
+
+```text
+继续修正引号，这次直接让 PowerShell 把整段作为 cmd 参数传进去。
+```
+
+### assistant 2026-07-02T04:55:48.216Z
+
+```text
+代码已经编过了，卡在链接：`QdnUpperComputerUi.exe` 正在被占用，链接器无法覆盖。按你之前要求，先清掉残留运行中的 Qt exe，再重新链接。
+```
+
+### assistant 2026-07-02T04:55:56.346Z
+
+```text
+发现两个 `QdnUpperComputerUi` 进程，其中一个就是固定 build 的 exe。现在结束它们，防止继续锁文件。
+```
+
+### assistant 2026-07-02T04:56:05.048Z
+
+```text
+一个进程已处理，另一个拒绝访问。我先确认它是否还在占用固定 exe；如果是系统权限残留，再用任务管理等价方式处理。
+```
+
+### assistant 2026-07-02T04:56:12.616Z
+
+```text
+剩下这个进程没有路径和窗口标题，像是半残留进程。我用 `taskkill` 再清一次。
+```
+
+### assistant 2026-07-02T04:56:21.287Z
+
+```text
+残留进程无法结束，但它没有路径，可能不是当前 exe 的文件锁。先重新链接验证；如果还锁，再换方式定位句柄。
+```
+
+### assistant 2026-07-02T04:56:35.221Z
+
+```text
+重新链接成功。现在跑 `--self-test-can` 做功能自测。
+```
+
+### assistant 2026-07-02T04:57:00.804Z
+
+```text
+`--self-test-can` 通过。最后我看一下差异范围，确认没有动到模拟器/P10/协议以外的东西。
+```
+
+### assistant 2026-07-02T04:57:12.456Z
+
+```text
+差异里有很多旧的未提交改动，不是这次动的范围；这次核心验证已经完成：主代码模拟关键字清空、固定 build 编译成功、`--self-test-can` 通过。
+```
+
+### assistant 2026-07-02T04:57:25.540Z
+
+```text
+已按清单处理完：主视图里用于实验室验证的 H 点模拟链路已去掉，包括“模拟开/关”、角度输入框、点击主视图生成模拟 H 点、无真实 H 时自动游走、`MainWindow` 后台定时注入假角度/假 H 的逻辑。
+
+保留了你要求保留的内容：临时 `0x111`、P10 的“填20组测试/加入队列”快照测试逻辑没有动。
+
+验证结果：
+- 已编译固定版本：`C:\Users\t250c\Documents\全电脑台车-CAN协议\qt-upper-computer-ui\build_audit_p201\QdnUpperComputerUi.exe`
+- `--self-test-can` 通过：`CAN_TO_NET self-test OK`
+- 主代码中 `QtHSimulation / dashboardQtHSimulation / 模拟H点 / 模拟开 / 模拟关` 已无残留。旧 `.bak` 备份文件里还有历史字符串，不参与编译。
+```
+
+### user 2026-07-02T04:57:50.681Z
+
+```text
+E:\AI_划时代\全电脑_算法PCB\上位机（siton）  你读下这个里面的代码。炮孔图的局部坐标系，怎么转换到到大地坐标系的？ 是否对你还有帮助？
+```
+
+### assistant 2026-07-02T04:58:03.665Z
+
+```text
+我会先按第三方 siton 上位机代码来读，不把它和我们当前 Qt 工程混在一起。重点找炮孔图文件解析、坐标转换、Q 点/全站仪/隧道坐标相关逻辑。
+```
+
+### assistant 2026-07-02T04:58:13.500Z
+
+```text
+内存里也提示过这个包是第三方 `Z16EA-1.2.5` Electron 包，我会把结论限定在这个包本身。现在开始读真实目录结构和源码，不靠旧结论直接回答。
+```
+
+### assistant 2026-07-02T04:58:25.335Z
+
+```text
+目录里有 `DocFile` 的 `.dp/.tl`，应用本体是 Electron 打包。下一步我直接找 `resources/app` 或 `app.asar` 并解包/搜索源码里的坐标转换关键词。
+```
+
+### assistant 2026-07-02T04:58:42.643Z
+
+```text
+`.dp` 文件本身确实是局部炮孔图：`StartPoint X/Y/Z`、`EndPoint X/Y/Z`，样例里入口 `Y=0`、终点 `Y=3`，这和我们刚才讨论的“炮孔图 Y 是钻进方向”一致。现在我找它有没有把这些局部点转到全站仪/大地坐标。
+```
+
+### assistant 2026-07-02T04:58:56.527Z
+
+```text
+源码是打包后的 webpack 文件，比较压缩。我会优先看明显的业务文件：`renderer.js`、`poseOperation.js`、`worker*.js`、`drilldatastore.js`、`Workface_calibration.json`、`initdata.json`，不要被 `node_modules` 干扰。
+```
+
+### assistant 2026-07-02T04:59:37.655Z
+
+```text
+我先按第三方包来读，只看它的炮孔图/位姿相关代码，不把它的实现直接混到我们自己的 Qt 项目里。重点查它有没有把 `.dp` 的局部孔坐标注册到全站仪/大地坐标的逻辑。
+```
+
+### assistant 2026-07-02T04:59:50.117Z
+
+```text
+技能文件不在 `.codex` 下，我切到 `.agents` 的技能路径继续；同时会重新做一次很窄的代码检索，避免被压缩后的 Electron 文件输出淹没。
+```
+
+### assistant 2026-07-02T05:00:04.841Z
+
+```text
+我已经确认这个包是之前标记过的第三方 Electron 上位机包。现在聚焦三个点查：`.dp/.tl` 文件含义、代码里有没有 `local -> world` 矩阵/平移旋转、以及它是否用全站仪/工作面标定文件把两套坐标系关联起来。
+```
+
+### assistant 2026-07-02T05:00:22.481Z
+
+```text
+配置文件已经很关键：这个包里确实有 `T_f_G / T_G_f` 这种工作面坐标到全局/车体坐标的齐次矩阵，而且 `.dp` 明确有每个孔的入口点和终点。下面我继续查这些矩阵在代码里是怎么用的，判断它是“真正做大地转换”还是只做显示坐标转换。
+```
+
+### assistant 2026-07-02T05:00:33.243Z
+
+```text
+`.tl` 文件里有隧道中线的大地坐标点和桩号，`.dp` 里是孔的局部入口/终点。下一步我用脚本截取压缩 JS 里的关键词附近片段，不再整行打印。
 ```
