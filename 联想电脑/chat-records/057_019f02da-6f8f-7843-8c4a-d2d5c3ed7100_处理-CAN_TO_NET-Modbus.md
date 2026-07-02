@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-07-02T12:38:30`
+- Exported at: `2026-07-02T12:45:54`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -58908,4 +58908,245 @@ H_plan.z = dot(H_world - O_world, Z_axis)
 ```
 
 下一步要查的是：`TunLineRef` 对应的隧道线文件在哪里，里面有没有里程 300.000 对应的大地坐标。
+```
+
+### user 2026-07-02T04:38:55.322Z
+
+```text
+# Files mentioned by the user:
+
+## 65747624f297ccc5e3e6e4b50bfdb613.jpg: C:/Users/t250c/Documents/xwechat_files/dazhude_6dd2/temp/RWTemp/2026-07/65747624f297ccc5e3e6e4b50bfdb613.jpg
+
+## My request for Codex:
+
+
+<image name=[Image #1] path="C:\Users\t250c\Documents\xwechat_files\dazhude_6dd2\temp\RWTemp\2026-07\65747624f297ccc5e3e6e4b50bfdb613.jpg">
+</image>
+```
+
+### user 2026-07-02T04:38:55.323Z
+
+```text
+# Files mentioned by the user:
+
+## 65747624f297ccc5e3e6e4b50bfdb613.jpg: C:/Users/t250c/Documents/xwechat_files/dazhude_6dd2/temp/RWTemp/2026-07/65747624f297ccc5e3e6e4b50bfdb613.jpg
+
+## My request for Codex:
+```
+
+### assistant 2026-07-02T04:39:09.684Z
+
+```text
+这张图说明得很关键：**炮孔图局部原点大概率就是设计断面的“结构中线/隧道中线”和某个高程基准的交点附近，不是设备 Q4。**
+
+你红圈那里像是图纸标的**“线路面”/路面基准**一类位置。结合图里能看到的：
+
+- 中间有“隧道中线”
+- 两侧有“线路中线”
+- 底部有横坡 `2%`
+- 有拱部、仰拱、路面、排水沟等断面设计尺寸
+- 尺寸是围绕中线和路面/设计高程展开的
+
+所以炮孔图 `(0,0,0)` 很可能对应的是：
+
+```text
+X = 0：隧道/断面中心线
+Y = 0：掌子面入口面
+Z = 0：某个设计高程基准，比如路面设计线、内轨顶、线路面、或断面设计基准线
+```
+
+这就回答了“原点跟大地坐标关系怎么找”：
+
+不是从 Q4 找，而是从**线路/隧道设计数据**找：
+
+```text
+炮孔图原点 O_plan(0,0,0)
+= 当前里程处，隧道中线/线路中线 + 设计高程基准点
+```
+
+也就是要拿到：
+
+1. 当前掌子面里程，比如 `Kxxx+xxx`
+2. 该里程处线路/隧道中线的大地坐标
+3. 该里程处设计高程，也就是图纸里 Z=0 对应的高程基准
+4. 线路切线方向，作为炮孔图 `Y+`
+5. 横向方向，作为炮孔图 `X+`
+6. 竖向高程方向，作为炮孔图 `Z+`
+
+然后：
+
+```text
+O_world = 当前里程处的中线点 + 高程基准修正
+H_plan = WorldToPlan(H_world)
+```
+
+所以你现在要问图纸/施工资料的人，不是问“Q4在哪里”，而是问：
+
+```text
+这张炮孔图的 (0,0,0) 对应隧道设计断面上的哪个点？
+是隧道中线与线路面？
+还是线路中线与轨面/路面设计高程？
+还是开挖轮廓中心？
+```
+
+只要这个点定义清楚，再结合隧道线坐标，Qt 就能把 H 点落到炮孔图坐标里。
+```
+
+### user 2026-07-02T04:41:01.978Z
+
+```text
+这个后面再交流，你先把模拟的去掉。
+```
+
+### assistant 2026-07-02T04:41:17.482Z
+
+```text
+我先按“主视图实验室模拟 H 点/角度输入”这条线清理，不动临时 111，也不碰 P10 的样本流程。先读 `SitonDrillMainView` 里所有 `qtHSimulation` 和“模拟”入口，确认删干净再编译。
+```
+
+### assistant 2026-07-02T04:41:34.432Z
+
+```text
+我看到两类“模拟”：一类是主视图顶部的“模拟开/关 + 关节输入框”，另一类是没有真实 H 点时让 H 点在孔之间自动游走的兜底动画。你现在要现场逻辑，我会把这两类都去掉：没有 Qt 本地 H 点就不画假 H 点。
+```
+
+### assistant 2026-07-02T04:41:58.364Z
+
+```text
+还有鼠标点击主视图把 H 点临时放到孔位附近的逻辑，这也是实验室模拟。我要一起去掉，保留鼠标只用于选孔/查看最近孔，不再改 H 点。
+```
+
+### user 2026-07-02T04:41:59.524Z
+
+```text
+模拟的去掉之前，你先把任务清单给我审核下
+```
+
+### assistant 2026-07-02T04:42:23.800Z
+
+```text
+先不动代码。任务清单我建议这样定：
+
+**删除范围**
+1. 删除主界面“模拟开/模拟关”按钮。
+2. 删除主界面上方的关节角度输入框：根角、大臂摆、大臂仰、D1、E1、F、CD、GG1、实时长度、夹角等。
+3. 删除“应用”按钮和对应的模拟输入提交逻辑。
+4. 删除 `MainWindow` 里的 `dashboardQtHSimulation*` 定时器、状态缓存、模拟角度注入逻辑。
+5. 删除刷新界面时把模拟角度塞进 `MachineRealtimeState` 的逻辑。
+6. 删除鼠标点击主视图后临时生成 H 点的逻辑。
+7. 删除无真实 Qt H 点时，H 点在炮孔之间自动游走的假数据显示。
+8. 主视图后续只显示真实链路：
+   `算法PCB原始关节数据 -> Qt本地算法 -> Qt H点/推进梁角度 -> 主视图显示`
+
+**保留范围**
+1. 保留临时 `0x111`。
+2. 保留 P10 机械误差补偿框架。
+3. 保留“填20组测试/加入队列”这类快照测试入口，除非你明确说也删。
+4. 保留“模拟量”这个业务词相关的整车 PCB 数据页面，因为那不是这次主视图实验室 H 点模拟。
+5. 保留 `--self-test-can` 里的必要自测，不删测试框架。
+
+**要改的文件**
+1. `src/SitonDrillMainView.h`
+2. `src/SitonDrillMainView.cpp`
+3. `src/MainWindow.h`
+4. `src/MainWindow.cpp`
+
+**验收**
+1. 搜索确认没有：
+   `qtHSimulation`、`dashboardQtHSimulation`、`模拟开`、`模拟关`、`dashboard.qtHSim`
+2. 编译：
+   `cmake --build build_audit_p201 --config Release`
+3. 自测：
+   `.\build_audit_p201\QdnUpperComputerUi.exe --self-test-can`
+4. 打开固定 exe，看主界面：
+   - 没有模拟按钮
+   - 没有关节角度模拟输入框
+   - 没有真实 H 点时，不再乱画假 H 点
+   - 有真实 Qt H 点时正常显示
+
+我会按这个清单执行；如果你要把 P10 的“填20组测试”也一起删，单独说一句。
+```
+
+### assistant 2026-07-02T04:42:23.826Z
+
+```text
+先不动代码。任务清单我建议这样定：
+
+**删除范围**
+1. 删除主界面“模拟开/模拟关”按钮。
+2. 删除主界面上方的关节角度输入框：根角、大臂摆、大臂仰、D1、E1、F、CD、GG1、实时长度、夹角等。
+3. 删除“应用”按钮和对应的模拟输入提交逻辑。
+4. 删除 `MainWindow` 里的 `dashboardQtHSimulation*` 定时器、状态缓存、模拟角度注入逻辑。
+5. 删除刷新界面时把模拟角度塞进 `MachineRealtimeState` 的逻辑。
+6. 删除鼠标点击主视图后临时生成 H 点的逻辑。
+7. 删除无真实 Qt H 点时，H 点在炮孔之间自动游走的假数据显示。
+8. 主视图后续只显示真实链路：
+   `算法PCB原始关节数据 -> Qt本地算法 -> Qt H点/推进梁角度 -> 主视图显示`
+
+**保留范围**
+1. 保留临时 `0x111`。
+2. 保留 P10 机械误差补偿框架。
+3. 保留“填20组测试/加入队列”这类快照测试入口，除非你明确说也删。
+4. 保留“模拟量”这个业务词相关的整车 PCB 数据页面，因为那不是这次主视图实验室 H 点模拟。
+5. 保留 `--self-test-can` 里的必要自测，不删测试框架。
+
+**要改的文件**
+1. `src/SitonDrillMainView.h`
+2. `src/SitonDrillMainView.cpp`
+3. `src/MainWindow.h`
+4. `src/MainWindow.cpp`
+
+**验收**
+1. 搜索确认没有：
+   `qtHSimulation`、`dashboardQtHSimulation`、`模拟开`、`模拟关`、`dashboard.qtHSim`
+2. 编译：
+   `cmake --build build_audit_p201 --config Release`
+3. 自测：
+   `.\build_audit_p201\QdnUpperComputerUi.exe --self-test-can`
+4. 打开固定 exe，看主界面：
+   - 没有模拟按钮
+   - 没有关节角度模拟输入框
+   - 没有真实 H 点时，不再乱画假 H 点
+   - 有真实 Qt H 点时正常显示
+
+我会按这个清单执行；如果你要把 P10 的“填20组测试”也一起删，单独说一句。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:183-183|note=[coordinate convention context for Qt main view discussion]
+MEMORY.md:1385-1386|note=[fixed Qt build path and validation pattern]
+</citation_entries>
+<rollout_ids>
+</rollout_ids>
+</oai-mem-citation>
+```
+
+### user 2026-07-02T04:44:24.847Z
+
+```text
+包括自己模拟的H点在主视图动作的相关的 也要去掉。如果是的，就按清单来搞。
+```
+
+### assistant 2026-07-02T04:44:36.849Z
+
+```text
+确认：会把“自己模拟的 H 点在主视图动作”的相关代码一起删掉。也就是没有真实 Qt 本地 H 点时，主视图不再造假点、不再鼠标点一下生成 H 点、不再自动游走。
+```
+
+### assistant 2026-07-02T04:44:47.151Z
+
+```text
+我先备份要动的四个源文件，然后按清单分块删。删除范围只针对 H 点/关节输入模拟，不碰整车模拟器、P10 样本测试和临时 111。
+```
+
+### assistant 2026-07-02T04:45:04.257Z
+
+```text
+备份完成。现在先删 `SitonDrillMainView` 对外模拟接口、信号、成员变量和顶部模拟控件创建。
+```
+
+### assistant 2026-07-02T04:45:12.441Z
+
+```text
+我先从头文件删接口和成员，随后删 cpp 实现。这样编译器会帮我们抓漏掉的引用。
 ```
