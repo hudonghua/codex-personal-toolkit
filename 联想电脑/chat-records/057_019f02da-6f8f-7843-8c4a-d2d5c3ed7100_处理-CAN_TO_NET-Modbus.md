@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-07-02T10:09:50`
+- Exported at: `2026-07-02T10:22:19`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -56855,4 +56855,43 @@ EndPoint.Y = 3   -> Y+ 方向，孔深 3m
 StartPoint.Y = 0
 EndPoint.Y = 4   -> Y+ 方向，孔深 4m
 ```
+```
+
+### user 2026-07-02T02:17:45.503Z
+
+```text
+炮孔图里面的数据，没有孔的起点和终点吗？
+```
+
+### assistant 2026-07-02T02:18:02.118Z
+
+```text
+有。`.dp` 里面每个孔都有：
+
+- `StartPoint`：孔入口点
+- `EndPoint`：孔尾点 / 孔底点
+
+例如当前 `千坊0531.dp` 里第 0 个孔：
+
+```xml
+<HoleId>0</HoleId>
+<StartPoint>
+  <IR:PointX>-5.5531</IR:PointX>
+  <IR:PointY>0.0000</IR:PointY>
+  <IR:PointZ>7.4114</IR:PointZ>
+</StartPoint>
+<EndPoint>
+  <IR:PointX>-5.7020</IR:PointX>
+  <IR:PointY>4.0000</IR:PointY>
+  <IR:PointZ>7.5450</IR:PointZ>
+</EndPoint>
+```
+
+所以孔的设计方向就是：
+
+```text
+EndPoint - StartPoint
+```
+
+孔深就是这两个点的三维距离。刚才我说的 `Y=3` 或 `Y=4` 只是其中 Y 方向分量，不是完整孔深。完整孔深还要算 X/Y/Z 三个方向的距离。
 ```
