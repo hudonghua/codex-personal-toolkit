@@ -1,8 +1,8 @@
 # 联想电脑 Codex 聊天记录
 
-- Exported at: `2026-07-06T23:11:46`
-- Exported chats: `61`
-- Missing source files: `0`
+- Exported at: `2026-07-06T23:19:38`
+- Exported chats: `60`
+- Missing source files: `1`
 - Content policy: raw Codex `.jsonl` files are not uploaded; Markdown exports are redacted.
 
 ## Chats
@@ -66,5 +66,4 @@
 - [处理 CAN_TO_NET Modbus](057_019f02da-6f8f-7843-8c4a-d2d5c3ed7100_处理-CAN_TO_NET-Modbus.md) `019f02da-6f8f-7843-8c4a-d2d5c3ed7100` messages: `10637`
 - [梳理QT软件逻辑](058_019f02db-bae6-7bf0-a533-c749bdd402be_梳理QT软件逻辑.md) `019f02db-bae6-7bf0-a533-c749bdd402be` messages: `2804`
 - [逆解开始](059_019f3252-629a-7cf0-861d-74abae6db2b8_逆解开始.md) `019f3252-629a-7cf0-861d-74abae6db2b8` messages: `57`
-- [Automation: 每周工作状态更新 Automation ID: automation Automation memory: $CODEX_HOME/au](060_019f350c-98d7-7690-8748-8aa42535e954_Automation-每周工作状态更新-Automation-ID-automation-Aut.md) `019f350c-98d7-7690-8748-8aa42535e954` messages: `8`
 - [AR眼镜](061_019f3596-36c3-7c83-bda4-16d3fedbebf2_AR眼镜.md) `019f3596-36c3-7c83-bda4-16d3fedbebf2` messages: `169`

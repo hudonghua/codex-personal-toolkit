@@ -1,8 +1,8 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-07-06T23:11:46",
-  "exported_count": 61,
-  "missing_count": 0,
+  "exported_at": "2026-07-06T23:19:38",
+  "exported_count": 60,
+  "missing_count": 1,
   "exports": [
     {
       "id": "019e4605-8951-7492-99a6-93dd6e605f83",
@@ -418,13 +418,6 @@
       "message_count": 57
     },
     {
-      "id": "019f350c-98d7-7690-8748-8aa42535e954",
-      "title": "Automation: 每周工作状态更新 Automation ID: automation Automation memory: $CODEX_HOME/au",
-      "file": "联想电脑/chat-records/060_019f350c-98d7-7690-8748-8aa42535e954_Automation-每周工作状态更新-Automation-ID-automation-Aut.md",
-      "updated_at": "2026-07-06T01:30:50.863Z",
-      "message_count": 8
-    },
-    {
       "id": "019f3596-36c3-7c83-bda4-16d3fedbebf2",
       "title": "AR眼镜",
       "file": "联想电脑/chat-records/061_019f3596-36c3-7c83-bda4-16d3fedbebf2_AR眼镜.md",
@@ -432,5 +425,11 @@
       "message_count": 169
     }
   ],
-  "missing": []
+  "missing": [
+    {
+      "id": "019f350c-98d7-7690-8748-8aa42535e954",
+      "thread_name": "Automation: 每周工作状态更新 Automation ID: automation Automation memory: $CODEX_HOME/au",
+      "updated_at": "2026-07-06T01:30:50.863Z"
+    }
+  ]
 }
