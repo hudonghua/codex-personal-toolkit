@@ -1,7 +1,7 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-07-02T13:22:41",
-  "exported_count": 58,
+  "exported_at": "2026-07-06T23:11:46",
+  "exported_count": 61,
   "missing_count": 0,
   "exports": [
     {
@@ -37,7 +37,7 @@
       "title": "ssh 服务 与codex app 能链接吗？",
       "file": "联想电脑/chat-records/005_019e5593-cc9b-7281-9754-fb3df0c97b1f_ssh-服务-与codex-app-能链接吗？.md",
       "updated_at": "2026-05-23T16:03:30.075Z",
-      "message_count": 169
+      "message_count": 210
     },
     {
       "id": "019e5aa0-ebfe-7770-8ab9-2b1096e256a1",
@@ -128,7 +128,7 @@
       "title": "、、",
       "file": "联想电脑/chat-records/018_019e64d3-489d-7700-b300-482f8c007b5f_、、.md",
       "updated_at": "2026-05-26T15:07:08.830Z",
-      "message_count": 80
+      "message_count": 83
     },
     {
       "id": "019e6872-ac59-7722-8c34-16bab479341c",
@@ -331,7 +331,7 @@
       "title": "继续开发 V1.20 下载修复",
       "file": "联想电脑/chat-records/047_019ebcf7-54ad-7101-9184-774f509d736b_继续开发-V1.20-下载修复.md",
       "updated_at": "2026-06-12T17:53:12.441Z",
-      "message_count": 3567
+      "message_count": 3995
     },
     {
       "id": "019ebf3d-ae09-7580-bb47-820755dc55d1",
@@ -380,7 +380,7 @@
       "title": "UI",
       "file": "联想电脑/chat-records/054_019f0139-acde-7932-beb5-e6842e03d130_UI.md",
       "updated_at": "2026-06-25T23:59:49.885Z",
-      "message_count": 1033
+      "message_count": 1171
     },
     {
       "id": "019f013b-7151-7041-bea6-3eb9a9aaf301",
@@ -401,14 +401,35 @@
       "title": "处理 CAN_TO_NET Modbus",
       "file": "联想电脑/chat-records/057_019f02da-6f8f-7843-8c4a-d2d5c3ed7100_处理-CAN_TO_NET-Modbus.md",
       "updated_at": "2026-06-26T07:35:02.690Z",
-      "message_count": 7425
+      "message_count": 10637
     },
     {
       "id": "019f02db-bae6-7bf0-a533-c749bdd402be",
       "title": "梳理QT软件逻辑",
       "file": "联想电脑/chat-records/058_019f02db-bae6-7bf0-a533-c749bdd402be_梳理QT软件逻辑.md",
       "updated_at": "2026-06-26T07:36:27.513Z",
-      "message_count": 1340
+      "message_count": 2804
+    },
+    {
+      "id": "019f3252-629a-7cf0-861d-74abae6db2b8",
+      "title": "逆解开始",
+      "file": "联想电脑/chat-records/059_019f3252-629a-7cf0-861d-74abae6db2b8_逆解开始.md",
+      "updated_at": "2026-07-05T12:48:15.338Z",
+      "message_count": 57
+    },
+    {
+      "id": "019f350c-98d7-7690-8748-8aa42535e954",
+      "title": "Automation: 每周工作状态更新 Automation ID: automation Automation memory: $CODEX_HOME/au",
+      "file": "联想电脑/chat-records/060_019f350c-98d7-7690-8748-8aa42535e954_Automation-每周工作状态更新-Automation-ID-automation-Aut.md",
+      "updated_at": "2026-07-06T01:30:50.863Z",
+      "message_count": 8
+    },
+    {
+      "id": "019f3596-36c3-7c83-bda4-16d3fedbebf2",
+      "title": "AR眼镜",
+      "file": "联想电脑/chat-records/061_019f3596-36c3-7c83-bda4-16d3fedbebf2_AR眼镜.md",
+      "updated_at": "2026-07-06T04:01:13.924Z",
+      "message_count": 169
     }
   ],
   "missing": []
