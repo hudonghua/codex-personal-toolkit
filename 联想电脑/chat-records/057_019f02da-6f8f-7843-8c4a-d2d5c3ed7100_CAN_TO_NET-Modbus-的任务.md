@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-07-13T12:08:18`
+- Exported at: `2026-07-13T12:15:57`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -93351,4 +93351,101 @@ MEMORY.md:974-975|note=[used fixed QDN Qt path and upload context]
 
 ```text
 清单已生成。现在先上传 zip。服务器可能会在接收大文件后空响应，我会以后续下载 SHA 来判定是否成功。
+```
+
+### user 2026-07-13T04:11:23.445Z
+
+```text
+<environment_context>
+  <current_date>2026-07-13</current_date>
+  <timezone>Asia/Shanghai</timezone>
+  <filesystem><workspace_roots><root>C:\Users\t250c\Documents\全电脑上位机</root><root>C:\Users\t250c\Documents\Codex</root><root>E:\工作</root><root>C:\Users\t250c\Documents\Codex\2026-07-01\new-chat</root><root>C:\Users\t250c\.codex\visualizations\2026\06\26\019f02da-6f8f-7843-8c4a-d2d5c3ed7100</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
+```
+
+### user 2026-07-13T04:11:23.474Z
+
+```text
+上传后，另外一台电脑不提醒升级
+```
+
+### assistant 2026-07-13T04:11:47.334Z
+
+```text
+我先按事实查，不猜。重点看三件事：服务器 manifest 现在到底是不是 `V1.65`、远程 zip 的 SHA 是否是新包、另一台电脑会不会因为版本号或更新地址没变而不提示。
+```
+
+### assistant 2026-07-13T04:12:05.087Z
+
+```text
+我现在读服务器，不看本地想当然。上次上传命令被中断过，最可能是 zip 或 manifest 没真正上传完。
+```
+
+### assistant 2026-07-13T04:12:18.302Z
+
+```text
+原因已经明确：服务器上还是 `V1.64`，所以另一台电脑不会提醒。也就是说刚才中断时 manifest 没上传成功。现在我重新上传 `V1.65` 的 zip 和 manifest，并回读验证。
+```
+
+### assistant 2026-07-13T04:13:37.848Z
+
+```text
+zip 上传返回了 `curl 52`，这个服务器常见：可能已经收下但不给响应。我按规则马上下载远程 zip 对 SHA，不能只看 curl 结果。
+```
+
+### assistant 2026-07-13T04:14:48.677Z
+
+```text
+远程 zip 已经是新包，SHA 对上。现在上传 manifest；这个文件很小，上传后马上回读版本。
+```
+
+### assistant 2026-07-13T04:15:07.552Z
+
+```text
+manifest 上传成功。现在回读服务器 manifest，并再核对远程 zip 内容是否干净。
+```
+
+### assistant 2026-07-13T04:15:27.225Z
+
+```text
+原因查到了：刚才服务器上的 `qdn_update_manifest.json` 还是 `V1.64`，所以另一台电脑不会提示升级。
+
+现在已经重新上传并校验完成：
+
+- 服务器 manifest：`V1.65`
+- 服务器 zip：`qdn_upper_latest.zip`
+- SHA256：`15fe1aee58b3427fe2c5699ce3f637ba2181552d8a6d110294a5f14dcfc4662e`
+- 远程 zip 和本地 zip SHA 已对上
+- 包内容检查通过：24 个运行时文件，无源码、文档、日志、截图、调试插件
+- 本地发布包 `--self-test-can` 通过
+
+另一台电脑现在重新打开 Qt 上位机，或者进设置里手动检查更新，应该能看到 `V1.65`。如果还不提醒，优先查那台电脑的 `qdn_update_config.json` 是否指向：
+`http://kxdz.anyixt.com:9999/zkj/qdn_update_manifest.json`
+```
+
+### assistant 2026-07-13T04:15:27.226Z
+
+```text
+原因查到了：刚才服务器上的 `qdn_update_manifest.json` 还是 `V1.64`，所以另一台电脑不会提示升级。
+
+现在已经重新上传并校验完成：
+
+- 服务器 manifest：`V1.65`
+- 服务器 zip：`qdn_upper_latest.zip`
+- SHA256：`15fe1aee58b3427fe2c5699ce3f637ba2181552d8a6d110294a5f14dcfc4662e`
+- 远程 zip 和本地 zip SHA 已对上
+- 包内容检查通过：24 个运行时文件，无源码、文档、日志、截图、调试插件
+- 本地发布包 `--self-test-can` 通过
+
+另一台电脑现在重新打开 Qt 上位机，或者进设置里手动检查更新，应该能看到 `V1.65`。如果还不提醒，优先查那台电脑的 `qdn_update_config.json` 是否指向：
+`http://kxdz.anyixt.com:9999/zkj/qdn_update_manifest.json`
+
+<oai-mem-citation>
+<citation_entries>
+skills/qdn-qt-upload-server/SKILL.md:63-73|note=[used QDN Qt upload and remote verification workflow]
+MEMORY.md:974-975|note=[used fixed Qt project and build output path]
+</citation_entries>
+<rollout_ids>
+</rollout_ids>
+</oai-mem-citation>
 ```
