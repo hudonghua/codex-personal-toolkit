@@ -1,6 +1,6 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-07-13T10:26:55",
+  "exported_at": "2026-07-13T10:34:44",
   "exported_count": 67,
   "missing_count": 0,
   "exports": [
@@ -93,7 +93,7 @@
       "title": "你好",
       "file": "联想电脑/chat-records/013_019e5f53-5528-7a62-a058-b08937c2bc41_你好.md",
       "updated_at": "2026-05-25T13:29:17.352Z",
-      "message_count": 35
+      "message_count": 52
     },
     {
       "id": "019e5f57-9bb2-7363-bd9f-58a413754009",
