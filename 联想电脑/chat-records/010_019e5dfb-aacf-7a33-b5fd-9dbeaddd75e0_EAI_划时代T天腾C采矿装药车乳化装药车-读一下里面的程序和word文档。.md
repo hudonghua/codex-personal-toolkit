@@ -1,9 +1,9 @@
-# E:\AI_划时代\T天腾\C采矿装药车\乳化装药车 读一下里面的程序和word文档。
+# E:\AI_划时代\T天腾\C采矿装药车\乳化装药车  读一下里面的程序和word文档。
 
 - Session id: `019e5dfb-aacf-7a33-b5fd-9dbeaddd75e0`
 - Source cwd: `E:\工作`
 - Model provider: `openai`
-- Exported at: `2026-07-06T23:19:07`
+- Exported at: `2026-07-13T09:55:03`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\05\25\rollout-2026-05-25T15-13-54-019e5dfb-aacf-7a33-b5fd-9dbeaddd75e0.jsonl`
 
 ## Transcript

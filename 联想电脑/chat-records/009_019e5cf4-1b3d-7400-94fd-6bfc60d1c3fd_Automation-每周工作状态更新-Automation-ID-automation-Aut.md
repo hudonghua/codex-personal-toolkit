@@ -1,9 +1,9 @@
-# Automation: 每周工作状态更新 Automation ID: automation Automation me
+# Automation: 每周工作状态更新 Automation ID: automation Automation memory: $CODEX_HOME/au
 
 - Session id: `019e5cf4-1b3d-7400-94fd-6bfc60d1c3fd`
 - Source cwd: `E:\工作`
 - Model provider: `openai`
-- Exported at: `2026-07-06T23:19:07`
+- Exported at: `2026-07-13T09:55:03`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\05\25\rollout-2026-05-25T10-26-02-019e5cf4-1b3d-7400-94fd-6bfc60d1c3fd.jsonl`
 
 ## Transcript
