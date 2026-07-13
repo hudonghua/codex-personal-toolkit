@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-07-13T12:15:57`
+- Exported at: `2026-07-13T12:23:47`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -93444,6 +93444,98 @@ manifest 上传成功。现在回读服务器 manifest，并再核对远程 zip 
 <citation_entries>
 skills/qdn-qt-upload-server/SKILL.md:63-73|note=[used QDN Qt upload and remote verification workflow]
 MEMORY.md:974-975|note=[used fixed Qt project and build output path]
+</citation_entries>
+<rollout_ids>
+</rollout_ids>
+</oai-mem-citation>
+```
+
+### user 2026-07-13T04:19:38.514Z
+
+```text
+另外一台电脑连接SYs连接不上，是不是需要按照启动？ 并不是简单的含了dll就行了？
+```
+
+### assistant 2026-07-13T04:19:54.936Z
+
+```text
+我按当前 Qt 代码核对 SYS 连接逻辑。这个问题不能只按“包里有没有 DLL”判断，要看程序实际加载哪个 DLL、调用哪些初始化函数，以及系统驱动是否在另一台电脑上存在。
+```
+
+### assistant 2026-07-13T04:20:12.638Z
+
+```text
+代码显示 SYS 会加载 `USBCAN64.dll/usbcan32.dll`，但连接还会调用 `InitHardware` 和 `InitCan`。也就是说 DLL 只是入口，电脑系统里的驱动和硬件枚举必须正常。
+```
+
+### assistant 2026-07-13T04:20:35.517Z
+
+```text
+是的，**SYS 不是只把 DLL 放进软件目录就行**。DLL 只是 Qt 调用硬件的入口，另一台电脑还必须满足：
+
+1. **安装 SYS / Systec 对应的 Windows 驱动**
+2. **设备管理器能识别 USB-CAN 盒子**
+3. **驱动服务/底层内核驱动正常**
+4. **CAN 盒子没被别的软件占用**
+5. **波特率、通道能初始化成功**
+
+Qt 当前代码里 SYS 是这样走的：
+
+- 先加载 `USBCAN64.dll` / `usbcan32.dll`：  
+  [CanHardwareClient.cpp:120](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanHardwareClient.cpp:120)
+- 然后找 `UcanInitHardwareEx`、`UcanInitCanEx2` 等函数：  
+  [CanHardwareClient.cpp:559](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanHardwareClient.cpp:559)
+- 再真正初始化硬件：  
+  [CanHardwareClient.cpp:572](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanHardwareClient.cpp:572)
+- 再初始化 CAN 通道：  
+  [CanHardwareClient.cpp:585](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanHardwareClient.cpp:585)
+
+所以判断很简单：
+
+- 如果报 `Cannot load CAN driver DLL`：DLL 没加载到，包或依赖有问题。
+- 如果报 `SYS InitHardware failed`：DLL 有了，但电脑没识别到硬件/驱动没装好/设备被占用。
+- 如果报 `SYS InitCan failed`：硬件打开了，但 CAN 通道初始化失败，可能是通道、波特率、驱动状态问题。
+
+当前发布包里已经含了 `USBCAN64.dll` 和 `usbcan32.dll`，所以**更大概率是另一台电脑没有装 SYS/Systec 驱动，或者驱动没启动/设备没识别**。
+
+建议先在那台电脑上用 SYS/Systec 官方工具打开 CAN 盒子。如果官方工具都打不开，Qt 肯定也打不开。
+```
+
+### assistant 2026-07-13T04:20:35.531Z
+
+```text
+是的，**SYS 不是只把 DLL 放进软件目录就行**。DLL 只是 Qt 调用硬件的入口，另一台电脑还必须满足：
+
+1. **安装 SYS / Systec 对应的 Windows 驱动**
+2. **设备管理器能识别 USB-CAN 盒子**
+3. **驱动服务/底层内核驱动正常**
+4. **CAN 盒子没被别的软件占用**
+5. **波特率、通道能初始化成功**
+
+Qt 当前代码里 SYS 是这样走的：
+
+- 先加载 `USBCAN64.dll` / `usbcan32.dll`：  
+  [CanHardwareClient.cpp:120](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanHardwareClient.cpp:120)
+- 然后找 `UcanInitHardwareEx`、`UcanInitCanEx2` 等函数：  
+  [CanHardwareClient.cpp:559](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanHardwareClient.cpp:559)
+- 再真正初始化硬件：  
+  [CanHardwareClient.cpp:572](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanHardwareClient.cpp:572)
+- 再初始化 CAN 通道：  
+  [CanHardwareClient.cpp:585](C:/Users/t250c/Documents/全电脑台车-CAN协议/qt-upper-computer-ui/src/CanHardwareClient.cpp:585)
+
+所以判断很简单：
+
+- 如果报 `Cannot load CAN driver DLL`：DLL 没加载到，包或依赖有问题。
+- 如果报 `SYS InitHardware failed`：DLL 有了，但电脑没识别到硬件/驱动没装好/设备被占用。
+- 如果报 `SYS InitCan failed`：硬件打开了，但 CAN 通道初始化失败，可能是通道、波特率、驱动状态问题。
+
+当前发布包里已经含了 `USBCAN64.dll` 和 `usbcan32.dll`，所以**更大概率是另一台电脑没有装 SYS/Systec 驱动，或者驱动没启动/设备没识别**。
+
+建议先在那台电脑上用 SYS/Systec 官方工具打开 CAN 盒子。如果官方工具都打不开，Qt 肯定也打不开。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:974-975|note=[used fixed QDN Qt project path context]
 </citation_entries>
 <rollout_ids>
 </rollout_ids>
