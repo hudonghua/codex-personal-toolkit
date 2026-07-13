@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-07-13T11:29:20`
+- Exported at: `2026-07-13T11:37:11`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -93118,4 +93118,105 @@ Before implementing:
 
 所以目前不是“应该统一”，而是 **Qt 当前代码里主视图显示已经按这套统一了**。  
 唯一要注意的是：Arm200A 正解内部坐标仍然不是这套，必须经过 `G -> f` 转换后，主视图才按炮孔图坐标显示。
+```
+
+### user 2026-07-13T03:29:23.815Z
+
+```text
+QT上传到服务器。
+```
+
+### assistant 2026-07-13T03:29:48.096Z
+
+```text
+我按固定的 Qt 上传流程来做：先确认发布规则和固定构建目录，然后打包运行文件、上传服务器，并回读服务器上的清单确认。
+```
+
+### assistant 2026-07-13T03:30:17.760Z
+
+```text
+固定路径和上传规则在记忆里有记录，我会同时按当前机器上的专用上传 skill 执行，避免又把源码、文档、日志打进包里。
+```
+
+### assistant 2026-07-13T03:30:41.201Z
+
+```text
+找到专用上传流程了。接下来我会先读这个流程，再按它要求只打包运行时文件。
+```
+
+### assistant 2026-07-13T03:31:04.493Z
+
+```text
+流程里没有要求新建构建目录，我会继续固定使用 `build_audit_p201`。先确认当前版本号、运行文件、现有发布脚本/配置，再决定是否需要刷新 manifest。
+```
+
+### assistant 2026-07-13T03:31:21.930Z
+
+```text
+当前构建目录里混有大量截图、日志和测试文件，所以不能直接压 `build_audit_p201`。我会重新生成干净的 staging，只复制 exe、Qt DLL、插件目录和必要资源。
+```
+
+### assistant 2026-07-13T03:31:41.419Z
+
+```text
+现有 manifest 是 `V1.64`，但这可能是旧包。我要查源码里当前显示的版本号；如果本地程序仍是 1.64，要上传新更新包通常需要升一个小版本，否则客户端不会提示更新。
+```
+
+### assistant 2026-07-13T03:31:54.482Z
+
+```text
+本地源码和服务器 manifest 都是 `V1.64`。如果现在直接上传，客户端会认为“已经是最新”，所以我会把当前 Qt 版本升到 `V1.65` 后构建、打包、上传。只改版本号这一处，不动业务代码。
+```
+
+### assistant 2026-07-13T03:32:22.501Z
+
+```text
+准备改版本号前我会按本地规则只保留 `main.cpp` 最新一份备份。这个改动是为了让远程升级能真正触发，不涉及功能逻辑。
+```
+
+### user 2026-07-13T03:32:26.179Z
+
+```text
+你先不要升级。等一个小时后，再重新来，我在改代码。
+```
+
+### assistant 2026-07-13T03:32:47.122Z
+
+```text
+收到，我停止发布和升级流程。刚才只创建了 `src/main.cpp` 的备份，还没改版本号、没构建、没打包、没上传。
+```
+
+### assistant 2026-07-13T03:34:30.990Z
+
+```text
+我把刚才还没用到的临时备份也清掉，避免源码目录多出无意义文件。
+```
+
+### assistant 2026-07-13T03:34:48.600Z
+
+```text
+已停止。没有改版本号、没有构建、没有打包、没有上传。
+
+刚才临时创建的 `main.cpp.bak_20260713_113225` 也已经删掉了，不会留下多余文件。
+
+我已经设置了 1 小时后回到这个任务，到时会重新按固定目录 `qt-upper-computer-ui/build_audit_p201` 做 Qt 上传服务器流程。你现在可以继续改代码。
+```
+
+### assistant 2026-07-13T03:34:48.600Z
+
+```text
+已停止。没有改版本号、没有构建、没有打包、没有上传。
+
+刚才临时创建的 `main.cpp.bak_20260713_113225` 也已经删掉了，不会留下多余文件。
+
+我已经设置了 1 小时后回到这个任务，到时会重新按固定目录 `qt-upper-computer-ui/build_audit_p201` 做 Qt 上传服务器流程。你现在可以继续改代码。
+
+<oai-mem-citation>
+<citation_entries>
+skills/qdn-qt-upload-server/SKILL.md:27-39|note=[used fixed Qt upload repo and build directory rules]
+MEMORY.md:974-975|note=[used fixed QDN Qt path and upload context]
+</citation_entries>
+<rollout_ids>
+</rollout_ids>
+</oai-mem-citation>
 ```
