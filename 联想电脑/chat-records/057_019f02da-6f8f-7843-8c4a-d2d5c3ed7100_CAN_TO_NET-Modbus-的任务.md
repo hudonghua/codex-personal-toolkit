@@ -3,7 +3,7 @@
 - Session id: `019f02da-6f8f-7843-8c4a-d2d5c3ed7100`
 - Source cwd: `C:\Users\t250c\Documents\全电脑上位机`
 - Model provider: `openai`
-- Exported at: `2026-07-13T12:00:34`
+- Exported at: `2026-07-13T12:08:18`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\26\rollout-2026-06-26T15-35-02-019f02da-6f8f-7843-8c4a-d2d5c3ed7100.jsonl`
 
 ## Transcript
@@ -93279,4 +93279,76 @@ MEMORY.md:974-975|note=[used fixed QDN Qt path and upload context]
 
 ```text
 刚才是 PowerShell 对带括号路径的引号解析失败，我用更严格的命令格式重跑。
+```
+
+### assistant 2026-07-13T04:00:44.900Z
+
+```text
+链接失败是 `QdnUpperComputerUi.exe` 被占用，通常是当前程序还开着。我要只关闭这个 Qt 上位机进程，然后重构建。
+```
+
+### assistant 2026-07-13T04:00:56.151Z
+
+```text
+发现一个正在运行的 `QdnUpperComputerUi.exe` 占住了目标文件。我先结束它，再继续。
+```
+
+### assistant 2026-07-13T04:01:09.573Z
+
+```text
+进程已结束。现在重新构建。
+```
+
+### assistant 2026-07-13T04:01:33.390Z
+
+```text
+构建通过。接下来跑本机 `--self-test-can`，然后才打包。
+```
+
+### assistant 2026-07-13T04:01:56.387Z
+
+```text
+自检通过。现在做干净发布目录。这里我会保留硬件通信必须的 DLL，但不放截图、日志、源码、文档、构建文件。先确认运行时依赖。
+```
+
+### assistant 2026-07-13T04:02:06.688Z
+
+```text
+代码会动态加载 `USBCAN64/usbcan32/ECanVci`，所以这些属于必要运行 DLL，会放进包。`PCANBasic.dll` 当前构建目录没有，程序也会从系统目录找，不强行打进包。现在生成干净包。
+```
+
+### assistant 2026-07-13T04:02:31.020Z
+
+```text
+打包目录已经生成，压缩命令的通配符参数写法不兼容。我不改内容，换成普通 `-Path` 重新压缩并检查包内容。
+```
+
+### assistant 2026-07-13T04:02:54.874Z
+
+```text
+第一次压缩检查发现 Qt 插件目录里带了调试版插件，比如 `qwindowsd.dll`。这不是源码，但也不是发布运行时应带的内容。我会清掉这些 `*d.dll` 调试插件后重新打包。
+```
+
+### assistant 2026-07-13T04:03:12.441Z
+
+```text
+干净包现在只有 24 个运行时条目，没有源码/文档/日志/截图/调试插件。接下来从 staging 目录运行一次自检。
+```
+
+### assistant 2026-07-13T04:03:31.296Z
+
+```text
+自检通过。现在生成 `V1.65` manifest，之后上传 zip 和 manifest。
+```
+
+### assistant 2026-07-13T04:03:44.185Z
+
+```text
+版本确认是 `V1.65`。现在写新的远程更新清单，SHA 使用刚才干净包的实际值。
+```
+
+### assistant 2026-07-13T04:04:02.351Z
+
+```text
+清单已生成。现在先上传 zip。服务器可能会在接收大文件后空响应，我会以后续下载 SHA 来判定是否成功。
 ```
