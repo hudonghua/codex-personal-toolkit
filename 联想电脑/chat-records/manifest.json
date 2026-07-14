@@ -1,7 +1,7 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-07-14T12:56:55",
-  "exported_count": 67,
+  "exported_at": "2026-07-14T13:05:43",
+  "exported_count": 66,
   "missing_count": 0,
   "exports": [
     {
@@ -142,7 +142,7 @@
       "title": "你读下有一个修改下载器的。有sys和gc的。到github去找找。这个记录",
       "file": "联想电脑/chat-records/020_019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5_你读下有一个修改下载器的。有sys和gc的。到github去找找。这个记录.md",
       "updated_at": "2026-05-28T10:09:53.618Z",
-      "message_count": 157
+      "message_count": 168
     },
     {
       "id": "019e7150-e769-70f2-a9c3-f7ea512dd2f0",
@@ -460,16 +460,9 @@
       "message_count": 461
     },
     {
-      "id": "019f5073-7da0-7930-8404-b5026dbf9dfe",
-      "title": "关于窗口版的下载器，你知道什么？",
-      "file": "联想电脑/chat-records/066_019f5073-7da0-7930-8404-b5026dbf9dfe_关于窗口版的下载器，你知道什么？.md",
-      "updated_at": "2026-07-11T09:12:58.937Z",
-      "message_count": 256
-    },
-    {
       "id": "019f5910-6b75-7d71-a5a4-7260e3bd7d8c",
       "title": "Automation: 每周工作状态更新 Automation ID: automation Automation memory: $CODEX_HOME/au",
-      "file": "联想电脑/chat-records/067_019f5910-6b75-7d71-a5a4-7260e3bd7d8c_Automation-每周工作状态更新-Automation-ID-automation-Aut.md",
+      "file": "联想电脑/chat-records/066_019f5910-6b75-7d71-a5a4-7260e3bd7d8c_Automation-每周工作状态更新-Automation-ID-automation-Aut.md",
       "updated_at": "2026-07-13T01:21:16.692Z",
       "message_count": 9
     }
