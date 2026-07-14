@@ -1,6 +1,6 @@
 # 联想电脑 Codex 聊天记录
 
-- Exported at: `2026-07-14T13:22:59`
+- Exported at: `2026-07-14T13:32:22`
 - Exported chats: `66`
 - Missing source files: `0`
 - Content policy: raw Codex `.jsonl` files are not uploaded; Markdown exports are redacted.
@@ -26,7 +26,7 @@
 - [你是什么模型](017_019e6431-d0e0-7aa3-af99-18d8b8b84bf0_你是什么模型.md) `019e6431-d0e0-7aa3-af99-18d8b8b84bf0` messages: `22`
 - [、、](018_019e64d3-489d-7700-b300-482f8c007b5f_、、.md) `019e64d3-489d-7700-b300-482f8c007b5f` messages: `83`
 - [全电脑CAN协议定制](019_019e6872-ac59-7722-8c34-16bab479341c_全电脑CAN协议定制.md) `019e6872-ac59-7722-8c34-16bab479341c` messages: `60`
-- [你读下有一个修改下载器的。有sys和gc的。到github去找找。这个记录](020_019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5_你读下有一个修改下载器的。有sys和gc的。到github去找找。这个记录.md) `019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5` messages: `203`
+- [你读下有一个修改下载器的。有sys和gc的。到github去找找。这个记录](020_019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5_你读下有一个修改下载器的。有sys和gc的。到github去找找。这个记录.md) `019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5` messages: `208`
 - [唐山项目： 先恢复约束纪律](021_019e7150-e769-70f2-a9c3-f7ea512dd2f0_唐山项目：-先恢复约束纪律.md) `019e7150-e769-70f2-a9c3-f7ea512dd2f0` messages: `131`
 - [在吗？](022_019e745a-332a-7a02-b5a9-dfe963d00a07_在吗？.md) `019e745a-332a-7a02-b5a9-dfe963d00a07` messages: `398`
 - [你读下天腾 采矿的记录。](023_019e797a-894f-7a83-8cba-1a4ed098fbbe_你读下天腾-采矿的记录。.md) `019e797a-894f-7a83-8cba-1a4ed098fbbe` messages: `591`
