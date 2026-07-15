@@ -1,6 +1,6 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-07-15T17:18:13",
+  "exported_at": "2026-07-15T17:26:13",
   "exported_count": 66,
   "missing_count": 0,
   "exports": [
@@ -142,7 +142,7 @@
       "title": "你读下有一个修改下载器的。有sys和gc的。到github去找找。这个记录",
       "file": "联想电脑/chat-records/020_019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5_你读下有一个修改下载器的。有sys和gc的。到github去找找。这个记录.md",
       "updated_at": "2026-05-28T10:09:53.618Z",
-      "message_count": 233
+      "message_count": 253
     },
     {
       "id": "019e7150-e769-70f2-a9c3-f7ea512dd2f0",
@@ -422,7 +422,7 @@
       "title": "AR眼镜",
       "file": "联想电脑/chat-records/060_019f3596-36c3-7c83-bda4-16d3fedbebf2_AR眼镜.md",
       "updated_at": "2026-07-06T04:01:13.924Z",
-      "message_count": 487
+      "message_count": 493
     },
     {
       "id": "019f3816-66ea-76e2-b6c0-98c48ddf70a5",
