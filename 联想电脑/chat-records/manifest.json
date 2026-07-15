@@ -1,6 +1,6 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-07-15T12:58:19",
+  "exported_at": "2026-07-15T13:46:21",
   "exported_count": 66,
   "missing_count": 0,
   "exports": [
@@ -460,11 +460,11 @@
       "message_count": 504
     },
     {
-      "id": "019f5910-6b75-7d71-a5a4-7260e3bd7d8c",
-      "title": "Automation: 每周工作状态更新 Automation ID: automation Automation memory: $CODEX_HOME/au",
-      "file": "联想电脑/chat-records/066_019f5910-6b75-7d71-a5a4-7260e3bd7d8c_Automation-每周工作状态更新-Automation-ID-automation-Aut.md",
-      "updated_at": "2026-07-13T01:21:16.692Z",
-      "message_count": 9
+      "id": "019f6449-75cf-7660-b739-f885cc142069",
+      "title": "鑫通操作台",
+      "file": "联想电脑/chat-records/066_019f6449-75cf-7660-b739-f885cc142069_鑫通操作台.md",
+      "updated_at": "2026-07-15T05:39:25.312Z",
+      "message_count": 28
     }
   ],
   "missing": []
