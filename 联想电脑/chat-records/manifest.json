@@ -1,6 +1,6 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-07-15T17:01:57",
+  "exported_at": "2026-07-15T17:10:07",
   "exported_count": 66,
   "missing_count": 0,
   "exports": [
@@ -163,7 +163,7 @@
       "title": "你读下天腾 采矿的记录。",
       "file": "联想电脑/chat-records/023_019e797a-894f-7a83-8cba-1a4ed098fbbe_你读下天腾-采矿的记录。.md",
       "updated_at": "2026-05-30T15:22:14.223Z",
-      "message_count": 765
+      "message_count": 772
     },
     {
       "id": "019e7d13-eb50-7051-81a3-80057affd603",
@@ -422,7 +422,7 @@
       "title": "AR眼镜",
       "file": "联想电脑/chat-records/060_019f3596-36c3-7c83-bda4-16d3fedbebf2_AR眼镜.md",
       "updated_at": "2026-07-06T04:01:13.924Z",
-      "message_count": 458
+      "message_count": 483
     },
     {
       "id": "019f3816-66ea-76e2-b6c0-98c48ddf70a5",
