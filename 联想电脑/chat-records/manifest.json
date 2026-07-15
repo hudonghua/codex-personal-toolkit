@@ -1,6 +1,6 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-07-15T12:11:10",
+  "exported_at": "2026-07-15T12:19:07",
   "exported_count": 66,
   "missing_count": 0,
   "exports": [
@@ -163,7 +163,7 @@
       "title": "你读下天腾 采矿的记录。",
       "file": "联想电脑/chat-records/023_019e797a-894f-7a83-8cba-1a4ed098fbbe_你读下天腾-采矿的记录。.md",
       "updated_at": "2026-05-30T15:22:14.223Z",
-      "message_count": 738
+      "message_count": 757
     },
     {
       "id": "019e7d13-eb50-7051-81a3-80057affd603",
@@ -282,7 +282,7 @@
       "title": "你好",
       "file": "联想电脑/chat-records/040_019ea18d-4000-7ed1-95b8-d066e99df22a_你好.md",
       "updated_at": "2026-06-07T10:07:29.281Z",
-      "message_count": 28
+      "message_count": 45
     },
     {
       "id": "019ea20a-edb7-7210-93af-c3b6e25b993f",
