@@ -3,7 +3,7 @@
 - Session id: `019f6ef7-1115-7b93-ab31-f53467ac47fd`
 - Source cwd: `C:\Users\t250c\Documents\Codex\2026-07-17\e-ai-g-7-17`
 - Model provider: `openai`
-- Exported at: `2026-07-20T14:10:38`
+- Exported at: `2026-07-20T14:18:56`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\07\17\rollout-2026-07-17T15-25-18-019f6ef7-1115-7b93-ab31-f53467ac47fd.jsonl`
 
 ## Transcript
