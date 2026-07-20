@@ -1,7 +1,7 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-07-20T14:27:12",
-  "exported_count": 96,
+  "exported_at": "2026-07-20T14:35:18",
+  "exported_count": 97,
   "missing_count": 0,
   "exports": [
     {
@@ -675,6 +675,13 @@
       "file": "联想电脑/chat-records/096_019f7e0f-e159-7c10-b01b-0a8d097ed338_10寸屏的模版构建。.md",
       "updated_at": "2026-07-20T05:46:42.797Z",
       "message_count": 9
+    },
+    {
+      "id": "019e7150-e769-70f2-a9c3-f7ea512dd2f0",
+      "title": "天腾装药小遥控器",
+      "file": "联想电脑/chat-records/097_019e7150-e769-70f2-a9c3-f7ea512dd2f0_天腾装药小遥控器.md",
+      "updated_at": "2026-07-20T06:26:35.6710908Z",
+      "message_count": 143
     }
   ],
   "missing": []
