@@ -3,7 +3,7 @@
 - Session id: `019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5`
 - Source cwd: `E:\工作`
 - Model provider: `openai`
-- Exported at: `2026-07-20T13:03:29`
+- Exported at: `2026-07-20T13:11:30`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\05\28\rollout-2026-05-28T18-09-53-019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5.jsonl`
 
 ## Transcript
@@ -6608,4 +6608,156 @@ A skill is a set of local instructions to follow that is stored in a `SKILL.md` 
 3. Boot 把准备扇区失败和擦除失败全部压成同一个 `0x00`，见 [main.c](E:/AI_划时代/下载器/AI_boot/bootloader_lpc1764_WDI_P1_5/Src/main.c:200)，目前还不能知道 ROM IAP 的具体错误码。
 
 结论：**不是等待时间，也不是栈大小，更不是 SYS 没发出去。问题在 Boot 的 Flash IAP 擦除执行。** 下一步应修 Boot 的 IAP 时钟参数、擦除期间关闭中断，并保留原始 IAP 错误码；继续改下载器超时没有作用。
+```
+
+### user 2026-07-20T05:06:16.007Z
+
+```text
+<environment_context>
+  <current_date>2026-07-20</current_date>
+  <timezone>Asia/Shanghai</timezone>
+  <filesystem><workspace_roots><root>C:\Users\t250c\Documents\Codex\2026-07-20\12-53-51-396-start-download</root><root>C:\Users\t250c\.codex\visualizations\2026\05\28\019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5</root></workspace_roots><permission_profile type="disabled"><file_system type="unrestricted" /></permission_profile></filesystem>
+</environment_context>
+```
+
+### user 2026-07-20T05:06:16.039Z
+
+```text
+换了个控制器还是一样。下载不了。
+```
+
+### assistant 2026-07-20T05:06:29.916Z
+
+```text
+换了控制器仍然在同一位置失败，基本可以排除单个控制器 Flash 损坏。现在重点不是再换硬件，而是核对新下载器的命令顺序和老下载器是否一致，尤其是“先下发地址再擦除”是否触发了新增的按范围擦除路径。
+```
+
+### assistant 2026-07-20T05:07:31.793Z
+
+```text
+我找到更符合这份日志的原因了：SYS 在擦除前发送了三次新协议探测 `0x82 01`，老 Boot 对不认识的命令会回复 `0x016 [00]`。当前程序只等“快速模式成功应答”，把这些负应答留到/误认到下一步，所以刚发擦除就立刻读到 `00`。这也解释了为什么换控制器完全一样，我先核实接收队列实现，然后只修这个协议串扰，不改任何超时时间。
+```
+
+### assistant 2026-07-20T05:08:04.831Z
+
+```text
+接收实现确认了：探测阶段会丢弃不匹配的 `0x016 [00]`，但第三次探测恰好在 1.2 秒边界结束，迟到的 `00` 会被下一步擦除等待读到。现场控制器显然是老 Boot，并不支持 `0x82` 快速模式；我现在禁用 SYS 的快速探测，固定走原来的 legacy 流程，不改 702、擦除或数据 ACK 的超时时间，只更新 `E:\安装软件\窗口版\UnifiedDownloader_core.exe`。
+```
+
+### assistant 2026-07-20T05:08:35.239Z
+
+```text
+修改已完成：现在 SYS 和广成都不会再发送 `0x82` 探测帧，直接进入 legacy 擦除/下载，避免旧 Boot 的 `0x016 [00]` 污染擦除应答。接下来只编译核心程序并覆盖固定目录，不重建或增加其他下载器。
+```
+
+### assistant 2026-07-20T05:09:06.378Z
+
+```text
+新版核心已编译并放到固定位置，当前窗口没有残留核心进程，下一次点击“开始下载”会直接使用它。为了符合你只保留一个正式下载器的要求，我再把安装目录根部的旧 `.bak` 文件归到现有备份子目录，正式运行文件名仍只有原来的那个。
+```
+
+### assistant 2026-07-20T05:09:26.467Z
+
+```text
+换控制器仍失败，说明不是单个控制器硬件问题。我重新判断后发现：之前把 `0x016 [00]` 直接判为擦除失败不够准确，它很可能是第三次 `0x82 01` 快速模式探测留下的迟到负应答，被下一步误当成擦除应答。
+
+已经修正：
+
+- 禁用 `0x82` 快速模式探测，固定走稳定的 legacy 协议。
+- 没有修改任何超时时间。
+- 正式程序仍是 [UnifiedDownloader_window.exe](E:/安装软件/窗口版/UnifiedDownloader_window.exe)。
+- 核心已更新为 `13:08:37`，SHA256：`986B69D498D5F3A16F5EC559C8EA399F014BBF6271C7B68142C3DC1A51CBA75C`
+- 安装目录根部的旧备份已移入备份子目录。
+
+现在直接重新下载。新日志应当不再出现：
+
+```text
+Fast mode probe attempt
+TX 0x011 [2] (82 01)
+```
+
+而是直接显示：
+
+```text
+Boot mode detected: legacy (fast mode probe disabled)
+Erasing flash...
+```
+
+这次需要现场复测才能确认最终效果。
+```
+
+### assistant 2026-07-20T05:09:26.489Z
+
+```text
+换控制器仍失败，说明不是单个控制器硬件问题。我重新判断后发现：之前把 `0x016 [00]` 直接判为擦除失败不够准确，它很可能是第三次 `0x82 01` 快速模式探测留下的迟到负应答，被下一步误当成擦除应答。
+
+已经修正：
+
+- 禁用 `0x82` 快速模式探测，固定走稳定的 legacy 协议。
+- 没有修改任何超时时间。
+- 正式程序仍是 [UnifiedDownloader_window.exe](E:/安装软件/窗口版/UnifiedDownloader_window.exe)。
+- 核心已更新为 `13:08:37`，SHA256：`986B69D498D5F3A16F5EC559C8EA399F014BBF6271C7B68142C3DC1A51CBA75C`
+- 安装目录根部的旧备份已移入备份子目录。
+
+现在直接重新下载。新日志应当不再出现：
+
+```text
+Fast mode probe attempt
+TX 0x011 [2] (82 01)
+```
+
+而是直接显示：
+
+```text
+Boot mode detected: legacy (fast mode probe disabled)
+Erasing flash...
+```
+
+这次需要现场复测才能确认最终效果。
+
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:321-330|note=[used prior phase separation and legacy ACK behavior]
+rollout_summaries/2026-05-28T10-09-53-TD1P-downloader_702_sys_tx_and_boot_stack_analysis.md:23-31|note=[used prior downloader and legacy protocol findings]
+</citation_entries>
+<rollout_ids>
+019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5
+</rollout_ids>
+</oai-mem-citation>
+```
+
+### user 2026-07-20T05:10:21.825Z
+
+```text
+可以了。为什么老是出问题？
+```
+
+### assistant 2026-07-20T05:10:40.200Z
+
+```text
+这次主要是我之前为了“快速模式”加入的 `0x82 01` 探测，不适合现场这些老 Boot。
+
+老 Boot 不认识 `0x82`，会回复 `0x016 [00]`。下载器连续探测三次后马上发送擦除命令，最后一个迟到的 `00` 有时会被误当成擦除结果，所以表现为：
+
+- 有时成功，有时失败；
+- 拔插 USB 后暂时恢复，因为接收队列被清空；
+- 换电脑后可能正常，因为驱动和 USB 缓冲时序不同；
+- 换控制器仍然失败，因为问题在下载器协议流程，不在控制器硬件；
+- 调整超时时间没有根治作用。
+
+现在已经取消快速模式探测，恢复老 Boot 原有的稳定流程：
+
+```text
+702 → 握手 → 地址 → 擦除 → legacy逐帧下载
+```
+
+因此这次能正常下载。现场这批控制器不能仅靠电脑端“保证快速模式”，除非统一升级 Boot，使它真正支持 `0x82` 快速协议。当前版本优先保证稳定。
+
+以后如果再出现 `0x17 data ack` 超时，那属于数据写 Flash 阶段的另一类问题，要单独看日志，不能和这次的 `0x016 [00]` 混在一起。
+```
+
+### user 2026-07-20T05:11:26.401Z
+
+```text
+一切以稳定的来啊。另外gc是同步也稳定了吗？
 ```
