@@ -1,20 +1,69 @@
-# 读下u盘的记录。
+# Automation: 每周工作状态更新 Automation ID: automation Automation memory: $CODEX_HOME/au
 
-- Session id: `019e5557-3947-7a13-9966-302a1436f635`
+- Session id: `019e5cf4-1b3d-7400-94fd-6bfc60d1c3fd`
 - Source cwd: `E:\工作`
 - Model provider: `openai`
 - Exported at: `2026-07-20T11:49:32`
-- Local source: `C:\Users\t250c\.codex\sessions\2026\05\23\rollout-2026-05-23T22-57-20-019e5557-3947-7a13-9966-302a1436f635.jsonl`
+- Local source: `C:\Users\t250c\.codex\sessions\2026\05\25\rollout-2026-05-25T10-26-02-019e5cf4-1b3d-7400-94fd-6bfc60d1c3fd.jsonl`
 
 ## Transcript
 
-### developer 2026-05-23T14:57:26.289Z
+### developer 2026-05-25T02:26:05.623Z
 
 ```text
 <permissions instructions>
 Filesystem sandboxing defines which files can be read or written. `sandbox_mode` is `danger-full-access`: No filesystem sandboxing - all commands are permitted. Network access is enabled.
 Approval policy is currently never. Do not provide the `sandbox_permissions` for any reason, commands will be rejected.
 </permissions instructions>
+Response MUST end with a remark-directive block.
+
+## Responding
+
+- Answer the user normally and concisely. Explain what you found, what you did, and what the user should focus on now.
+- Automations: use the memory file at `$CODEX_HOME/automations/<automation_id>/memory.md` (create it if missing).
+  - Read it first (if present) to avoid repeating recent work, especially for "changes since last run" tasks.
+  - Memory is important: some tasks must build on prior work, and others must avoid duplicating prior focus.
+  - Before returning the directive, write a concise summary of what you did/decided plus the current run time.
+  - Use the `Automation ID:` value provided in the message to locate/update this file.
+- REQUIRED: End with a valid remark-directive block on its own line (not inline).
+  - Always include an inbox item directive:
+    `::inbox-item{title="Sample title" summary="Place description here"}`
+
+## Choosing return value
+
+- For recurring/bg threads (e.g., "pull datadog logs and fix any new bugs", "address the PR comments"):
+  - Always return `::inbox-item{...}` with the title/summary the user should see.
+
+## Guidelines
+
+- Directives MUST be on their own line.
+- Output exactly ONE inbox-item directive.
+- Do NOT use invalid remark-directive formatting.
+- DO NOT place commas between arguments.
+  - Valid: `::inbox-item{title="Sample title" summary="Place description here"}`
+  - Invalid: `::inbox-item{title="Sample title",summary="Place description here"}`
+- When referring to files, use full absolute filesystem links in Markdown (not relative paths).
+  - Valid: [`/Users/alice/project/src/main.ts`](/Users/alice/project/src/main.ts)
+  - Invalid: `src/main.ts` or `[main](src/main.ts)`
+- Try not to ask the user for more input if possible to infer.
+- If a PR is opened by the automation, add the `codex-automation` label when available alongside the normal `codex` label.
+- Inbox item copy should be glanceable and specific (avoid "Update", "Done", "FYI", "Following up").
+  - Title: what this thread now _is_ (state + object). Aim ~4-8 words.
+  - Title should explain what was built or what happened.
+- Summary: what the user should _do/know next_ (next step, blocker, or waiting-on). Aim ~6-14 words.
+- Summary should usually match the general automation name or prompt summary.
+- Both title and summary should be fairly short; usually avoid one-word titles/summaries.
+  - Prefer concrete nouns + verbs; include a crisp status cue when helpful: "blocked", "needs decision", "ready for review".
+
+## Examples (inbox-item)
+
+- Work needed:
+  - `::inbox-item{title="Fix flaky checkout tests" summary="Repro isolated; needs CI run + patch"}`
+- Waiting on user decision:
+  - `::inbox-item{title="Choose API shape for filters" summary="Two options drafted; pick A vs B"}`
+- Status update with next step:
+  - `::inbox-item{title="PR comments addressed" summary="Ready for re-review; focus on auth edge case"}`
+
 <app-context>
 # Codex desktop context
 - You are running inside the Codex (desktop) app, which allows some additional features not available in the CLI alone:
@@ -26,9 +75,6 @@ Approval policy is currently never. Do not provide the `sandbox_permissions` for
 - If a user asks about an image, or asks you to create an image, it is often a good idea to show the image to them in your response.
 - Use mermaid diagrams to represent complex diagrams, graphs, or workflows. Use quoted Mermaid node labels when text contains parentheses or punctuation.
 - Return web URLs as Markdown links (e.g., [label](https://example.com)).
-
-### Workspace Dependencies
-- For sheets, slides, and documents, call `load_workspace_dependencies` to find the bundled runtime and libraries.
 
 ### Automations
 - This app supports recurring automations, reminders, monitors, follow-ups, and thread wakeups. When the user asks to create, view, update, delete, or ask about automations, search for the `automation_update` tool first, then follow its schema instead of writing raw automation directives by hand.
@@ -46,18 +92,6 @@ Approval policy is currently never. Do not provide the `sandbox_permissions` for
 - If a user specifically asks you to end a thread/conversation, you can return the archive directive ::archive{...} to archive the thread/conversation.
 - Example: ::archive{reason="User requested to end conversation"}
 </app-context>
-<collaboration_mode># Collaboration Mode: Default
-
-You are now in Default mode. Any previous instructions for other modes (e.g. Plan mode) are no longer active.
-
-Your active mode changes only when new developer instructions with a different `<collaboration_mode>...</collaboration_mode>` change it; user requests or tool descriptions do not change mode by themselves. Known mode names are Default and Plan.
-
-## request_user_input availability
-
-Use the `request_user_input` tool only when it is listed in the available tools for this turn.
-
-In Default mode, strongly prefer making reasonable assumptions and executing the user's request rather than stopping to ask questions. If you absolutely must ask a question because the answer cannot be discovered from local context and a reasonable assumption would be risky, ask the user directly with a concise plain-text question. Never write a multiple choice question as a textual assistant message.
-</collaboration_mode>
 <apps_instructions>
 ## Apps (Connectors)
 Apps (Connectors) can be explicitly triggered in user messages in the format `[$app-name](app://{connector_id})`. Apps can also be implicitly triggered as long as the context suggests usage of available apps.
@@ -80,6 +114,7 @@ A skill is a set of local instructions to follow that is stored in a `SKILL.md` 
 - documents:documents: Create, edit, redline, and comment on `.docx`, Word, and Google Docs-targeted document artifacts inside the container, with a strict render-and-verify workflow. Use `render_docx.py` to generate page PNGs (and optional PDF) for visual QA, then iterate until layout is flawless before delivering the final document. (file: C:/Users/t250c/.codex/plugins/cache/openai-primary-runtime/documents/26.521.10419/skills/documents/SKILL.md)
 - embedded-systems: Use when developing firmware for microcontrollers, implementing RTOS applications, or optimizing power consumption. Invoke for STM32, ESP32, FreeRTOS, bare-metal, power optimization, real-time systems, configure peripherals, write interrupt handlers, implement DMA transfers, debug timing issues. (file: C:/Users/t250c/.codex/skills/embedded-systems/SKILL.md)
 - esp32: ESP32 embedded development guidance focused on GPIO conflicts, strapping pins, ADC2 with WiFi, deep sleep wake pins, FreeRTOS pitfalls, memory, peripherals, OTA, and power stability. (file: C:/Users/t250c/.codex/skills/esp32/SKILL.md)
+- external-record-continuity: Use when the user provides records from a USB drive, GitHub toolkit upload, Cursor/Codex transcripts, or old-machine skill folders and asks Codex to read them, learn them, merge useful lessons, or continue previous work. (file: C:/Users/t250c/.codex/skills/external-record-continuity/SKILL.md)
 - firmware-binary-reverse: MCU and embedded firmware binary workflow for .bin/.hex/.elf/.axf analysis, byte patching, version comparison, checksum/CRC repair, Keil/MDK firmware verification, fixed-address parameter edits, and safe documentation. Use for user-owned firmware images and pair with keil5-embedded-c for source-level work. (file: C:/Users/t250c/.codex/skills/firmware-binary-reverse/SKILL.md)
 - github:gh-address-comments: Address actionable GitHub pull request review feedback. Use when the user wants to inspect unresolved review threads, requested changes, or inline review comments on a PR, then implement selected fixes. Use the GitHub app for PR metadata and flat comment reads, and use the bundled GraphQL script via `gh` whenever thread-level state, resolution status, or inline review context matters. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/6188456f/skills/gh-address-comments/SKILL.md)
 - github:gh-fix-ci: Use when a user asks to debug or fix failing GitHub PR checks that run in GitHub Actions. Use the GitHub app from this plugin for PR metadata and patch context, and use `gh` for Actions check and log inspection before implementing any approved fix. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/github/6188456f/skills/gh-fix-ci/SKILL.md)
@@ -88,6 +123,11 @@ A skill is a set of local instructions to follow that is stored in a `SKILL.md` 
 - keil5-embedded-c: Keil5 and embedded C firmware workflow for hardware-related work. Use when Codex works on Keil/uVision projects, C51/ARM/MCU/单片机 code, GBK C files, timers/定时器, interrupts/中断, IO/ADC/PWM/CAN/UART/RS485 protocols/硬件协议, screen/屏端 integration, bin/hex verification, protocol documents/协议文档, or embedded C code changes where correctness depends on real code paths and device behavior. (file: C:/Users/t250c/.codex/skills/keil5-embedded-c/SKILL.md)
 - mcu-gpio-peripheral: MCU GPIO and peripheral bring-up workflow for embedded C/Keil/MDK projects. Covers input/output, pullup/pulldown, push-pull/open-drain, alternate functions, EXTI interrupts, debounce, ADC/PWM/UART/I2C/SPI pin conflicts, schematics, register/HAL checks, and Chinese embedded-code conventions. (file: C:/Users/t250c/.codex/skills/mcu-gpio-peripheral/SKILL.md)
 - multi-computer-toolkit-merge: Merge Codex toolkit uploads from multiple computers. Use when another computer has its own skills, MCP servers, work-states, memory/sqlite records, or task snapshots that need to be integrated without overwriting local work. (file: C:/Users/t250c/.codex/skills/multi-computer-toolkit-merge/SKILL.md)
+- openai-developers:agents-sdk: Build, run, deploy, and evaluate OpenAI Agents SDK apps from Codex. Use when the user asks to create or adapt an Agents SDK app, build from a prompt or Codex thread, prepare a runnable agent prototype, add a focused eval harness, or deploy locally through the Agents SDK Deployment Manager. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/6188456f/skills/agents-sdk/SKILL.md)
+- openai-developers:build-chatgpt-app: Build, scaffold, refactor, and troubleshoot ChatGPT Apps SDK applications that combine an MCP server and widget UI. Use when Codex needs to design tools, register UI resources, wire the MCP Apps bridge or ChatGPT compatibility APIs, apply Apps SDK metadata or CSP or domain settings, or produce a docs-aligned project scaffold. Prefer a docs-first workflow by invoking the openai-docs skill or OpenAI developer docs MCP tools before generating code. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/6188456f/skills/build-chatgpt-app/SKILL.md)
+- openai-developers:chatgpt-app-submission: Inspect a ChatGPT Apps MCP server codebase and generate chatgpt-app-submission.json with app info suggestions, tool hint justifications, test cases, and negative test cases, then report review-check findings and outputSchema warnings for submission review. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/6188456f/skills/chatgpt-app-submission/SKILL.md)
+- openai-developers:openai-api-troubleshooting: Use when an OpenAI API request fails and Codex needs to classify the likely cause, explain the next step, and route to the right follow-up. Covers common runtime failures such as blocked outbound network access, invalid credentials, exhausted API quota or credits, rate limits, and model, project, or organization access issues; delegate key provisioning to openai-platform-api-key and current documentation lookups to openai-docs. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/6188456f/skills/openai-api-troubleshooting/SKILL.md)
+- openai-developers:openai-platform-api-key=***REDACTED*** for building, running, testing, debugging, or configuring apps, UIs, scripts, CLIs, generators, and tools that use AI, including AI-powered apps, apps that generate output with AI, and user-input-driven AI features. Treat unspecified AI in build requests as OpenAI API usage unless the user names another provider or says not to use OpenAI. First inspect credentials safely, then ask whether to reuse an existing key or create one before API-dependent implementation. Also use for OPENAI_API_KEY or sk-proj setup requests. Never expose plaintext. (file: C:/Users/t250c/.codex/plugins/cache/openai-curated/openai-developers/6188456f/skills/openai-platform-api-key/SKILL.md)
 - opencv: OpenCV computer vision library. Use for image processing. (file: C:/Users/t250c/.codex/skills/opencv-g1joshi/SKILL.md)
 - opencv: You are an expert in OpenCV (Open Source Computer Vision Library), the most popular library for real-time computer vision. You help developers build image processing pipelines, object detection systems, video analysis tools, augmented reality, and document processing using OpenCV's 2,500+ algorithms for image manipulation, feature detection, camera calibration, 3D reconstruction, and DNN inference — in Python, C++, or JavaScript. (file: C:/Users/t250c/.codex/skills/opencv-terminalskills/SKILL.md)
 - pdf: Use when tasks involve reading, creating, or reviewing PDF files where rendering and layout matter; prefer visual checks by rendering pages (Poppler) and use Python tools such as `reportlab`, `pdfplumber`, and `pypdf` for generation and extraction. (file: C:/Users/t250c/.codex/skills/pdf/SKILL.md)
@@ -128,6 +168,7 @@ A plugin is a local bundle of skills, MCP servers, and apps. Below is the list o
 - `Browser`: Browser / browser-use plugin Aliases: @browser, @browser-use, browser-use, Browser, in-app browser. Use Browser, the Codex in-app browser, when the user asks to open, inspect, navigate, test, click, type, or screenshot local web targets such as localhost, 127.0.0.1, ::1, file:// URLs, or the current in-app browser tab. After significant frontend changes to a local app, use Browser to open the relevant local target when it is known or obvious, unless the user asks for another browser tool. For requests like "open localhost:3000" or "open to localhost:4000", navigate the in-app browser to http://localhost:3000 or http://localhost:4000. Do not satisfy explicit @browser or @browser-use requests with macOS `open`, shell commands, or generic web browsing unless the user asks for another browser tool or approves a fallback.
 - `Documents`: Create and edit document artifacts in Codex, including Word files and Google Docs.
 - `GitHub`: Inspect repositories, triage pull requests and issues, debug CI, and publish changes through a hybrid GitHub connector and CLI workflow.
+- `OpenAI Developers`: Build with OpenAI APIs, Agents SDK, and ChatGPT Apps, and create and save OpenAI API keys from Codex.
 - `Presentations`: Create, edit, render, verify, and export presentation slide decks. Use when Codex needs to build or modify a deck, slidedeck, presentation deck, slide deck, slides, PowerPoint, Google Slides, PPT, PPTX, .ppt, or .pptx file.
 - `Spreadsheets`: Create, edit, analyze, visualize, render, and export spreadsheets or Google Sheets-ready workbooks in Codex.
 ### How to use plugins
@@ -266,477 +307,204 @@ You can update the memories **only** when explicitly asked by the user. This mus
 v1
 
 ## User Profile
-The user works with Codex as a hands-on problem-solving partner across Windows tooling and industrial computer-vision tasks. They value direct, evidence-backed help over generic advice, and they often sharpen the task by challenging weak assumptions in the current design. In technical planning work, they want concrete next steps, decision triggers, and validation plans they can actually run. In troubleshooting, they are comfortable with local log/process inspection and benefit from agents that distinguish "loaded but unusable" from "failed to launch."
+The user uses Codex as a practical Windows-side engineering partner. Their recurring work spans Keil/uVision embedded C, GBK/GB2312 legacy files, Codex desktop/tooling setup, GitHub-backed cross-computer continuity, and an industrial AprilTag + total-station calibration workflow. They care more about real evidence and runnable fixes than polished explanations.
 
-The current memory set shows two active workflows: troubleshooting the Codex Windows desktop app from `C:\Users\t250c`, and designing a fixed-camera AprilTag localization system with total-station ground truth from `C:\Users\t250c\Documents\Codex\2026-05-22\new-chat-2`. Their follow-ups emphasize practical validation: how to compare error, what to distrust, and how to structure the smallest repeatable experiment that exposes whether the pipeline really works.
+They often work by pointing at a real path, repo, log, or device and expect the agent to inspect it directly. They also invest in durable reuse: when a rule, workflow, or imported record is valuable, they want it absorbed into memory/skills so future sessions and even other computers can continue with less re-explanation. In design work, they push the agent to challenge weak assumptions and define concrete validation metrics instead of preserving fragile legacy steps.
 
 ## User preferences
-- When the user says the app "进不了主界面," investigate startup/loading stages and local logs first instead of jumping to generic reinstall advice.
-- When the user has not asked for edits yet, begin with read-only inspection of logs, processes, versions, and dependency state.
-- When the user says "我现在没思路。你是项目经理，你觉得怎么搞？", respond with a prioritized execution plan and decision triggers rather than broad brainstorming.
-- When the user questions a weak measurement chain like "相机的位姿，你靠相机的外壳三个点。我感觉是不合理的", challenge the geometry directly and do not preserve fragile intermediates by default.
-- When validation is fuzzy, define the comparison metric explicitly; in the AprilTag workflow, prefer world-coordinate error over vague distance checks and treat single-tag OpenCV depth as suspect.
-- Prefer minimal, repeatable experiments that isolate whether a pipeline generalizes, such as fixing measured tags once and moving the camera repeatedly.
+- When the user gives a literal path like `F:\memory` or a local project path, inspect that exact path first and report concrete findings before abstract discussion.
+- When the user asks whether the agent can access or modify a program, answer with direct filesystem/project confirmation first.
+- When the user says "restore memory", load local durable memory first, then confirm what was recovered before continuing.
+- When the user mentions `skill` or gives a new task, infer needed skills proactively, search official/GitHub sources, and install or create the right one instead of waiting for exact skill names.
+- Standalone "upload" means full work-state sync for cross-computer continuation, not transcript archiving.
+- For embedded/code-edit tasks, proactively apply the learned discipline: backup first, preserve GBK/GB2312 when needed, trace real call paths, keep function boundaries tight, and verify after edits.
+- When troubleshooting, start with read-only inspection of logs, processes, versions, and dependency state before proposing larger changes.
+- In the AprilTag workflow, define error in world coordinates, challenge weak geometry directly, and prefer a prioritized execution plan over open-ended brainstorming.
 
 ## General Tips
-- Environment baseline: Windows user profile at `C:\Users\t250c`; `cmd.exe` may be a safer fallback if PowerShell launcher issues appear during local inspection.
-- For Codex desktop issues on this machine, search `C:\Users\t250c\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\Codex\Logs\YYYY\MM\DD\` first and look for `ready-to-show`, `main frame finished load`, `hasUpdate=true`, and `Failed to locate git executable in PATH`.
-- If Codex logs show the window loaded, pivot quickly from "launch failure" to post-load initialization, cached state, update, or dependency checks.
-- In the AprilTag workflow, preserve exact retrieval handles like `TagCenter_world_calc`, `TagCenter_world_measured`, `Q points`, and `ID->TagSize mapping`; they are better search keys than smoother paraphrases.
-- When one run surfaces only design direction and not a verified fix, record the decision triggers and stop rules rather than overstating confidence.
+- Environment baseline: Windows, PowerShell, user profile rooted at `C:\Users\t250c`; `cmd /c ...` or `codex.cmd ...` can be a safer fallback when PowerShell wrapper/policy issues appear.
+- Cross-machine continuity lives around `C:\Users\t250c\.codex`, `C:\Users\t250c\Documents\Codex\codex-personal-toolkit`, and the private repo `hudonghua/codex-personal-toolkit`.
+- If system `python`/`git` is missing, prefer bundled Python, portable Git/GitHub CLI, or PowerShell archive-copy workflows rather than blocking.
+- For imported USB/old-machine records, search `.codex/history.jsonl`, `.codex/memories/MEMORY.md`, `.cursor/memory`, recent `agent-transcripts`, and `SKILL.md` files first; old transcripts are clues, not proof of current state.
+- For Windows path/encoding issues, separate ACL/ownership, Codex writable scope, and terminal encoding as three different layers.
+- For Codex desktop issues on this machine, `codex doctor --all` plus the newest package log under `...OpenAI.Codex_2p2nqsd0c76g0...\Logs\YYYY\MM\DD\` is the fastest first check.
 
 ## What's in Memory
+### E:\工作
+
+#### 2026-05-23
+
+- GitHub-backed continuity from USB records: external-record-continuity, upload-work.ps1, work-states, F:\.codex\history.jsonl, agent-transcripts
+  - desc: Search this first for "continue from uploaded records", USB/old-machine imports, or cross-computer resume/merge flows from `cwd=E:\工作`.
+  - learnings: Jump straight to high-signal `.codex`/`.cursor` records, learn from them instead of copying blindly, then push a timestamped work-state snapshot to the toolkit repo.
+
+- Embedded editing rules and camera-project recall check: backup before edit, GBK, call path, TagCenter_world_calc, total-station validation
+  - desc: Routes to the user asking what to watch for during code edits and how much Codex already knows about the camera project from imported records.
+  - learnings: Restate the exact embedded safety rules directly; treat remembered camera context as background until live files are re-read.
+
+### C:\Users\t250c\Documents\Codex\2026-05-23\new-chat
+
+#### 2026-05-23
+
+- GBK skill repair and Windows permission layers: E:\IPMsg\gbk-garbled-comments, takeown, icacls, write-ok, utf8-chinese-ok
+  - desc: Search this first for garbled Chinese skill/source files, E:/D: write-access questions, or "do I need to restart Codex after permission changes?" cases.
+  - learnings: Separate ACLs, Codex writable scope, and terminal encoding; verify with a tiny temp-file write before the real overwrite.
+
+- Lenovo Windows Hello face-login diagnosis: Lenovo Legion Y9000P IRX9, 83DF, pnputil, Biometric, SunplusIT, FaceCredentialProvider
+  - desc: Routes to the hardware/driver-based answer for whether this exact laptop supports Windows Hello face login.
+  - learnings: Vendor specs plus `pnputil` beat WMI/CIM here; software face-provider entries are not proof of IR hardware.
+
 ### C:\Users\t250c
 
 #### 2026-05-23
 
-- Codex Windows desktop app launch troubleshooting: Codex, OpenAI.Codex_2p2nqsd0c76g0, ready-to-show, main frame finished load, hasUpdate=true, git not in PATH, wsl.exe --status
-  - desc: Search this first for "进不了主界面" or similar Codex desktop startup issues from `cwd=C:\Users\t250c`; it routes to the local package log path, update clue, and dependency-state findings.
-  - learnings: If logs already show `ready-to-show` and `main frame finished load`, stop treating it as an early-launch crash; check Store update, reset/repair path, and missing `git`/WSL as post-load factors.
+- Codex desktop startup and connectivity troubleshooting: codex doctor --all, 127.0.0.1:10809, codex-app-proxy.cmd, ready-to-show, hasUpdate=true, git not in PATH
+  - desc: Search this first for `codex app` login/connectivity/startup hangs from `cwd=C:\Users\t250c`.
+  - learnings: Confirm proxy inheritance in the real environment first; if logs already show `ready-to-show` and `main frame finished load`, pivot to post-load/update/dependency issues.
+
+#### 2026-05-21
+
+- Skill auto-discovery, official installs, and toolkit setup: skill, openai/skills, keil5-embedded-c, pdf, security-best-practices, codex-personal-toolkit
+  - desc: Covers the durable "infer needed skills and install them" default plus the first round of local skill/toolkit setup from `cwd=C:\Users\t250c`.
+  - learnings: PowerShell archive-copy install worked when system Python was missing; the user expects proactive skill selection, not passive waiting.
+
+- F: memory inspection, discipline import, and mixed-size AprilTag prompt: F:\memory, F:\skills, Get-Content -Encoding UTF8 -Raw, TagSize, 150mm, 300mm
+  - desc: Search here for the original discipline-file ingestion flow and the first reusable camera-scheme prompt with mixed tag sizes.
+  - learnings: Re-read suspect Chinese files with explicit UTF-8; mixed-size tags require explicit per-ID `TagSize` mapping.
 
 ### C:\Users\t250c\Documents\Codex\2026-05-22\new-chat-2
 
 #### 2026-05-22
 
-- Industrial AprilTag fixed-camera pose and validation workflow: AprilTag, fixed camera, total station, Q points, TagCenter_world_calc, TagCenter_world_measured, ID->TagSize mapping, held-out tags
-  - desc: Search this first for fixed-camera AprilTag design, long-range extrinsics, mixed tag sizes, or "误差 我怎么比"; it captures the world-coordinate validation direction and why shell Q points were demoted.
-  - learnings: Prefer direct world-measured tags/control points over short-baseline shell references, compare `TagCenter_world_calc` vs measured world truth, and keep held-out tags or points for validation.
+- Fixed-camera AprilTag validation plan: Q points, TagCenter_world_calc, TagCenter_world_measured, held-out tags, world-coordinate error
+  - desc: Search this first for the deeper calibration/validation workflow when the user wants design direction rather than just a prompt.
+  - learnings: Prefer direct world-measured control over weak shell references, and evaluate success with world-coordinate error rather than vague distance checks.
 
 ### Older Memory Topics
 
-- None currently; all high-signal topics are in the recent active memory window.
+#### C:\Users\t250c
+
+- Desktop Keil repo orientation and local login persistence: C:\Users\t250c\Desktop\KX_LCD70_200_10AI, MC_LCD7 - 10AI_V1.1.uvprojx, LPC1768, Src\main.c, auth.json
+  - desc: Use this for the first-pass map of the desktop embedded project and the fact that local Codex CLI login state already existed under `cwd=C:\Users\t250c`.
 ========= MEMORY_SUMMARY ENDS =========
 
 When memory is likely relevant, start with the quick memory pass above before
 deep repo exploration.
 ```
 
-### user 2026-05-23T14:57:26.289Z
+### user 2026-05-25T02:26:05.623Z
 
 ```text
 <environment_context>
   <cwd>E:\工作</cwd>
   <shell>powershell</shell>
-  <current_date>2026-05-23</current_date>
+  <current_date>2026-05-25</current_date>
   <timezone>Asia/Shanghai</timezone>
 </environment_context>
 ```
 
-### user 2026-05-23T14:57:26.294Z
+### user 2026-05-25T02:26:05.628Z
 
 ```text
-读下u盘的记录。
+Automation: 每周工作状态更新
+Automation ID: automation
+Automation memory: $CODEX_HOME/automations/automation/memory.md
+Last run: never
+
+Review recent work activity in the workspace and draft a brief weekly status update. Summarize completed work, current in-progress items, blockers or risks, and suggested next steps. Keep it concise and ready to send or adapt.
 ```
 
-### assistant 2026-05-23T14:57:29.781Z
+### assistant 2026-05-25T02:26:16.215Z
 
 ```text
-我先看一下当前机器识别到的盘符和卷标，判断哪个是 U 盘，再只读地查看里面的目录/记录文件。
+I’m reviewing recent activity under `E:\工作` and the automation memory first, then I’ll pull concrete workspace signals like git status, recent commits, and recently modified files to draft a concise weekly update.
 ```
 
-### assistant 2026-05-23T14:57:40.683Z
+### assistant 2026-05-25T02:26:28.915Z
 
 ```text
-系统里看到一个可移动盘 `F:`，容量约 2GB。我接着扫它的顶层目录和文件名，先不改任何东西。
+I’ve confirmed the workspace has two active Qt-related project folders updated on May 24-25. Next I’m checking git history and recent file changes inside each so the status update is grounded in actual work, not just folder timestamps.
 ```
 
-### assistant 2026-05-23T14:57:44.587Z
+### assistant 2026-05-25T02:26:43.801Z
 
 ```text
-盘里主要有 `.codex` 和 `.cursor` 两个目录，`rg` 没扫出普通文件名，可能是隐藏/编码/权限或目录很浅。我再递归列一下文件，看看“记录”具体在哪。
+Neither project is a git repo, so the weekly summary needs to rely on source timestamps, build outputs, and the Qt setup scripts/logs in the workspace. I’m reading the project files and recent setup artifacts now to separate actual code work from environment setup.
 ```
 
-### assistant 2026-05-23T14:58:01.836Z
+### assistant 2026-05-25T02:26:55.729Z
 
 ```text
-这个 U 盘里其实是一套 `.codex` / `.cursor` 工作记录，文件很多，刚才完整递归输出被刷屏了。现在我会缩小范围：看 Codex 的 `history.jsonl`、SQLite 记录库，以及 Cursor 最近的 agent transcript。
+The concrete picture so far is: a Qt 6.8.3 toolchain was installed and verified with a built `QtSmokeTest.exe`, while the OpenCV-based template has source work but no matching build artifacts yet. I’m doing one last pass on build directories and dependency presence so the weekly note can call out the real blocker cleanly.
 ```
 
-### assistant 2026-05-23T14:58:18.133Z
+### assistant 2026-05-25T02:27:02.430Z
 
 ```text
-`history.jsonl` 里有中文乱码，这是典型 UTF-8/GBK 互相误读的样子；我会把它按“GBK 字符串还原成 UTF-8”的方式解码，再读最近会话摘要。
+I’ve confirmed there is no `QtOpenCVTemplate\build` directory and no separate OpenCV SDK path surfaced under `E:\`, so the main risk looks like dependency readiness rather than code churn. I’m packaging this into a short weekly update and then I’ll persist a concise run note into the automation memory.
 ```
 
-### assistant 2026-05-23T14:58:53.938Z
+### assistant 2026-05-25T02:27:13.051Z
 
 ```text
-除了聊天流水，U 盘上还有比较有价值的“记忆”文件：Cursor 的 `CURSOR_AGENT_MEMORY.md` 和两个视觉测量相关节点。我读这些比扫几千个缓存文件更有用。
+I’ve finished the evidence pass. I’m writing a short automation memory entry with the key findings so next week’s run can build on this instead of re-deriving the same Qt/toolchain context.
 ```
 
-### assistant 2026-05-23T14:59:33.798Z
+### assistant 2026-05-25T02:27:40.035Z
 
 ```text
-我已经能还原出最近几条主线了：119 接收机输出协议、200A 屏正解/CAN1 传感器 ID、以及 5 月 12 日 AprilTag 标定验证。最后再看一下最新记录的结尾，确认有没有未完成的尾巴。
+每周状态更新草稿如下，已按 `E:\工作` 的实际文件活动整理，可直接发送或稍作改写：
+
+本周完成：
+- Qt 6.8.3 开发环境已落地到 `E:\Qt`，包含 Qt Creator、CMake、Ninja 和 MinGW 工具链。
+- `QtSmokeTest` 已成功配置并生成可执行文件，说明 Qt 本地编译链路可用。
+- 新建了 `QtOpenCVTemplate`，完成了基础 CMake 工程、主窗口框架、图片打开、灰度处理和 Canny 边缘显示示例。
+
+当前进行中：
+- 正在把 OpenCV 接入 Qt 模板，代码骨架已就位，但模板项目还没有生成 `build` 目录，暂未完成实际联调验证。
+
+阻塞/风险：
+- 目前主要风险不是 Qt，而是 OpenCV 依赖尚未明确就绪；工作区里还没看到可直接用于 `find_package(OpenCV)` 的独立 OpenCV SDK 路径。
+- 两个项目都不是 Git 仓库，当前进展只能依赖本地时间戳和文件状态，后续追踪会比较弱。
+
+下周建议：
+- 先确认 OpenCV SDK 安装位置并完成 `QtOpenCVTemplate` 首次配置编译。
+- 跑通一次真实图片加载与处理流程，确认运行时 DLL/`PATH` 配置。
+- 视情况把两个项目纳入 Git，避免后续周报只能靠文件修改时间回溯。
+
+::inbox-item{title="Qt environment and template status" summary="OpenCV hookup is next; verify first template build"}
 ```
 
-### assistant 2026-05-23T14:59:58.478Z
+### assistant 2026-05-25T02:27:40.045Z
 
 ```text
-读了，U 盘识别为 `F:`。里面主要是 `.codex` 和 `.cursor` 的历史记录/记忆，不是普通文档盘。我只做了只读查看，没碰 `auth.json` 这类敏感文件。
-
-重点记录如下：
-
-- `F:\.codex\history.jsonl`：Codex 历史从 `2026-05-02` 到 `2026-05-22`，最近关键词有“听课”“工作目录”“聊天需要记录”。
-- `F:\.cursor\memory\CURSOR_AGENT_MEMORY.md`：全局记忆，核心纪律是嵌入式/GBK 文件修改前备份、用字节方式保持编码、硬件协议必须基于实际代码验证。
-- `F:\.cursor\memory\vision_T_shell_cam_node_20260512.md`：AprilTag/全站仪标定记录，核心结论是用 `TagCenter_world_calc` 对比全站仪实测 `Center_world`，当时 Clean 10 组误差大约 `MAE 16.13mm / RMS 20.03mm / MAX 36.30mm`。
-- `F:\.cursor\memory\vision_edge_distortion_kd_node_20260512.md`：边缘畸变/KD 补偿记录，结论是中心区准，边缘/四角误差大；工程补偿后 21 点约 `平均 11.05mm / RMS 12.99mm / 最大 30.44mm`。
-- 最新 Cursor 主记录在 `F:\.cursor\projects\empty-window\agent-transcripts\701e2331...\701e2331....jsonl`，时间到 `2026-05-23 18:02`。主线是 119 接收机和 200A 屏相关：
-  - 119 接收机：`PWM_Up0()` 里 `vmA > 1000` 作为 DO 输出，`1~1000` 作为 PWM 电流，生成过输出协议 HTML。
-  - MC_LCD 临时工程：定位过“最大/最小值反置导致 2# 手柄上下动作时左右也输出”的问题，根因是 `PWM_logic()` 非法参数提前 return 但未清全局输出/方向变量。
-  - 200A 屏：整理过 CAN1 三臂传感器 ID 表，后续双轴 ID 从 `0x18F` 改到 `0x28F`。
-  - 最新未收口的事情：CAN ID 偏移逻辑调试。现场反馈“还是起不来”后，改回“上电原 ID，运行中收到 CC/BB 才切换”版本后能启动；接着用户要求接收也要偏移，并提出“无论如何两套接收 ID 都注册，只保存一个标志位，标志为 1 用偏移，为 0 用原 ID”。记录最后停在正在重写注册段，没看到最终完成确认。
-
-所以如果你是想接着干，当前最该接的是最后这件：**CAN1 接收表固定注册原 ID + 偏移 ID 两套，铁电只保存模式标志，发送/业务逻辑按标志选择当前 ID，避免上电因接收表切换死机。**
-```
-
-### user 2026-05-23T15:01:31.416Z
-
-```text
-以后这些记录大概率直接上传到github ，然后让你来读。然后继续干。
-```
-
-### assistant 2026-05-23T15:01:40.893Z
-
-```text
-可以，这个流程很合适。
-
-以后你把这些记录上传到 GitHub，我可以按下面方式接着干：
-
-1. 你给我 GitHub 仓库地址、分支、目录或某个文件链接。
-2. 我先读 `README` / `MEMORY` / 最新 transcript / 任务交接文件。
-3. 我提炼当前状态：已经确认的结论、正在做的任务、最后一个未完成点、不能踩的坑。
-4. 然后直接继续代码、文档、协议表或验证计算。
-
-我建议你上传时保持一个固定结构，后面会省很多时间：
-
-```text
-repo/
-  handoff/
-    CURRENT_TASK.md          # 当前要继续干什么
-    LAST_STATUS.md           # 上次停在哪
-    DECISIONS.md             # 已确认决策
-    DO_NOT_FORGET.md         # 坑、禁忌、现场规则
-  records/
-    codex/
-    cursor/
-    chat/
-  projects/
-    具体工程或关键文件
-```
-
-最关键的是每次上传后有一个 `handoff/CURRENT_TASK.md`，写清楚“现在接着干哪件事”。这样我不用在几万行记录里猜方向，可以直接续上。
-```
-
-### user 2026-05-23T15:01:54.646Z
-
-```text
-另外这个里面有skill没？
-```
-
-### assistant 2026-05-23T15:02:06.447Z
-
-```text
-有，U 盘里有不少 skill。
-
-主要在这几个位置：
-
-```text
-F:\.cursor\skills\
-F:\.cursor\skills-cursor\
-F:\.codex\skills\
-```
-
-我刚才看到的明确 skill 包括：
-
-```text
-F:\.cursor\skills\gbk-garbled-comments\SKILL.md
-F:\.cursor\skills\opencv\SKILL.md
-F:\.cursor\skills\qdn-project-vision\SKILL.md
-F:\.cursor\skills\terminalskills-opencv\SKILL.md
-F:\.cursor\skills\univer-cli\SKILL.md
-F:\.cursor\skills\xlsx\SKILL.md
-```
-
-还有 Cursor 自带/同步过来的：
-
-```text
-F:\.cursor\skills-cursor\babysit\SKILL.md
-F:\.cursor\skills-cursor\canvas\SKILL.md
-F:\.cursor\skills-cursor\create-skill\SKILL.md
-F:\.cursor\skills-cursor\shell\SKILL.md
-...
-```
-
-比较有用的是这几个：
-
-- `gbk-garbled-comments`：修 GBK/GB2312 嵌入式 C 文件乱码注释。
-- `qdn-project-vision`：全电钻/视觉/AprilTag/solvePnP/T_shell_cam 相关。
-- `opencv` / `terminalskills-opencv`：OpenCV 图像处理。
-- `xlsx`：Excel 表格处理。
-
-所以答案是：**有，而且不只是记录，里面已经带了一套 Cursor/Codex 的技能体系。**以后如果这些也上传 GitHub，我可以先读对应 `SKILL.md`，再按里面的流程继续干。
-```
-
-### user 2026-05-23T15:02:34.896Z
-
-```text
-如果有就学习下。然后整理下你自己的。然后上传
-```
-
-### assistant 2026-05-23T15:02:48.124Z
-
-```text
-我会先读 U 盘里几个最有价值的 `SKILL.md`，提炼成适合我这边长期复用的技能/流程；然后看本机有没有既定的上传仓库或同步脚本，再把整理结果上传。先不覆盖现有技能。
-```
-
-### assistant 2026-05-23T15:02:58.615Z
-
-```text
-U 盘里有两类：一类是旧 Codex 技能，另一类是 Cursor 技能。本机已经有更完整的一批，所以我会优先“吸收差异”：重点看 GBK 安全编辑、备份/恢复、QDN 视觉、Keil 这几个，不简单整目录覆盖。
-```
-
-### assistant 2026-05-23T15:03:18.722Z
-
-```text
-本机有 `workflow-memory-skillsmith`，正好用于把这种“从旧记录里学到的流程”固化成全局 skill。我会新建一个小而准的技能，不覆盖现有 `keil5-embedded-c`，专门记录“外部记录/旧机器技能吸收 + GBK/Keil/视觉交接”的流程。
-```
-
-### assistant 2026-05-23T15:03:23.711Z
-
-```text
-我确认上传脚本会同步 `~\\.codex\\skills` 的技能列表和当前工作状态，但不会自动把新技能目录复制进 toolkit 的 `skills` 目录。因此我会先在本机创建技能，再同步复制到 toolkit，最后跑上传脚本提交推送。
-```
-
-### assistant 2026-05-23T15:03:30.878Z
-
-```text
-现在开始落地：新增一个 `external-record-continuity` 全局技能，专门处理“U 盘/GitHub 上传的历史记录、旧电脑 skill、交接 transcript”。它会告诉未来的我先读哪些入口、怎么吸收旧 skill、怎么避免覆盖现有技能。
-```
-
-### assistant 2026-05-23T15:04:24.582Z
-
-```text
-我还会把旧 U 盘里最硬的嵌入式规则追加进现有 `keil5-embedded-c`，这样以后遇到 GBK、CAN、PWM、协议文档时能直接触发，不只靠新交接技能。
-```
-
-### assistant 2026-05-23T15:05:03.512Z
-
-```text
-技能已经写入本机，也镜像到 toolkit；我还记了一条 Memory/SQLite 记录，方便以后检索。接下来跑上传脚本，它会生成工作状态快照、提交并推送到 GitHub。
-```
-
-### assistant 2026-05-23T15:05:15.595Z
-
-```text
-本地提交已经生成，包含新技能、Keil 技能补充和这次工作快照；现在等 GitHub push 结果返回。
-```
-
-### assistant 2026-05-23T15:05:34.701Z
-
-```text
-已完成：我读了 U 盘里的旧 skill，并把有价值的部分整理进本机技能体系。
-
-新增技能：
-
-`C:\Users\t250c\.codex\skills\external-record-continuity\SKILL.md`
-
-它专门处理以后这种流程：从 U 盘/GitHub 读取 `.codex`、`.cursor`、transcript、旧 `SKILL.md`，提取当前任务状态，学习但不覆盖本机新技能，然后继续干活。
-
-同时补充了现有技能：
-
-`C:\Users\t250c\.codex\skills\keil5-embedded-c\SKILL.md`
-
-加入了旧记录里的关键规则：GBK 文件字节安全修改、乱码注释只改注释、协议文档必须从真实代码路径推导、硬件逻辑保持简单、死机时先恢复可启动路径再拆分验证。
-
-已经上传到 GitHub：
-
-- 仓库：`https://github.com/hudonghua/codex-personal-toolkit`
-- 提交：`8a5de4cc0c6d37165d65d58a127744970bde1009`
-- 快照目录：`C:\Users\t250c\Documents\Codex\codex-personal-toolkit\work-states\2026\codex-skills-mcp-github-sync_20260523-230512`
-
-也保存了 Memory/SQLite 记录，后面你说“读 GitHub 记录继续干”，我就能按这个新技能走。
-```
-
-### user 2026-05-23T15:08:08.270Z
-
-```text
-sqlite 是你自己管理的吧。跟我没啥关系吧。
-```
-
-### assistant 2026-05-23T15:08:15.585Z
-
-```text
-对，SQLite 主要是我这边自己管理的本地检索记录，跟你的工程业务文件没直接关系。
-
-它的作用类似“我的工作笔记索引”：记录我学到了什么、某次上传路径、某个技能更新过什么。以后我可以更快查到，不用每次重新翻一大堆 transcript。
-
-这次上传里带了：
-
-```text
-mcp-data/memory.sqlite
-mcp-data/records.sqlite
-```
-
-它们不是你的项目源码，也不是你需要手动维护的东西。你只要关心 GitHub 里的 `skills/`、`work-states/`、以及以后交接用的记录文件就行。SQLite 可以理解成“给 Codex 恢复记忆用的辅助数据库”。
-```
-
-### user 2026-05-23T15:08:47.049Z
-
-```text
-另外一台电脑没有这个。如果他从github上下载后。是不是他也有了？
-```
-
-### assistant 2026-05-23T15:08:55.095Z
-
-```text
-是的，另一台电脑从 GitHub 下载后，**可以拥有这些 SQLite 记忆数据**，前提是它运行 toolkit 的安装/恢复脚本。
-
-流程是：
-
-```powershell
-git clone https://github.com/hudonghua/codex-personal-toolkit
-cd codex-personal-toolkit
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.\install.ps1 -IncludeData
-```
-
-其中 `-IncludeData` 就是关键。它会把 toolkit 里的技能、MCP 配置和数据恢复到那台电脑对应的 Codex 目录里。这样另一台电脑不只是有 `skills/`，也能带上 `memory.sqlite` / `records.sqlite` 这类辅助记忆。
-
-不过有一点：SQLite 只是辅助索引，不是唯一来源。真正最稳的是：
-
-- `skills/`：长期规则和工作方法
-- `work-states/.../README.md` / `transcript.md`：这次工作上下文
-- `mcp-data/*.sqlite`：辅助检索记录
-
-所以另一台电脑即使 SQLite 没加载成功，只要技能和 work-state 在，也能继续；SQLite 成功恢复的话，会更顺。
-```
-
-### user 2026-05-23T15:10:03.433Z
-
-```text
-另外一台电脑用的时间长。这台电脑是新电脑。所以另外一台电脑的记录以及项目痕迹很多。到时候我让上传后，互相整理下。尽量两台电脑同步。
-```
-
-### assistant 2026-05-23T15:10:11.123Z
-
-```text
-这就是典型的“双电脑长期同步”场景，我会按现有 toolkit 合并技能来处理：先区分“可直接合并的技能/记录”和“必须人工判定的项目痕迹”，避免新电脑把老电脑的东西冲掉。
-```
-
-### assistant 2026-05-23T15:10:21.816Z
-
-```text
-可以，这个方向对。以后两台电脑同步时，我会按“合并，不覆盖”的原则处理。
-
-老电脑记录多，就让老电脑先执行上传，把它的：
-
-- `skills/`
-- `work-states/`
-- `transcript`
-- `mcp-data/memory.sqlite`
-- `mcp-data/records.sqlite`
-- 项目交接文件
-- MCP 配置片段
-
-都推到 `codex-personal-toolkit`。然后新电脑这边拉取后，我做一次 merge：新增的直接收进来；同名但内容不同的 skill 不直接覆盖，而是保留本机版本，同时生成 `*.incoming-时间.md` 或 merge report，让我们判断哪个更准。
-
-重点规则是：
-
-- `work-states/` 按时间追加，不互相覆盖。
-- `skills/` 可以合并，但冲突要留痕。
-- SQLite 不能整库互相覆盖，最好做记录级合并或保留来源。
-- 项目源码不要随便覆盖，只把“状态快照”和“交接说明”同步，真正项目文件按具体任务再决定。
-
-以后你在老电脑说“上传”，在新电脑说“同步一下 GitHub 记录”，我就按这个流程把两边整理到尽量一致。
-```
-
-### user 2026-05-23T15:10:52.562Z
-
-```text
-那我考考你。在修改代码的时候，需要注意什么？
-```
-
-### assistant 2026-05-23T15:11:04.627Z
-
-```text
-修改代码时，尤其是你这些 Keil/嵌入式/GBK/硬件协议项目，要注意这几条：
-
-1. **先理解再动手**
-   不能看见函数名就猜。要先追调用链、执行周期、变量来源、输出去向。比如 `app10ms()` 这种名字不能直接当 10ms，要追到定时器/中断/调度条件。
-
-2. **改前必须备份**
-   每个要改的文件先备份，带时间戳：
-
-   ```text
-   App_lcd.c.bak_20260523_230000
-   ```
-
-   不能没备份就改。也不能乱删旧工程。
-
-3. **GBK/GB2312 文件不能乱用工具改**
-   老 C/H 文件如果是 GBK 编码，不能直接用普通编辑方式、`sed`、`Set-Content` 之类硬写中文。要按字节读：
-
-   ```text
-   bytes -> decode('gbk') -> 修改 -> encode('gbk') -> 写回
-   ```
-
-4. **只改该改的地方**
-   锁定函数头和结尾大括号，确认没有吞掉下一个函数。不要顺手重构，不要扩大改动范围。
-
-5. **协议和硬件逻辑必须看真实代码**
-   CAN ID、位定义、PWM/DO、引脚极性、字节顺序、比例系数，都要从实际接收/发送/输出路径确认，不能凭注释或经验写表。
-
-6. **硬件逻辑越简单越好**
-   能一个标志位解决，就别搞复杂状态机。现场已经证明：CAN ID 偏移这种事，动态清表、重注册、上电乱切都容易把设备搞死。
-
-7. **改完必须验证**
-   能编译就跑 Keil 编译；不能编译就至少做静态检查：函数边界、关键变量、调用路径、协议表、输出路径都要读回确认。
-
-8. **不确定就说不确定**
-   不能为了显得完成就说“好了”。硬件项目只有对和错，协议错一点设备就不工作。
-```
-
-### user 2026-05-23T15:12:02.241Z
-
-```text
-关于摄像头的项目，你了解多少？
-```
-
-### assistant 2026-05-23T15:12:20.534Z
-
-```text
-我了解的主要是这套“固定相机 + AprilTag + 全站仪验证”的项目，不是泛泛的摄像头项目。
-
-核心目标是：用相机识别 AprilTag，拿到相机坐标下的 `tx/ty/tz`，再通过标定好的外参链路，换算成全站仪世界坐标里的 Tag 中心点：
-
-```text
-TagCenter_cam(tx,ty,tz)
--> T_world_cam / T_shell_cam
--> TagCenter_world_calc
-```
-
-然后用全站仪实测的：
-
-```text
-TagCenter_world_measured
-```
-
-做对比，误差就是：
-
-```text
-error_mm = |TagCenter_world_calc - TagCenter_world_measured|
-```
-
-我记得几个关键点：
-
-- 不能只拿相机外壳上的 `Q1/Q2/Q3` 点和相机距离硬比，因为 `Q1` 不是相机光心。
-- `Q1/Q2/Q3` 是用来建立外壳坐标系 `Shell` 的，真正要标的是 `Shell -> Cam` 的固定变换，也就是 `T_shell_cam`。
-- 你用的是 `TagSize = 150mm`。
-- 当前 K/D 里有一组参数大概是 `fx≈2856`、`fy≈2886`、`cx≈1055`、`cy≈552`，畸变参数也比较大。
-- 中心区域效果比较好，边缘/四角误差明显变大，所以问题重点不是 AprilTag 识别本身，而是边缘畸变、K/D、角点定位或等效补偿。
-- 后面做过一个按 `center_x/center_y` 对 `tx/ty/tz` 修正的工程补偿模型，补偿后边缘点误差能明显下降。
-- 验证方式应该用“新点不参与标定”，拿固定参数去算，再和全站仪实测世界坐标比，不能把验证点又塞回拟合里。
-
-我现在对这个项目的理解是：它不是“摄像头能不能识别 Tag”的问题，而是一个 **相机坐标系到现场世界坐标系的工程标定问题**。真正要盯住的是：K/D 是否可靠、`T_shell_cam` 是否稳定、边缘误差是否可建模补偿、以及新采点能不能泛化。
+每周状态更新草稿如下，已按 `E:\工作` 的实际文件活动整理，可直接发送或稍作改写：
+
+本周完成：
+- Qt 6.8.3 开发环境已落地到 `E:\Qt`，包含 Qt Creator、CMake、Ninja 和 MinGW 工具链。
+- `QtSmokeTest` 已成功配置并生成可执行文件，说明 Qt 本地编译链路可用。
+- 新建了 `QtOpenCVTemplate`，完成了基础 CMake 工程、主窗口框架、图片打开、灰度处理和 Canny 边缘显示示例。
+
+当前进行中：
+- 正在把 OpenCV 接入 Qt 模板，代码骨架已就位，但模板项目还没有生成 `build` 目录，暂未完成实际联调验证。
+
+阻塞/风险：
+- 目前主要风险不是 Qt，而是 OpenCV 依赖尚未明确就绪；工作区里还没看到可直接用于 `find_package(OpenCV)` 的独立 OpenCV SDK 路径。
+- 两个项目都不是 Git 仓库，当前进展只能依赖本地时间戳和文件状态，后续追踪会比较弱。
+
+下周建议：
+- 先确认 OpenCV SDK 安装位置并完成 `QtOpenCVTemplate` 首次配置编译。
+- 跑通一次真实图片加载与处理流程，确认运行时 DLL/`PATH` 配置。
+- 视情况把两个项目纳入 Git，避免后续周报只能靠文件修改时间回溯。
+
+::inbox-item{title="Qt environment and template status" summary="OpenCV hookup is next; verify first template build"}
+<oai-mem-citation>
+<citation_entries>
+MEMORY.md:109-111|note=[used prior workspace context for E-workspace AprilTag and active project continuity]
+MEMORY.md:20-21|note=[used E-workspace continuity context to decide lightweight memory pass before live inspection]
+</citation_entries>
+<rollout_ids>
+019e5557-3947-7a13-9966-302a1436f635
+</rollout_ids>
+</oai-mem-citation>
 ```

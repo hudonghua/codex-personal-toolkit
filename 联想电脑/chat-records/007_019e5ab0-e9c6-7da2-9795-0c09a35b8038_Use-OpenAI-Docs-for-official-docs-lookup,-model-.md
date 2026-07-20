@@ -1,14 +1,14 @@
-# [@openai-developers](plugin://openai-developers@openai-curated) 你是什么用途？
+# Use OpenAI Docs for official docs lookup, model selection, model migration, and 
 
-- Session id: `019e5aa0-ebfe-7770-8ab9-2b1096e256a1`
+- Session id: `019e5ab0-e9c6-7da2-9795-0c09a35b8038`
 - Source cwd: `E:\工作`
 - Model provider: `openai`
 - Exported at: `2026-07-20T11:49:32`
-- Local source: `C:\Users\t250c\.codex\sessions\2026\05\24\rollout-2026-05-24T23-35-56-019e5aa0-ebfe-7770-8ab9-2b1096e256a1.jsonl`
+- Local source: `C:\Users\t250c\.codex\sessions\2026\05\24\rollout-2026-05-24T23-53-24-019e5ab0-e9c6-7da2-9795-0c09a35b8038.jsonl`
 
 ## Transcript
 
-### developer 2026-05-24T15:36:03.667Z
+### developer 2026-05-24T15:53:28.716Z
 
 ```text
 <permissions instructions>
@@ -358,7 +358,7 @@ When memory is likely relevant, start with the quick memory pass above before
 deep repo exploration.
 ```
 
-### user 2026-05-24T15:36:03.668Z
+### user 2026-05-24T15:53:28.716Z
 
 ```text
 <environment_context>
@@ -369,359 +369,775 @@ deep repo exploration.
 </environment_context>
 ```
 
-### user 2026-05-24T15:36:03.672Z
+### user 2026-05-24T15:53:28.721Z
 
 ```text
-[@openai-developers](plugin://openai-developers@openai-curated)
-你是什么用途？
+Use OpenAI Docs for official docs lookup, model selection, model migration, and prompt-upgrade work. [$openai-docs](C:\\Users\\t250c\\.codex\\skills\\.system\\openai-docs\\SKILL.md)
 ```
 
-### developer 2026-05-24T15:36:03.676Z
+### assistant 2026-05-24T15:53:33.147Z
 
 ```text
-Capabilities from the `OpenAI Developers` plugin:
-- Skills from this plugin are prefixed with `OpenAI Developers:`.
-- Apps from this plugin available in this session: `OpenAI Platform`.
-Use these plugin-associated capabilities to help solve the task.
+I’ll load the OpenAI docs skill so future OpenAI API/model guidance in this thread follows its official-docs workflow.
 ```
 
-### assistant 2026-05-24T15:36:08.728Z
+### assistant 2026-05-24T15:53:36.030Z
 
 ```text
-我是 `OpenAI Developers` 插件，主要用途是帮你在 Codex 里做 OpenAI 开发相关的事情：
-
-- 查官方 OpenAI API / Agents SDK / ChatGPT Apps 文档
-- 搭建或修改使用 OpenAI API 的项目
-- 创建、配置、排查 `OPENAI_API_KEY`
-- 调试 OpenAI API 报错，比如权限、额度、模型不可用、速率限制
-- 构建 ChatGPT Apps / MCP 工具 / Agents SDK 应用
-- 生成或检查 ChatGPT App 提交材料
-
-简单说：如果你要“做一个用 OpenAI 的程序”、接 API、写 agent、做 ChatGPT App，或者排查 key 和模型调用问题，就可以叫我用这个插件。
+Loaded the `openai-docs` skill. For OpenAI docs lookup, model selection, migrations, and prompt-upgrade work in this thread, I’ll follow the official-docs-first workflow and cite OpenAI sources.
 ```
 
-### user 2026-05-24T15:36:34.720Z
+### user 2026-05-24T15:53:39.002Z
 
 ```text
-你试给我看看
+你是谁？
 ```
 
-### assistant 2026-05-24T15:36:42.000Z
+### assistant 2026-05-24T15:53:42.398Z
 
 ```text
-我来用它做一个小演示：先走官方文档路径，查一个当前 OpenAI API 的最小可用调用方式，然后给你一段可以直接放进项目里试跑的代码。
+我是 Codex，一个基于 GPT-5 的编程协作助手。现在运行在你的 Codex 桌面环境里，当前工作目录是 `E:\工作`。
+
+我可以帮你读项目、改代码、跑命令、查日志、处理文档/表格/演示、做嵌入式和 Keil 相关分析，也可以按你刚才指定的规则用 OpenAI 官方文档来查 API、模型选择和迁移信息。
 ```
 
-### assistant 2026-05-24T15:36:57.099Z
+### user 2026-05-24T15:53:50.196Z
 
 ```text
-可以，刚才我已经用 `OpenAI Developers` 插件的文档能力做了一次小演示：查了 OpenAI 官方开发文档，确认当前推荐是通过 **Responses API** 和官方 SDK 调用模型；官方模型页也显示最新模型族可通过 Responses API 使用。来源：[OpenAI API docs](https://developers.openai.com/api/docs/models/all)、[Responses API 相关模型说明](https://developers.openai.com/api/docs/models/gpt-5.1-codex-max)。
-
-比如它可以直接帮你生成这种最小调用示例：
-
-```js
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  apiKey=***REDACTED***,
-});
-
-const response = await client.responses.create({
-  model: "gpt-5.5",
-  input: "用一句话解释什么是 AprilTag 标定。",
-});
-
-console.log(response.output_text);
+我说的是这个docs
 ```
 
-它还能继续往下做三类事：
-
-1. 帮你创建或配置 `OPENAI_API_KEY`
-2. 帮你把现有程序接上 OpenAI API
-3. 帮你排查 API 报错、模型选择、Agents SDK 或 ChatGPT Apps 问题
-
-刚才这就是“查官方文档 + 给可运行代码”的用途展示。
-```
-
-### user 2026-05-24T15:38:08.278Z
+### assistant 2026-05-24T15:54:01.865Z
 
 ```text
-我看不出来。你的用途哦。
+明白，你说的是这个 OpenAI Docs skill：
+
+`C:\Users\t250c\.codex\skills\.system\openai-docs\SKILL.md`
+
+我刚才已经读取并启用了它的流程。之后凡是涉及 OpenAI 官方文档查询、模型选择、模型迁移、prompt 升级，我会优先按这个 skill 的规则走：先用官方 OpenAI docs/MCP；必要时才退回官方域名网页搜索；回答时给出处。
 ```
 
-### assistant 2026-05-24T15:38:16.990Z
+### user 2026-05-24T15:54:33.177Z
 
 ```text
-明白，你要看的不是“文档查询演示”，而是“这个插件到底能替你做什么”。
-
-它的用途很直白：
-
-我可以帮你把 **OpenAI 能力接进你自己的程序里**。
-
-比如你说一句：
-
-> 给我做个脚本，把一段中文技术说明总结成三条要点
-
-我就可以用这个插件帮你：
-
-1. 检查/创建 `OPENAI_API_KEY`
-2. 在当前目录写一个可运行脚本
-3. 接入 OpenAI API
-4. 跑起来验证输出
-5. 报错的话继续修
-
-或者你说：
-
-> 我要做一个本地小工具，输入图片，让 AI 判断里面有没有 AprilTag
-
-我就可以帮你搭代码、选模型、写调用、处理返回结果。
-
-再简单点说：
-
-**没有这个插件时，我主要是写代码、改文件、查项目。  
-有这个插件时，我还能帮你把 OpenAI 的模型、API key、Agents、ChatGPT App 能力真正接到项目里。**
-
-它不是给你看的“按钮”，而是给我用的“开发工具箱”。你真正会感觉到它有用，是在你让我做一个 AI 功能的时候。
+大概什么什么内容？
 ```
 
-### user 2026-05-24T15:39:56.382Z
+### assistant 2026-05-24T15:54:40.956Z
 
 ```text
-你试试。我给你一个目录 C:\Users\t250c\Desktop\KX_LCD70_200_10AI
+这个 `openai-docs` skill 大概规定的是：
+
+- 用途：处理 OpenAI 官方文档查询、API 用法、模型选择、模型迁移、prompt 升级。
+- 优先级：先用 OpenAI developer docs 的 MCP 工具查官方文档；只有查不到时，才用网页搜索，而且限制在 OpenAI 官方域名。
+- 模型选择：如果问“最新模型”“默认模型”“该用哪个模型”，要优先查 `latest-model.md`。
+- 模型迁移：如果用户明确说迁移到某个模型，就尊重指定目标；如果只说“升级到最新”，才解析当前最新模型。
+- 改代码时的边界：模型升级要保持范围窄，只改活跃默认模型和直接相关 prompt；不要顺手改 SDK、认证、工具链、价格表、历史示例等。
+- API key：如果是构建、运行、调试需要 OpenAI API key 的项目，要先走 `openai-platform-api-key` 的凭据流程。
+- 质量要求：不要编造价格、参数、可用性或 breaking change；如果官方文档和代码现状冲突，要说明并停止扩展修改。
+- 兜底：如果 MCP 没装，按里面的流程安装 `openaiDeveloperDocs` MCP，再重启 Codex 后重试。
 ```
 
-### assistant 2026-05-24T15:40:10.772Z
+### user 2026-05-24T15:55:13.107Z
 
 ```text
-好，我用这个真实目录来演示：先不乱改你的工程，只做只读摸底，看看它是什么项目、入口在哪里、有没有适合接 AI 辅助分析的点。
+openCV的呢？
 ```
 
-### assistant 2026-05-24T15:40:20.747Z
+### assistant 2026-05-24T15:55:19.186Z
 
 ```text
-我识别到了：这是一个 Keil/uVision 的 LPC17xx 工程，而且记忆里也有一条旧线索说入口大概率在 `Src\main.c`。现在我会重新读现场文件，旧线索只当路标，不当结论。
+我会看一下本机两个 OpenCV skill 的入口说明，再给你概括区别和适用场景。
 ```
 
-### assistant 2026-05-24T15:40:34.624Z
+### assistant 2026-05-24T15:55:28.822Z
 
 ```text
-现场文件里中文注释是旧编码，普通终端会显示成乱码；这类工程后面如果真要改，我会按 GBK/GB2312 保编码处理。现在我继续抓主循环、定时器和 CAN/屏通信的实际调用链。
+OpenCV 这边你本机有两个 skill，名字都叫 `opencv`，但内容层级不一样：
+
+1. `C:\Users\t250c\.codex\skills\opencv-g1joshi\SKILL.md`
+   - 比较短，是基础提醒型。
+   - 适合：图片缩放、裁剪、BGR/RGB 转换、Canny、SIFT/ORB、视频读写、`cv::Mat`、OpenCV DNN 推理。
+   - 核心提醒：OpenCV 默认读图是 `BGR`，Python 里图像就是 NumPy 数组；服务端建议装 `opencv-python-headless`；深度学习训练不要用 OpenCV，训练用 PyTorch，OpenCV 更适合预处理和推理。
+
+2. `C:\Users\t250c\.codex\skills\opencv-terminalskills\SKILL.md`
+   - 更完整，像一份 OpenCV 实战速查。
+   - 适合：图像处理流水线、目标检测、视频分析、轮廓/形状检测、文档处理、相机标定、3D 重建、DNN 推理。
+   - 里面有 Python 示例，包括：
+     - `cv2.imread`
+     - 灰度转换
+     - resize
+     - Gaussian/median blur
+     - Canny 边缘检测
+     - threshold/adaptive threshold
+     - morphology 开闭运算
+     - `cv2.dnn.readNetFromONNX`
+     - 摄像头/视频处理
+     - contour 检测和形状判断
+
+简单说：  
+如果只是“用 OpenCV 做图像处理”，第一个够用；如果你要真正写检测、视频、轮廓、DNN 推理代码，第二个更有用。
+
+另外你这里还有更专门的视觉 skill，比如 `senior-computer-vision`，适合 YOLO、SAM、Mask R-CNN、ONNX/TensorRT、训练和部署这类更重的视觉 AI 工作。
 ```
 
-### assistant 2026-05-24T15:40:52.224Z
+### user 2026-05-24T15:55:51.968Z
 
 ```text
-现在已经能说点实在的了：这个目录不是泛泛的 C 工程，而是一个带 LCD、CAN1/CAN2、UART0 屏、UART1 模块、ADC、PWM/DO 的控制器固件。我再看一下版本说明和最近构建产物，给你一个“我能拿它做什么”的具体示范。
+C语言能读取openCV吗？
 ```
 
-### assistant 2026-05-24T15:41:13.000Z
+### assistant 2026-05-24T15:56:01.094Z
 
 ```text
-顺手抓到了一个比“能跑”更有价值的点：最近构建是 0 errors、69 warnings，其中有几条不是纯噪声，比如 `App_lcd.c` 数组越界、`App_comm.c` 非 void 函数缺 return、`App_usr.c` 隐式声明。这个就很像插件/AI 辅助能派上用场的入口：把构建日志和源码一起读，帮你定位风险。
+可以，但要分清楚：
+
+OpenCV 本体主要是 **C++ API**，现在已经没有完整推荐使用的纯 C API 了。  
+所以：
+
+- **C++ 可以直接用 OpenCV**，这是最标准方式。
+- **C 语言项目不能很自然地直接调用 OpenCV C++ 接口**。
+- 如果你的主工程必须是 C，可以写一层 **C++ 封装 + C ABI 接口**，让 C 调用这层封装。
+
+典型结构：
+
+```cpp
+// opencv_wrapper.cpp
+#include <opencv2/opencv.hpp>
+
+extern "C" int image_width(const char *path) {
+    cv::Mat img = cv::imread(path);
+    if (img.empty()) return -1;
+    return img.cols;
+}
 ```
 
-### assistant 2026-05-24T15:41:41.221Z
+对应 C 头文件：
 
-```text
-试了一下这个目录，能看出实际用途了。
+```c
+// opencv_wrapper.h
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-我已经只读检查了 [C:\Users\t250c\Desktop\KX_LCD70_200_10AI](C:\Users\t250c\Desktop\KX_LCD70_200_10AI)：这是 Keil/uVision 的 LPC17xx 控制器工程，主工程是 [MC_LCD7 - 10AI_V1.1.uvprojx](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\MC_LCD7%20-%2010AI_V1.1.uvprojx:10)，里面有 RAM 目标 `LPC1768`、FLASH 目标 `LPC1765`。主入口在 [main.c](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\Src\main.c:58)，初始化了 CAN1/CAN2、UART0 屏、UART1 模块、ADC、PWM、I2C 等。
+int image_width(const char *path);
 
-我还看了最近构建日志：[MC_LCD - 7Control_V.build_log.htm](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\FLASH\MC_LCD%20-%207Control_V.build_log.htm:212) 显示 `0 Error(s), 69 Warning(s)`。其中有几条值得查，不是摆设：
-
-- [App_lcd.c](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\Src\App_lcd.c:433)：构建器报 `subscript out of range`，现场代码访问 `value[8][...]`，要回头确认 `value` 数组定义是不是只到 7。
-- [App_comm.c](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\Src\App_comm.c:148)：`Uart0_WL_Rcv()` 是非 void 函数，但函数体只有一个分号，没有 return。
-- [App_usr.c](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\Src\App_usr.c:3115)：`Ramp()` 被隐式声明，多处调用，可能缺函数声明或头文件。
-- [App_usr.c](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\Src\App_usr.c:3228)：有嵌套注释警告，可能导致后续注释/代码边界和你以为的不一样。
-
-所以我的用途不是“看一个目录名然后说几句”。对这种工程，我可以直接做这些事：
-
-1. 读 Keil 工程结构，确认实际编译文件、芯片、目标、include path。
-2. 读构建日志，把 69 个 warning 分成“可忽略”和“可能影响运行”的。
-3. 顺着 `main -> timer/CAN/UART/LCD/App_usr` 追真实调用链。
-4. 要改功能时，先备份、保留 GBK/GB2312 编码，再小范围改 C 文件。
-5. 如果用 `OpenAI Developers` 插件接 API，还能做成一个本地“固件审查助手”：自动读取 build log 和源码片段，输出风险排序、修复建议、协议表、版本说明摘要。
-
-这次我没有改你的工程，只做了现场识别和风险抓取。
+#ifdef __cplusplus
+}
+#endif
 ```
 
-### assistant 2026-05-24T15:41:41.224Z
+C 代码里调用：
+
+```c
+#include "opencv_wrapper.h"
+#include <stdio.h>
+
+int main(void) {
+    int w = image_width("test.jpg");
+    printf("width = %d\n", w);
+    return 0;
+}
+```
+
+编译时用 **C++ 编译器链接**，例如 `g++`，因为最终要链接 OpenCV 的 C++ 库。
+
+如果你说的是 **单片机 C / Keil C / 嵌入式 C**，那基本不能直接用 OpenCV。OpenCV 太大，依赖操作系统、内存、文件系统和 C++ 运行环境，通常跑在 PC、Linux 工控机、树莓派、Jetson、Windows 程序里。单片机端一般只接收 OpenCV 处理后的结果，比如坐标、角度、识别 ID。
+```
+
+### user 2026-05-24T15:56:53.696Z
 
 ```text
-试了一下这个目录，能看出实际用途了。
+你帮我生成有一个QT软件的 调取opeNCV的 模版
+```
 
-我已经只读检查了 [C:\Users\t250c\Desktop\KX_LCD70_200_10AI](C:\Users\t250c\Desktop\KX_LCD70_200_10AI)：这是 Keil/uVision 的 LPC17xx 控制器工程，主工程是 [MC_LCD7 - 10AI_V1.1.uvprojx](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\MC_LCD7%20-%2010AI_V1.1.uvprojx:10)，里面有 RAM 目标 `LPC1768`、FLASH 目标 `LPC1765`。主入口在 [main.c](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\Src\main.c:58)，初始化了 CAN1/CAN2、UART0 屏、UART1 模块、ADC、PWM、I2C 等。
+### assistant 2026-05-24T15:57:01.538Z
 
-我还看了最近构建日志：[MC_LCD - 7Control_V.build_log.htm](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\FLASH\MC_LCD%20-%207Control_V.build_log.htm:212) 显示 `0 Error(s), 69 Warning(s)`。其中有几条值得查，不是摆设：
+```text
+我会在当前目录生成一个最小 Qt C++ + OpenCV 模板，采用 CMake，这样在 Qt Creator、Visual Studio 或命令行里都比较容易接起来。先看一下当前目录结构，避免覆盖已有工程。
+```
 
-- [App_lcd.c](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\Src\App_lcd.c:433)：构建器报 `subscript out of range`，现场代码访问 `value[8][...]`，要回头确认 `value` 数组定义是不是只到 7。
-- [App_comm.c](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\Src\App_comm.c:148)：`Uart0_WL_Rcv()` 是非 void 函数，但函数体只有一个分号，没有 return。
-- [App_usr.c](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\Src\App_usr.c:3115)：`Ramp()` 被隐式声明，多处调用，可能缺函数声明或头文件。
-- [App_usr.c](C:\Users\t250c\Desktop\KX_LCD70_200_10AI\Src\App_usr.c:3228)：有嵌套注释警告，可能导致后续注释/代码边界和你以为的不一样。
+### assistant 2026-05-24T15:57:05.811Z
 
-所以我的用途不是“看一个目录名然后说几句”。对这种工程，我可以直接做这些事：
+```text
+目录里目前只有 `downloads`，没有同名工程。我会新建 `QtOpenCVTemplate`，内容包含 Qt 窗口、打开图片按钮、OpenCV 灰度/Canny 处理示例，以及 Windows 下配置 `OpenCV_DIR` 的说明。
+```
 
-1. 读 Keil 工程结构，确认实际编译文件、芯片、目标、include path。
-2. 读构建日志，把 69 个 warning 分成“可忽略”和“可能影响运行”的。
-3. 顺着 `main -> timer/CAN/UART/LCD/App_usr` 追真实调用链。
-4. 要改功能时，先备份、保留 GBK/GB2312 编码，再小范围改 C 文件。
-5. 如果用 `OpenAI Developers` 插件接 API，还能做成一个本地“固件审查助手”：自动读取 build log 和源码片段，输出风险排序、修复建议、协议表、版本说明摘要。
+### assistant 2026-05-24T15:57:52.576Z
 
-这次我没有改你的工程，只做了现场识别和风险抓取。
+```text
+我注意到 Windows 中文路径下 `cv::imread(fileName.toLocal8Bit())` 容易踩编码问题。这里直接改成 Qt 读取文件字节、OpenCV `imdecode` 解码，模板对中文路径更稳。
+```
+
+### assistant 2026-05-24T15:58:06.695Z
+
+```text
+模板已经写好。我现在做一次轻量检查：确认文件齐全，并看当前机器有没有可直接配置构建的 Qt/CMake/OpenCV 命令。
+```
+
+### assistant 2026-05-24T15:58:13.819Z
+
+```text
+已生成 Qt + OpenCV 模板工程：
+
+[E:\工作\QtOpenCVTemplate\CMakeLists.txt](</E:/工作/QtOpenCVTemplate/CMakeLists.txt>)  
+[E:\工作\QtOpenCVTemplate\src\mainwindow.cpp](</E:/工作/QtOpenCVTemplate/src/mainwindow.cpp>)  
+[E:\工作\QtOpenCVTemplate\README.md](</E:/工作/QtOpenCVTemplate/README.md>)
+
+功能包含：
+
+- Qt Widgets 窗口
+- 打开图片
+- 原图显示
+- OpenCV 灰度处理
+- OpenCV Canny 边缘检测
+- `cv::Mat` 转 `QImage`
+- 对 Windows 中文路径更稳：用 Qt 读文件字节，再用 `cv::imdecode` 解码
+
+我没有在本机实际编译，因为当前环境里没找到 `cmake` / `qmake`，也没检测到 `OpenCV_DIR` 或 `CMAKE_PREFIX_PATH`。你装好 Qt、OpenCV、CMake 后，可以按 README 里的方式配置。
+```
+
+### user 2026-05-24T15:59:46.285Z
+
+```text
+你对codesys 可以修改吗？
+```
+
+### assistant 2026-05-24T15:59:54.364Z
+
+```text
+可以，但取决于你给我的是什么形式的 CODESYS 工程。
+
+我能比较稳地修改：
+
+- 导出的 Structured Text：`.st`、`.txt`
+- XML 导出文件：`.xml`
+- CODESYS 工程导出的 PLCopen XML
+- 配置文档、变量表、IO 映射说明
+- 你项目里的协议、算法、状态机、功能块逻辑
+- 如果工程目录里有可读源码文件，我可以直接读、改、对比、备份
+
+不太适合直接硬改：
+
+- `.project` / `.projectarchive` 这类 CODESYS 原生工程包  
+  这通常是 IDE 管理的格式，直接文本修改风险高，最好通过 CODESYS 导出源码或 XML 后改，或者用 IDE 打开再导入。
+
+如果你本机装了 CODESYS，而且有命令行、脚本接口或可自动化方式，我也可以帮你检查能不能调用它来导出、构建或验证。
+
+你直接把工程路径发我，比如：
+
+```text
+D:\xxx\xxx.project
+```
+
+或导出的源码目录，我可以先只读检查，告诉你哪些文件能安全修改、哪些需要通过 CODESYS IDE 导入导出。
+```
+
+### user 2026-05-24T16:01:46.712Z
+
+```text
+<environment_context>
+  <current_date>2026-05-25</current_date>
+  <timezone>Asia/Shanghai</timezone>
+</environment_context>
+```
+
+### user 2026-05-24T16:01:46.722Z
+
+```text
+你对我的视觉项目有多少了解？
+```
+
+### assistant 2026-05-24T16:01:49.878Z
+
+```text
+我会先用本机记忆做一次快速核对，再把“我确定知道的”和“需要重新读项目确认的”分开说。
+```
+
+### assistant 2026-05-24T16:02:15.903Z
+
+```text
+我对你的视觉项目有“方向级”和“设计约束级”的记忆，但还没有在当前回合重新读取你的实际项目文件，所以不能把这些当成最新代码事实。
+
+我目前知道的核心是：
+
+你的项目不是普通“识别 AprilTag”的小实验，而是一个工业固定相机定位/标定系统。重点是相机看到 AprilTag 后，计算标签中心在世界坐标系下的位置，然后用全站仪/经纬仪测得的真实世界坐标做验证。
+
+我记得的关键对象和链路包括：
+
+- `TagCenter_cam`
+- `T_world_cam`
+- `T_shell_cam`
+- `TagCenter_world_calc`
+- `TagCenter_world_measured`
+- `solvePnP`
+- 相机内参/畸变参数 `K/D`
+- AprilTag 实际物理尺寸 `TagSize`
+- 150 mm 和 300 mm 混合尺寸标签，需要按 ID 做严格尺寸映射
+
+我记得的设计判断：
+
+- 误差评价应该看世界坐标误差：`TagCenter_world_calc` 对比 `TagCenter_world_measured`，而不是只看相机距离或 OpenCV 输出的单标签深度。
+- 混合尺寸标签不能用一个统一 `TagSize` 求解。
+- 边缘/四角区域畸变是主要风险，中心区域精度通常会更好。
+- 之前讨论过的工作几何大概是固定相机，8-12 m 工作距离，覆盖范围约 6 m 横向、12 m 纵向，目标世界坐标误差大概希望小于 30 mm。
+- Q 点/外壳参考点可以用于安装或位移检查，但不应该无条件作为最高精度外参来源；如果这条几何链弱，就应该降级甚至去掉，优先用直接世界测量控制点验证。
+- 方案讨论不应停留在“换高像素相机”这种泛泛建议，而要围绕畸变、覆盖范围、全场验证、镜头选择、K/D 重标定、残差补偿或 rational distortion model 等问题展开。
+
+我还记得一个工作原则：如果你让我继续改这个视觉项目，我应该先重新读取当前工程文件和数据，再下结论。记忆只能作为背景，不能替代现场代码和现场数据。
+```
+
+### assistant 2026-05-24T16:02:15.906Z
+
+```text
+我对你的视觉项目有“方向级”和“设计约束级”的记忆，但还没有在当前回合重新读取你的实际项目文件，所以不能把这些当成最新代码事实。
+
+我目前知道的核心是：
+
+你的项目不是普通“识别 AprilTag”的小实验，而是一个工业固定相机定位/标定系统。重点是相机看到 AprilTag 后，计算标签中心在世界坐标系下的位置，然后用全站仪/经纬仪测得的真实世界坐标做验证。
+
+我记得的关键对象和链路包括：
+
+- `TagCenter_cam`
+- `T_world_cam`
+- `T_shell_cam`
+- `TagCenter_world_calc`
+- `TagCenter_world_measured`
+- `solvePnP`
+- 相机内参/畸变参数 `K/D`
+- AprilTag 实际物理尺寸 `TagSize`
+- 150 mm 和 300 mm 混合尺寸标签，需要按 ID 做严格尺寸映射
+
+我记得的设计判断：
+
+- 误差评价应该看世界坐标误差：`TagCenter_world_calc` 对比 `TagCenter_world_measured`，而不是只看相机距离或 OpenCV 输出的单标签深度。
+- 混合尺寸标签不能用一个统一 `TagSize` 求解。
+- 边缘/四角区域畸变是主要风险，中心区域精度通常会更好。
+- 之前讨论过的工作几何大概是固定相机，8-12 m 工作距离，覆盖范围约 6 m 横向、12 m 纵向，目标世界坐标误差大概希望小于 30 mm。
+- Q 点/外壳参考点可以用于安装或位移检查，但不应该无条件作为最高精度外参来源；如果这条几何链弱，就应该降级甚至去掉，优先用直接世界测量控制点验证。
+- 方案讨论不应停留在“换高像素相机”这种泛泛建议，而要围绕畸变、覆盖范围、全场验证、镜头选择、K/D 重标定、残差补偿或 rational distortion model 等问题展开。
+
+我还记得一个工作原则：如果你让我继续改这个视觉项目，我应该先重新读取当前工程文件和数据，再下结论。记忆只能作为背景，不能替代现场代码和现场数据。
 
 <oai-mem-citation>
 <citation_entries>
-MEMORY.md:75-75|note=[prior clue for desktop Keil project path]
-MEMORY.md:98-98|note=[prior project orientation verified against live files]
+MEMORY.md:109-111|note=[project scope and reuse caveat]
+MEMORY.md:121-131|note=[AprilTag calibration keywords and validation terms]
+MEMORY.md:141-157|note=[known coordinate chain, metrics, geometry, and design judgments]
+MEMORY.md:161-163|note=[warning to re-read live files before treating memory as current]
 </citation_entries>
 <rollout_ids>
+019e4acc-ab22-7922-978e-464868a2d358
+019e4ba3-3a1f-7dc1-828f-519c1ded6f84
+019e5557-3947-7a13-9966-302a1436f635
 </rollout_ids>
 </oai-mem-citation>
 ```
 
-### user 2026-05-24T15:42:21.151Z
+### user 2026-05-24T16:02:37.632Z
 
 ```text
-我的意思是，你刚才这个插件 有什么用？ 给我讲清楚。
+我现在电脑连接摄像头。 电脑有个QT软件。我怎么用？
 ```
 
-### assistant 2026-05-24T15:42:32.278Z
+### assistant 2026-05-24T16:02:56.258Z
 
 ```text
-你说得对，我刚才跑偏了。你问的是 **OpenAI Developers 这个插件本身有什么用**。
+你现在的使用方式分两种情况：
 
-它的作用是：**让我能在 Codex 里更方便地做 OpenAI 开发相关工作**。不是分析你 Keil 工程的主力工具。
+**1. Qt 软件已经支持摄像头**
+先按这个顺序试：
 
-具体分三块：
+1. 插上摄像头，确认 Windows 能识别  
+   打开系统“相机”应用，看有没有画面。
 
-1. **查最新官方文档**
-   比如你问“现在 OpenAI API 该用哪个接口、哪个模型、怎么写 Responses API”，我可以用它查官方文档，而不是靠记忆乱说。
+2. 打开你的 Qt 软件  
+   找类似这些按钮/菜单：
+   - `Camera`
+   - `Open Camera`
+   - `Start`
+   - `Device`
+   - `Capture`
+   - `视频采集`
+   - `打开摄像头`
 
-2. **帮你配置 OpenAI API Key**
-   比如项目里需要 `OPENAI_API_KEY`，这个插件可以走 OpenAI Platform 的连接能力，帮你创建或配置 key。它不会把明文 key 直接暴露在聊天里。
+3. 选择摄像头编号  
+   一般 USB 摄像头是：
+   - `0`：默认摄像头
+   - `1`：第二个摄像头
+   - `2`：第三个摄像头
 
-3. **帮你做 OpenAI 应用开发**
-   比如：
-   - 给你的程序接入 AI 总结、问答、图片识别
-   - 写 OpenAI API 调用代码
-   - 做 Agents SDK 项目
-   - 做 ChatGPT App / MCP 工具
-   - 排查 API 报错、额度、权限、模型不可用等问题
+4. 设置参数  
+   常见参数：
+   - 分辨率：`1920x1080`、`1280x720`
+   - 曝光
+   - 增益
+   - 帧率
+   - 是否自动曝光
 
-拿你的 Keil 工程举例，它不能直接“懂硬件”或“自动修固件”。但它可以帮我给这个工程外挂一个 AI 工具，例如：
+5. 点 `Start` 或 `打开`，看实时画面。
 
-> 读取 Keil build log 和源码片段，让 OpenAI 模型自动生成 warning 风险报告。
+**2. Qt 软件还没写摄像头功能**
+那就要在 Qt 里加 OpenCV 调摄像头代码。核心代码类似这样：
 
-这时插件的用途就是：**负责 OpenAI API 那部分能力**。  
-而我刚才读你的工程目录，用的主要是 Codex 本身的本地文件能力，不是这个插件的核心价值。
+```cpp
+#include <opencv2/opencv.hpp>
+
+cv::VideoCapture cap;
+
+bool openCamera(int cameraIndex)
+{
+    cap.open(cameraIndex);
+    if (!cap.isOpened()) {
+        return false;
+    }
+
+    cap.set(cv::CAP_PROP_FRAME_WIDTH, 1920);
+    cap.set(cv::CAP_PROP_FRAME_HEIGHT, 1080);
+    cap.set(cv::CAP_PROP_FPS, 30);
+
+    return true;
+}
+
+bool readFrame(cv::Mat &frame)
+{
+    if (!cap.isOpened()) {
+        return false;
+    }
+
+    cap >> frame;
+    return !frame.empty();
+}
 ```
 
-### user 2026-05-24T15:44:01.355Z
+Qt 里通常用 `QTimer` 定时取图：
 
-```text
-OpenAI API 调用代码  试试
+```cpp
+connect(timer, &QTimer::timeout, this, [=]() {
+    cv::Mat frame;
+    if (readFrame(frame)) {
+        // frame 就是当前摄像头画面
+        // 可以显示到 QLabel，也可以做 AprilTag / OpenCV 处理
+    }
+});
+
+timer->start(30);
 ```
 
-### assistant 2026-05-24T15:44:15.482Z
+如果你是做你那个 AprilTag 视觉项目，基本流程应该是：
 
 ```text
-好，这次就演示它真正擅长的东西：写一段 OpenAI API 调用代码。先检查一下当前目录适合用什么语言和有没有现成 key 配置；我不会在聊天里展示密钥。
+摄像头取图
+-> OpenCV 得到 cv::Mat
+-> AprilTag 检测
+-> 根据 tag ID 找实际 TagSize
+-> solvePnP 求位姿
+-> 转成世界坐标 TagCenter_world_calc
+-> 和全站仪测量值 TagCenter_world_measured 比较
 ```
 
-### assistant 2026-05-24T15:44:20.008Z
+你现在最直接的下一步是：把这个 Qt 软件的工程路径发我，比如：
 
 ```text
-这段调用代码会使用 OpenAI API。当前环境里我没有发现可用的 `OPENAI_API_KEY`，当前目录也没有 `.env` 或 `package.json`。
-
-要不要我先通过 OpenAI Platform 安全创建一个 API key，并保存到当前目录的 `.env.local` 里作为 `OPENAI_API_KEY`？确认后我再写一个最小 Node.js 调用脚本并试跑。
+E:\工作\xxxQtProject
 ```
 
-### user 2026-05-24T15:44:32.783Z
-
-```text
-好
+或者 `.pro` / `CMakeLists.txt` / `.sln` 所在目录。我可以直接看它现在有没有摄像头模块，并告诉你应该点哪里用，或者帮你把 OpenCV 摄像头采集功能加进去。
 ```
 
-### assistant 2026-05-24T15:44:37.963Z
+### user 2026-05-24T16:03:30.019Z
 
 ```text
-收到。我会创建一个名为 `工作 Codex` 的项目 API key，写到 `E:\工作\.env.local` 的 `OPENAI_API_KEY`，全程不把明文 key 打到聊天或终端输出里。
+帮我下载有一个QT软件。
 ```
 
-### assistant 2026-05-24T15:44:43.479Z
+### assistant 2026-05-24T16:03:37.764Z
 
 ```text
-本地加密准备好了；下一步通过 OpenAI Platform 连接器创建 key。连接器只会收到公钥，返回加密后的 key，我再在本机解密写入 `.env.local`。
+我先按“下载 Qt 官方 Windows 安装器”来处理；这样你后面可以用 Qt Creator 打开/编译 Qt 软件。如果你其实想下载某个现成的摄像头 Qt 程序，我再按具体软件名换目标。
 ```
 
-### assistant 2026-05-24T15:45:01.759Z
+### assistant 2026-05-24T16:03:40.311Z
 
 ```text
-创建 key 这一步被 OpenAI Platform 连接器拦住了：返回 `401 Reauthentication required`，意思是这个插件需要你重新授权/登录一下 OpenAI Platform。
-
-你可以在 Codex 里打开 Apps / 插件连接，重新连接 `OpenAI Platform`。连好后告诉我“好了”，我就继续：
-
-1. 创建 `工作 Codex` API key
-2. 写入 `E:\工作\.env.local`
-3. 生成一个最小 OpenAI API 调用脚本
-4. 直接试跑给你看结果
-
-这正好也说明这个插件的用途之一：它负责安全创建和接入 OpenAI API key，但当前卡在账号重新授权。
+官方目录里有 Windows x64 在线安装器，文件大小约 55 MB，更新时间是 2026-03-25。我现在把它下载到当前工作目录的 `downloads` 文件夹。
 ```
 
-### user 2026-05-24T15:45:09.037Z
+### assistant 2026-05-24T16:03:45.736Z
 
 ```text
-4
+下载还在进行中，我会等它完成并检查文件大小，避免给你一个半截文件。
 ```
 
-### assistant 2026-05-24T15:45:19.356Z
+### assistant 2026-05-24T16:04:16.481Z
 
 ```text
-第 4 步“直接试跑”现在还不能做，因为前面创建 `OPENAI_API_KEY` 失败了，插件返回的是：
-
-`401 Reauthentication required`
-
-也就是 OpenAI Platform 连接需要重新授权。
-
-你先在 Codex 的 Apps / 插件里重新连接 `OpenAI Platform`，然后跟我说“好了”。我就继续创建 key、写 `.env.local`、生成调用代码并运行。
+网络下载速度偏慢，但进程仍在跑。我再等一轮，如果没有结束就检查当前文件大小。
 ```
 
-### user 2026-05-24T15:45:46.961Z
+### assistant 2026-05-24T16:04:33.440Z
 
 ```text
-算了。不搞了
+当前已经下了约 9.8 MB，目标约 55 MB。继续等待完成。
 ```
 
-### assistant 2026-05-24T15:45:51.710Z
+### assistant 2026-05-24T16:05:04.283Z
 
 ```text
-好，那就先不搞 API key 这块。
-
-结论留一句：这个插件主要是在你需要 **真实调用 OpenAI API** 时用，尤其是安全创建 key、接 API、查官方文档、排查 API 报错。刚才卡住不是代码问题，是 OpenAI Platform 连接器需要重新授权。
+已经超过半分钟，仍在下载。这个文件不大但官方镜像速度可能波动，我会继续等到完成再给你路径。
 ```
 
-### user 2026-05-24T15:46:36.677Z
+### assistant 2026-05-24T16:05:46.100Z
 
 ```text
-授权后。我另外一台电脑就可以登录吗、
+现在约 21.5 MB，下载正常推进。继续等待。
 ```
 
-### assistant 2026-05-24T15:46:43.613Z
+### user 2026-05-24T16:06:23.450Z
 
 ```text
-可以，但要分清楚两件事：
+后续你全自动下载，并安装。我睡觉了。
+```
 
-1. **授权 OpenAI Platform 插件**
-   这是给当前这台电脑上的 Codex 插件用的。你在这台电脑授权后，通常只代表这台电脑/这个 Codex 环境可以通过插件创建 key、查你的 OpenAI Platform 项目。
+### assistant 2026-05-24T16:06:34.122Z
 
-2. **另一台电脑登录 Codex**
-   另一台电脑还是需要自己登录 Codex / ChatGPT 账号。授权状态不一定会自动同步过去。
+```text
+可以。我会按无人值守方式做：先完成官方安装器下载；如果官方在线安装器需要登录/交互而不能静默完成，我会改用可脚本化的 Qt SDK 安装方式，并把 Qt、CMake/OpenCV 需要的路径整理好。期间我不会做需要你点确认的步骤。
+```
 
-如果你的目标是“另一台电脑也能调用 OpenAI API”，有两种做法：
+### assistant 2026-05-24T16:06:58.747Z
 
-- 在另一台电脑也授权 `OpenAI Platform` 插件，然后让它自己创建/配置 API key。
-- 或者把这台电脑生成的 `OPENAI_API_KEY` 安全地同步到另一台电脑的项目 `.env.local` 里。
+```text
+我查到这台机器有 Python、winget、git，但没有现成的 `cmake`、`ninja`、`cl` 或 `g++`。所以光有 Qt Creator 不够，我会同时准备可编译 Qt 项目的 SDK/工具链。
+```
 
-但不建议把 key 直接发聊天、微信、明文文件里。更稳的是：每台电脑各自授权插件，各自创建 key；以后不用了可以在 [OpenAI Platform](https://platform.openai.com) 里单独吊销。
+### assistant 2026-05-24T16:08:05.102Z
+
+```text
+官方安装器已经接近完成。后面我会优先安装脚本化组件：Qt SDK、MinGW 工具链、CMake/Ninja；Qt Creator 如果 winget 可以静默安装，也会一并安装。
+```
+
+### assistant 2026-05-24T16:08:30.301Z
+
+```text
+官方安装器下载中断了，已有的是半截文件。我会用支持断点续传/重试的方式重新拉取，避免从头反复失败。
+```
+
+### assistant 2026-05-24T16:09:04.440Z
+
+```text
+下载续传正常，已经补完剩余部分的三分之一左右。接下来我会装脚本化 Qt；如果官方安装器无法静默安装，我不会卡在登录界面。
+```
+
+### assistant 2026-05-24T16:09:23.610Z
+
+```text
+官方 Qt 在线安装器已经完整下载。现在我转向无人值守安装路线，先装 `aqtinstall`，用它直接拉取 Qt SDK 和 MinGW 组件。
+```
+
+### assistant 2026-05-24T16:10:25.223Z
+
+```text
+`aqtinstall` 已装好。现在我查询 Qt 可用版本和 Windows 桌面架构，选一个能配 MinGW 的稳定组合。
+```
+
+### assistant 2026-05-24T16:11:13.124Z
+
+```text
+可脚本化组件已确定：Qt 6.8.3 + MinGW 13.1.0 + CMake 3.30.5 + Ninja 1.12.1。Qt Creator 我会优先用 winget 装较新的桌面版，aqt 里的 Creator 包偏旧。
+```
+
+### assistant 2026-05-24T16:11:38.978Z
+
+```text
+winget 能找到 `TheQtCompanyLtd.QtCreator`，版本 19.0.0。我先安装 Qt SDK 和构建工具到 `E:\Qt`，再装 Qt Creator。
+```
+
+### assistant 2026-05-24T16:12:26.151Z
+
+```text
+Qt SDK 下载已经开始，`qtbase`、`qtsvg`、`qttools` 等组件在安装中。这个过程会比较久，我会保持轮询直到完成或出现明确错误。
+```
+
+### assistant 2026-05-24T16:13:05.940Z
+
+```text
+Qt 6.8.3 SDK 已安装到 `E:\Qt\6.8.3\mingw_64`。现在安装独立的 MinGW、CMake、Ninja 工具包，并验证 `qmake`/编译器能运行。
+```
+
+### assistant 2026-05-24T16:13:49.124Z
+
+```text
+MinGW 工具链包在下载，暂时没有报错。这个包比 Qt 基础组件小一些，完成后我会继续装 CMake 和 Ninja。
+```
+
+### assistant 2026-05-24T16:14:42.767Z
+
+```text
+Qt SDK、MinGW、CMake、Ninja 都装完了。现在安装 Qt Creator 桌面 IDE，如果 winget 安装失败，我会保留命令行可编译环境并记录原因。
+```
+
+### assistant 2026-05-24T16:15:28.336Z
+
+```text
+Qt Creator 正在从 GitHub 下载 MSI 安装包，winget 还在运行。下载速度没有即时进度，但进程正常。
+```
+
+### assistant 2026-05-24T16:16:06.653Z
+
+```text
+Qt Creator 下载/安装耗时比 SDK 更长。我会继续等，完成后会用命令行验证 Qt 工程能配置编译。
+```
+
+### assistant 2026-05-24T16:16:54.861Z
+
+```text
+Qt Creator MSI 是 166 MB，下载中；上一段进度已经到 36 MB 左右。后续我会等安装器退出，不中途结束。
+```
+
+### assistant 2026-05-24T16:17:56.668Z
+
+```text
+下载进度已经过 70 MB，继续正常。安装完成后我会配置并编译刚才生成的 `QtOpenCVTemplate`，验证 Qt 环境没问题；OpenCV 另行处理，因为这台机器还没检测到 OpenCV SDK。
+```
+
+### assistant 2026-05-24T16:18:54.334Z
+
+```text
+Qt Creator 下载已超过 110 MB。还在继续，预计再等一会儿进入 MSI 安装阶段。
+```
+
+### assistant 2026-05-24T16:19:44.998Z
+
+```text
+Qt Creator 下载完成并通过哈希校验，现在 MSI 正在静默安装。安装阶段可能需要几十秒到几分钟。
+```
+
+### assistant 2026-05-24T16:20:23.866Z
+
+```text
+安装器还在跑。这个阶段 winget 不输出细节，但还没失败，我会继续等到退出码返回。
+```
+
+### assistant 2026-05-24T16:21:07.853Z
+
+```text
+Qt Creator 静默安装时间偏长。为了不误判卡死，我会额外查一下 MSI 进程状态，同时继续等待 winget 返回。
+```
+
+### assistant 2026-05-24T16:21:56.748Z
+
+```text
+MSI 进程还存在，说明安装仍在执行而不是 winget 自己空转。等它退出后我再做环境验证。
+```
+
+### assistant 2026-05-24T16:23:16.944Z
+
+```text
+Qt Creator 的 MSI 似乎长时间停在安装阶段，可能在等系统安装器权限或被 Windows Installer 挂住。Qt SDK 和构建工具已经装好，我会再等一小段；如果还是不退出，就用已装好的 Qt 命令行环境完成验证，并把 Creator 标成“安装中/需人工确认”。
+```
+
+### assistant 2026-05-24T16:23:55.788Z
+
+```text
+Qt Creator MSI 已经在同一个等待状态停了几分钟；这通常不是下载慢，而是安装器卡住。为避免一夜挂在这里，我会终止这次 winget 安装尝试，改用可验证的 Qt SDK 环境继续，并尝试用非 MSI 的 aqt 版 Qt Creator 作为备选。
+```
+
+### assistant 2026-05-24T16:24:13.882Z
+
+```text
+winget 已退出失败，系统里没有可用的 `qtcreator` 命令。残留的系统 `msiexec` 我当前权限不能杀掉，但 Qt SDK 不受影响；我现在用 aqt 下载 Qt Creator 备用版到 `E:\Qt`。
+```
+
+### assistant 2026-05-24T16:25:00.173Z
+
+```text
+备用 Qt Creator 已通过 aqt 装完。现在我检查工具路径，并尝试配置/编译 Qt 模板工程。OpenCV SDK 还未安装，所以先验证纯 Qt 工具链，随后决定是否继续装 OpenCV。
+```
+
+### assistant 2026-05-24T16:25:19.020Z
+
+```text
+Qt 本身已验证可用。这里有一个关键点：Qt+OpenCV 在 Windows 上要匹配编译器 ABI。现在装的是 Qt MinGW 版，官方 OpenCV Windows 预编译包通常是 MSVC 版，直接混用会出链接问题。我先检查机器有没有 Visual Studio/MSVC，再决定 OpenCV 安装路线。
+```
+
+### assistant 2026-05-24T16:25:26.156Z
+
+```text
+没有检测到本机 Visual Studio/MSVC。为了先保证 Qt 安装是实打实可编译的，我会加一个很小的 Qt Widgets smoke test 工程并用刚装的 CMake/Ninja/MinGW 编译。
+```
+
+### assistant 2026-05-24T16:26:14.466Z
+
+```text
+Qt 编译验证通过，`QtSmokeTest.exe` 已生成。接下来我写两个便捷脚本：一个打开 Qt Creator，一个打开带 Qt 工具链 PATH 的 PowerShell，方便你醒来直接用。
+```
+
+### assistant 2026-05-24T16:26:32.897Z
+
+```text
+我刚写的 Qt Creator 启动脚本应该打开可见窗口，不应该隐藏；我马上修正这一点。
+```
+
+### assistant 2026-05-24T16:26:53.276Z
+
+```text
+Qt Creator 可执行文件能正常启动到版本命令入口，但没有输出版本文本；CMake、Ninja、g++ 都验证成功。考虑到你接下来要接摄像头，我会再补装 Qt Multimedia 模块，方便 Qt 程序直接访问摄像头。
+```
+
+### assistant 2026-05-24T16:27:57.373Z
+
+```text
+Qt Multimedia 正在补装；aqt 会重新确认部分基础包，但最终会把摄像头/音视频模块放进同一个 Qt 6.8.3 目录。
+```
+
+### assistant 2026-05-24T16:28:51.977Z
+
+```text
+最终检查通过：Qt、Qt Creator 备用版、Qt Multimedia、CMake/Ninja/MinGW 都在本地路径下可用。只剩一个 winget MSI 残留进程我没有权限结束；它不影响 `E:\Qt` 这套可用环境。
+```
+
+### assistant 2026-05-24T16:29:01.422Z
+
+```text
+已自动完成 Qt 开发环境安装和验证。
+
+装好的东西：
+
+- Qt SDK：`E:\Qt\6.8.3\mingw_64`
+- Qt Multimedia 摄像头/音视频模块：已补装
+- MinGW 编译器：`E:\Qt\Tools\mingw1310_64\bin\g++.exe`
+- CMake：`E:\Qt\Tools\CMake_64\bin\cmake.exe`
+- Ninja：`E:\Qt\Tools\Ninja\ninja.exe`
+- Qt Creator：`E:\Qt\Tools\QtCreator\bin\qtcreator.exe`
+- 官方 Qt 在线安装器也下载好了：`E:\工作\downloads\qt-online-installer-windows-x64-online.exe`
+
+我还编译验证了一个 Qt 测试工程：
+
+- 工程：[QtSmokeTest](</E:/工作/QtSmokeTest/CMakeLists.txt>)
+- 生成文件：`E:\工作\QtSmokeTest\build\QtSmokeTest.exe`
+
+给你留了两个脚本：
+
+- 打开 Qt Creator：[launch-qtcreator.ps1](</E:/工作/launch-qtcreator.ps1>)
+- 打开 Qt 开发命令环境：[qt-dev-shell.ps1](</E:/工作/qt-dev-shell.ps1>)
+
+注意：我尝试用 winget 安装最新版 Qt Creator 19.0.0，但它的 MSI 静默安装长时间卡住，最后我改用 aqt 安装了可用的 Qt Creator 备用版。系统里还残留一个 `msiexec` 进程，我当前权限不能结束；但 `E:\Qt` 这套 Qt 环境已经可用，不依赖那个卡住的安装。
+```
+
+### user 2026-05-26T15:08:32.820Z
+
+```text
+<environment_context>
+  <cwd>C:\Users\t250c\Documents\Codex\2026-05-26\new-chat</cwd>
+  <shell>powershell</shell>
+  <current_date>2026-05-26</current_date>
+  <timezone>Asia/Shanghai</timezone>
+</environment_context>
+```
+
+### user 2026-05-26T15:08:32.827Z
+
+```text
+压缩上下文
 ```
