@@ -1,7 +1,7 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-07-20T14:35:18",
-  "exported_count": 97,
+  "exported_at": "2026-07-20T14:53:22",
+  "exported_count": 96,
   "missing_count": 0,
   "exports": [
     {
@@ -132,8 +132,8 @@
     },
     {
       "id": "019e7150-e769-70f2-a9c3-f7ea512dd2f0",
-      "title": "唐山项目： 先恢复约束纪律",
-      "file": "联想电脑/chat-records/019_019e7150-e769-70f2-a9c3-f7ea512dd2f0_唐山项目：-先恢复约束纪律.md",
+      "title": "天腾装药小遥控器",
+      "file": "联想电脑/chat-records/019_019e7150-e769-70f2-a9c3-f7ea512dd2f0_天腾装药小遥控器.md",
       "updated_at": "2026-05-29T01:19:48.073Z",
       "message_count": 143
     },
@@ -450,7 +450,7 @@
       "title": "鑫通操作台",
       "file": "联想电脑/chat-records/064_019f6449-75cf-7660-b739-f885cc142069_鑫通操作台.md",
       "updated_at": "2026-07-15T05:39:25.312Z",
-      "message_count": 236
+      "message_count": 257
     },
     {
       "id": "019f6eb9-d09e-7d02-abd9-c7f7b74c8d5d",
@@ -675,13 +675,6 @@
       "file": "联想电脑/chat-records/096_019f7e0f-e159-7c10-b01b-0a8d097ed338_10寸屏的模版构建。.md",
       "updated_at": "2026-07-20T05:46:42.797Z",
       "message_count": 9
-    },
-    {
-      "id": "019e7150-e769-70f2-a9c3-f7ea512dd2f0",
-      "title": "天腾装药小遥控器",
-      "file": "联想电脑/chat-records/097_019e7150-e769-70f2-a9c3-f7ea512dd2f0_天腾装药小遥控器.md",
-      "updated_at": "2026-07-20T06:26:35.6710908Z",
-      "message_count": 143
     }
   ],
   "missing": []
