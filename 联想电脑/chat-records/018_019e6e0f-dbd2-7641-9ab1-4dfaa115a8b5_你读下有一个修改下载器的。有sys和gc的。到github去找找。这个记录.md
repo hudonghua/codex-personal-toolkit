@@ -3,7 +3,7 @@
 - Session id: `019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5`
 - Source cwd: `E:\工作`
 - Model provider: `openai`
-- Exported at: `2026-07-20T13:11:30`
+- Exported at: `2026-07-20T13:19:29`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\05\28\rollout-2026-05-28T18-09-53-019e6e0f-dbd2-7641-9ab1-4dfaa115a8b5.jsonl`
 
 ## Transcript
@@ -6760,4 +6760,20 @@ rollout_summaries/2026-05-28T10-09-53-TD1P-downloader_702_sys_tx_and_boot_stack_
 
 ```text
 一切以稳定的来啊。另外gc是同步也稳定了吗？
+```
+
+### assistant 2026-07-20T05:11:37.905Z
+
+```text
+是的，现在 **SYS 和 GC 都统一以稳定为主**：
+
+- 不使用 `AUTO`
+- 不发送 `0x82` 快速模式探测
+- 固定使用老 Boot 支持的 `legacy` 逐帧应答
+- 选择 SYS 就只走 SYS；选择广成就只走 GC
+- 不通过缩短时间或批量发帧追求速度
+
+但必须说明：这次修改直接解决的是 SYS 的 `0x016 [00]` 串扰。GC 以前出现的 `0x17 data ack` 超时属于数据传输阶段，不能仅凭这次 SYS 成功就说已经彻底解决。
+
+GC 的验收标准应是：同一个控制器、同一个 BIN，连续完整下载至少 3 次，中间不拔 USB、不重启适配器。全部成功后才能确认现场稳定。当前软件已经采用最保守的 GC 下载流程。
 ```
