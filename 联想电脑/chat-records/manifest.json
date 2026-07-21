@@ -1,6 +1,6 @@
 {
   "device": "联想电脑",
-  "exported_at": "2026-07-21T10:24:53",
+  "exported_at": "2026-07-21T10:32:56",
   "exported_count": 96,
   "missing_count": 0,
   "exports": [
@@ -198,7 +198,7 @@
       "title": "GPS升级",
       "file": "联想电脑/chat-records/028_019e8932-1dee-7271-bad3-2c954d2f9ce2_GPS升级.md",
       "updated_at": "2026-06-02T16:37:03.599Z",
-      "message_count": 486
+      "message_count": 493
     },
     {
       "id": "019e8966-e133-76a1-8710-ae567d1fcdb8",
