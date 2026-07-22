@@ -3,7 +3,7 @@
 - Session id: `019ebcf7-54ad-7101-9184-774f509d736b`
 - Source cwd: `C:\Users\t250c\Documents\Keil监控项目`
 - Model provider: `openai`
-- Exported at: `2026-07-22T10:42:13`
+- Exported at: `2026-07-22T10:50:53`
 - Local source: `C:\Users\t250c\.codex\sessions\2026\06\13\rollout-2026-06-13T01-53-12-019ebcf7-54ad-7101-9184-774f509d736b.jsonl`
 
 ## Transcript
@@ -34141,4 +34141,46 @@ Release 发布成功。现在释放临时 F 盘映射，再把发布产物覆盖
 
 ```text
 刚才读到的是旧的 Roaming 日志；这个探针日志实际写到 LocalAppData。现在按源码路径读正确文件。
+```
+
+### assistant 2026-07-22T02:42:14.595Z
+
+```text
+隐藏探针没有刷新日志，原因大概率是 GUI 子系统 exe 在命令行下不按控制台方式回写。这个不影响主验证；我再用文件哈希确认本地运行目录和刚发布产物完全一致。
+```
+
+### assistant 2026-07-22T02:42:18.422Z
+
+```text
+本地 exe/dll 哈希和发布目录一致。机器上有 x86 dotnet，我用它直接跑本地 DLL 的固件探针，这样能拿到真实探针日志。
+```
+
+### assistant 2026-07-22T02:42:36.956Z
+
+```text
+本地 DLL 的真实探针已经 PASS，关键提示也对：`UV4 返回码=1，但日志确认 0 Error(s)`。我把临时复制出来的工程副本清理掉。
+```
+
+### assistant 2026-07-22T02:42:49.361Z
+
+```text
+清理命令被本地策略挡住了，因为它是递归删除。这个临时副本在 `%TEMP%`，不影响运行；我不继续绕策略删它，避免把时间耗在无关动作上。
+```
+
+### assistant 2026-07-22T02:42:51.686Z
+
+```text
+已覆盖本地运行目录：
+
+`C:\Users\t250c\Documents\Keil监控项目\can-variable-monitor-github-main\can_monitor_client_V1.0\上位机监控.exe`
+
+旧目录已备份到：
+
+`C:\Users\t250c\Documents\Keil监控项目\can-variable-monitor-github-main\can_monitor_client_V1.0_backup_before_firmware_exitcode_fix_20260722_1040`
+
+验证结果：用本地 DLL 跑 10 寸大屏工程副本的固件探针，结果 `FirmwareInstallProbe: PASS`。关键日志已经变成：
+
+`Keil 编译验证通过：FLASH，UV4 返回码=1，但日志确认 0 Error(s)`
+
+所以你现在重新打开这个本地 exe，再刷新这个工程，不应该再因为 warning-only 显示“加载固件失败”。
 ```
